@@ -12,11 +12,17 @@ const globalForPrisma = globalThis as unknown as {
 function createPrismaClient() {
   const connectionString = process.env.DATABASE_URL;
 
+  // During Next.js build phase, DATABASE_URL may not be available
+  // Return a basic PrismaClient without adapter to allow build to complete
+  // At runtime, DATABASE_URL will be available from environment variables
   if (!connectionString) {
-    throw new Error('DATABASE_URL environment variable is not set');
+    console.warn('DATABASE_URL not set - using basic Prisma Client (build mode)');
+    return new PrismaClient({
+      log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
+    });
   }
 
-  // Create PostgreSQL connection pool
+  // Runtime: Create PostgreSQL connection pool with adapter
   const pool = new Pool({ connectionString });
   const adapter = new PrismaPg(pool);
 
