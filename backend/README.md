@@ -79,3 +79,11 @@ This is a **monolithic** deployment where frontend and backend are combined in a
 - Both run on the same server (port 3000)
 
 For split architecture documentation, see the root-level documentation files.
+
+---
+
+## Deployment History
+
+**Last Updated:** February 3, 2026 18:05 IST
+**Status:** Docker build configured, ready for deployment
+**Build:** Docker multi-stage build with Next.js standalone output
