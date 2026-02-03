@@ -227,11 +227,11 @@ nasa_sakhi/
 ---
 
 ### Stage 1: Environment Setup
-**Date:** Feb 3 PM (2 hours)
+**Date:** Feb 3-4 (2 hours)
 
-**Important:** This project is cross-platform (Windows, macOS, Linux). See [CROSS-PLATFORM.md](../CROSS-PLATFORM.md) for platform-specific guidance.
+**🎯 Goal:** Set up local development environment to work with DC Deploy infrastructure
 
-**Tasks:**
+---
 
 #### 1. Clone the Repository
 
@@ -240,367 +240,212 @@ git clone https://github.com/tangy83/NaSaSakhi.git
 cd nasa_sakhi
 ```
 
-#### 2. Platform-Specific Setup
+#### 2. Navigate to Backend Directory
 
-**Choose your platform:**
-
-**🪟 Windows Users:**
-- See [WINDOWS-SETUP.md](../WINDOWS-SETUP.md) for detailed Windows guide
-- **Recommended:** Use WSL2 for best compatibility
-- **Alternative:** Native Windows with PostgreSQL installed locally
-
-**🍎 macOS Users:**
-```bash
-# Install PostgreSQL via Homebrew
-brew install postgresql@15
-brew services start postgresql@15
-```
-
-**🐧 Linux Users:**
-```bash
-# Install PostgreSQL
-sudo apt update
-sudo apt install postgresql-15 postgresql-contrib-15
-sudo systemctl start postgresql
-```
-
-#### 3. Run Cross-Platform Setup
+**Important:** All backend work happens in the `backend/` directory:
 
 ```bash
-# Automated setup script (works on all platforms)
-npm run setup
-
-# Generate secure secrets
-npm run generate-secrets
+cd backend
 ```
 
-This will:
-- Check prerequisites (Node.js, npm, Git)
-- Create environment files
-- Install dependencies
+This is the directory that DC Deploy deploys from.
 
-#### 4. Create Feature Branch
+#### 3. Install Dependencies
 
 ```bash
-git checkout -b feature/backend-api
+npm install
 ```
 
-#### 5. Database Setup
+This installs all required packages including:
+- Next.js 15
+- Prisma 7.3.0
+- React 19
+- TypeScript
+- All other dependencies
 
-**Option A: Local Development Database**
+#### 4. Configure Environment
 
-Create a local PostgreSQL database:
+Create `backend/.env`:
 
-```bash
-# Access PostgreSQL (use your platform's method)
-# macOS/Linux:
-psql postgres
-
-# Windows (native):
-psql -U postgres
-
-# Windows (WSL2):
-sudo -u postgres psql
-
-# In psql:
-CREATE DATABASE nasa_sakhi_dev;
-\q
-```
-
-**Option B: Connect to Staging Database (NaSaSakhiDB)**
-
-If you have access to the staging database:
-
-```bash
-# Connection string for NaSaSakhiDB
-DATABASE_URL="postgresql://naarisamata_user:PASSWORD@NaSaSakhiDB_IP:5432/naarisamata_staging"
-```
-
-**⚠️ Note:** Use local database for development, staging for integration testing only.
-
-#### 6. Configure Environment Variables
-
-Edit the generated `.env` file:
-
-**Local Development:**
 ```env
-# PostgreSQL (your local database)
-DATABASE_URL="postgresql://postgres:password@localhost:5432/nasa_sakhi_dev"
+# Database (Use staging database for development)
+DATABASE_URL="postgresql://JQZAEG:%2B1h8t3x%7Baa@nasasakhidbstg:5432/nasasakhidbstg-db"
 
-# NextAuth
+# Node Environment
+NODE_ENV=development
+
+# NextAuth (for local testing)
 NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="<paste-generated-secret-from-npm-run-generate-secrets>"
-
-# MySQL (legacy, for data migration)
-MYSQL_HOST="your-mysql-host"
-MYSQL_PORT="3306"
-MYSQL_DATABASE="sakhi"
-MYSQL_USER="your-username"
-MYSQL_PASSWORD="your-password"
+NEXTAUTH_SECRET="yiPTbj2ltp7Z01URNJhaNhxOsuyuqb2VMYwVAuAeeyQ"
 ```
 
-**Staging/Integration Testing:**
-```env
-# PostgreSQL (NaSaSakhiDB staging database)
-DATABASE_URL="postgresql://naarisamata_user:STAGING_PASSWORD@NaSaSakhiDB_IP:5432/naarisamata_staging"
+**⚠️ Important Notes:**
+- We use the **staging database** (nasasakhidbstg) for development
+- No local PostgreSQL installation needed
+- The database is already configured with all necessary tables
+- This is the same database used in production (DC Deploy)
 
-# NextAuth
-NEXTAUTH_URL="http://NaSaSakhiFEStg_IP:3000"
-NEXTAUTH_SECRET="<staging-secret>"
-```
-
-#### 7. Test Prisma Connection
+#### 5. Generate Prisma Client
 
 ```bash
-cd apps/backend  # or the backend directory
 npx prisma generate
-npx prisma db push
 ```
 
-Should succeed (even with minimal schema).
+This generates the Prisma Client based on `prisma/schema.prisma`.
 
-#### 8. Test Next.js Dev Server
+Expected output:
+```
+✔ Generated Prisma Client (v7.3.0) to ./node_modules/@prisma/client in XXms
+```
+
+#### 6. Test Database Connection
 
 ```bash
-# Go back to root
-cd ../..
-
-# Start dev server
 npm run dev
 ```
 
-Open http://localhost:3000 - should see homepage.
+Open browser and test endpoints:
+- **Health Check:** http://localhost:3000/api/health
+  - Should return `{"status":"healthy",...}`
+- **Database Test:** http://localhost:3000/api/db-test
+  - Should return `{"success":true,"message":"Database connection successful!",...}`
 
-#### 9. Docker Compose (Optional for Staging Deployment)
+If both work, your environment is ready! ✅
 
-If you're deploying to staging using Docker Compose:
+---
 
-```bash
-# View Docker Compose setup
-cat deployment/docker/docker-compose.staging.yml
+#### 7. Understanding the Project Structure
 
-# Deploy to staging (from deployment guide)
-# See deployment/DEPLOYMENT-GUIDE.md for full instructions
+```
+backend/                          ← DC Deploy deploys from here
+├── src/
+│   ├── app/                     ← Next.js App Router
+│   │   ├── api/                 ← YOUR API ROUTES GO HERE
+│   │   │   ├── health/          ← Health check endpoint
+│   │   │   └── db-test/         ← Database test endpoint
+│   │   ├── page.tsx             ← Homepage
+│   │   └── layout.tsx           ← Root layout
+│   ├── lib/                     ← Shared libraries
+│   │   ├── prisma.ts            ← Prisma client singleton
+│   │   └── api/                 ← API utilities
+│   └── middleware.ts            ← CORS middleware
+├── prisma/                      ← YOUR DATABASE WORK GOES HERE
+│   └── schema.prisma            ← Database schema definition
+├── package.json                 ← Dependencies
+├── Dockerfile                   ← Docker build config (DC Deploy)
+└── .env                         ← Environment variables (YOU CREATE THIS)
 ```
 
-**Staging Environment:**
-- **NaSaSakhiDB:** PostgreSQL database server
-- **NaSaSakhiFEStg:** Frontend/monolithic app server (PM2 + Nginx)
-- **NaSaSakhiBEStg:** Backend API server (optional split deployment)
+---
 
-#### 10. DC Deploy Staging Access (Needed on Feb 6)
+#### 8. Development Workflow
 
-**Important:** You don't need staging access until Feb 6 (integration day). Use local database for Feb 3-5 development.
+**Daily Development Loop:**
 
-**When You Need It:**
-- ✅ Feb 6 AM: Deploy backend to staging server
-- ✅ Feb 6 PM: Integration testing with Sunitha
-- ✅ Feb 7: Final QA and demo preparation
-
-**What You Need from Infrastructure Team:**
-
-Before Feb 6, request from Tanuj or infrastructure team:
-
-1. **SSH Access to NaSaSakhiFEStg Server**
+1. **Work in `backend/src/app/api/` for API routes**
    ```bash
-   # Server hostname or IP address
-   NaSaSakhiFEStg_HOST="<IP address or hostname>"
-
-   # SSH username
-   SSH_USER="<your-username>"
-
-   # SSH key (if using key-based auth)
-   # Add your public key to server's ~/.ssh/authorized_keys
+   # Example: Create new API endpoint
+   mkdir -p src/app/api/reference/categories
+   touch src/app/api/reference/categories/route.ts
    ```
 
-2. **PostgreSQL Database Credentials**
+2. **Work in `backend/prisma/` for database schema**
    ```bash
-   # Database connection details
-   DB_HOST="<NaSaSakhiDB IP or hostname>"
-   DB_PORT="5432"
-   DB_NAME="naarisamata_staging"
-   DB_USER="naarisamata_user"
-   DB_PASSWORD="<staging-password>"
+   # Edit schema
+   nano prisma/schema.prisma
 
-   # Full connection string
-   DATABASE_URL="postgresql://naarisamata_user:<password>@<DB_HOST>:5432/naarisamata_staging"
-   ```
-
-3. **Firewall/VPN Access (if required)**
-   ```bash
-   # If servers are behind firewall, you may need:
-   # - VPN credentials
-   # - IP whitelisting (provide your IP)
-   # - Bastion/jump host access
-   ```
-
-**How to Connect:**
-
-**A. SSH into NaSaSakhiFEStg Server:**
-
-```bash
-# First time: Add server to known hosts
-ssh <SSH_USER>@<NaSaSakhiFEStg_HOST>
-
-# Example (once you have actual details):
-# ssh deploy@192.168.1.100
-# or
-# ssh deploy@nasasakhi-staging.dcDeploy.com
-
-# You should see Ubuntu server prompt
-```
-
-**B. Test Database Connection from Server:**
-
-Once SSH'd into NaSaSakhiFEStg:
-
-```bash
-# Install PostgreSQL client if not present
-sudo apt install postgresql-client-15
-
-# Test connection to NaSaSakhiDB
-psql "postgresql://naarisamata_user:<PASSWORD>@<NaSaSakhiDB_IP>:5432/naarisamata_staging"
-
-# Should see: naarisamata_staging=#
-# If successful, type \q to quit
-```
-
-**C. Test Database Connection from Your Local Machine:**
-
-```bash
-# From your development machine
-psql "postgresql://naarisamata_user:<PASSWORD>@<NaSaSakhiDB_IP>:5432/naarisamata_staging"
-
-# This tests if database port (5432) is accessible from outside
-# If it fails, you may need VPN or SSH tunnel
-```
-
-**D. SSH Tunnel (if database is not directly accessible):**
-
-If PostgreSQL port is not exposed externally:
-
-```bash
-# Create SSH tunnel through NaSaSakhiFEStg
-ssh -L 5433:<NaSaSakhiDB_IP>:5432 <SSH_USER>@<NaSaSakhiFEStg_HOST>
-
-# Now connect to localhost:5433
-psql "postgresql://naarisamata_user:<PASSWORD>@localhost:5433/naarisamata_staging"
-```
-
-**Staging Deployment Workflow (Feb 6):**
-
-1. **Merge your code to integration branch:**
-   ```bash
-   git checkout -b integration/mvp
-   git merge feature/backend-api
-   git push origin integration/mvp
-   ```
-
-2. **SSH into NaSaSakhiFEStg:**
-   ```bash
-   ssh <SSH_USER>@<NaSaSakhiFEStg_HOST>
-   cd /var/www/nasa_sakhi  # or wherever app is deployed
-   ```
-
-3. **Pull latest code:**
-   ```bash
-   git pull origin integration/mvp
-   npm install
-   ```
-
-4. **Run database migrations:**
-   ```bash
+   # Generate Prisma Client
    npx prisma generate
-   npx prisma migrate deploy
    ```
 
-5. **Build and restart:**
+3. **Test locally**
    ```bash
-   npm run build
-   pm2 reload all
-   # or
-   pm2 restart nasa-sakhi
+   npm run dev
+   # Test at http://localhost:3000/api/your-endpoint
    ```
 
-6. **Verify deployment:**
+4. **Commit changes**
    ```bash
-   # Check PM2 status
-   pm2 status
-
-   # Check logs
-   pm2 logs nasa-sakhi --lines 50
-
-   # Test API endpoint
-   curl http://localhost:3000/api/health
-   curl http://localhost:3000/api/reference/categories
+   git add .
+   git commit -m "Add: Your feature description"
    ```
 
-**Troubleshooting:**
+5. **Deploy to DC Deploy**
+   ```bash
+   git push origin main
+   ```
 
-**Issue: Can't SSH into server**
-```bash
-# Check if you can ping the server
-ping <NaSaSakhiFEStg_HOST>
+   DC Deploy automatically:
+   - Detects the push
+   - Builds Docker container from `backend/Dockerfile`
+   - Deploys to https://nasassakhibestg.dcdeployapp.com
+   - Takes ~2-3 minutes
 
-# Check if SSH port is open
-telnet <NaSaSakhiFEStg_HOST> 22
+6. **Test deployed endpoint**
+   ```bash
+   curl https://nasassakhibestg.dcdeployapp.com/api/your-endpoint
+   ```
 
-# If using SSH key, ensure correct permissions
-chmod 600 ~/.ssh/id_rsa
-ssh -i ~/.ssh/id_rsa <SSH_USER>@<NaSaSakhiFEStg_HOST>
-```
+---
 
-**Issue: Can't connect to database**
-```bash
-# Check if PostgreSQL port is accessible
-telnet <NaSaSakhiDB_IP> 5432
+#### 9. DC Deploy Configuration (Already Done for You)
 
-# If not, use SSH tunnel (see above)
-# Or request VPN access from infrastructure team
-```
+**Application:** nasassakhibestg
+**Database:** nasasakhidbstg
+**Status:** ✅ Successfully deployed (Build #24)
 
-**Issue: Permission denied on server**
-```bash
-# Check user groups
-groups
+**Environment Variables (Configured in DC Deploy):**
+- `NODE_ENV=production`
+- `PORT=3000`
+- `DATABASE_URL=postgresql://JQZAEG:***@nasasakhidbstg:5432/nasasakhidbstg-db`
+- `NEXT_PUBLIC_APP_URL=https://nasassakhibestg.dcdeployapp.com`
+- `NEXTAUTH_URL=https://nasassakhibestg.dcdeployapp.com`
+- `NEXTAUTH_SECRET=[configured]`
 
-# May need to be added to 'www-data' or 'deploy' group
-# Contact infrastructure team
-```
+You don't need to configure these - they're already set up in DC Deploy.
 
-**Pre-Feb 6 Checklist:**
+---
 
-Before integration day (Feb 6), ensure you have:
+#### 10. Testing Your Setup
 
-- [ ] SSH access to NaSaSakhiFEStg server
-- [ ] Database credentials for NaSaSakhiDB
-- [ ] Tested SSH connection successfully
-- [ ] Tested database connection successfully
-- [ ] Know where app is deployed (`/var/www/nasa_sakhi` or similar)
-- [ ] Understand PM2 commands (restart, logs, status)
-- [ ] Reviewed [deployment/DEPLOYMENT-GUIDE.md](../deployment/DEPLOYMENT-GUIDE.md)
-- [ ] Contacted Tanuj if any credentials missing
+**✅ Checklist:**
 
-#### Platform-Specific Troubleshooting
+1. **Local development works:**
+   ```bash
+   cd backend
+   npm run dev
+   # Open http://localhost:3000 - should see homepage
+   ```
 
-**Windows Issues:**
-- Line ending errors: See [WINDOWS-SETUP.md](../WINDOWS-SETUP.md#common-windows-issues)
-- PostgreSQL connection: Check if service is running in Services (services.msc)
-- Port conflicts: Use `netstat -ano | findstr :3000` to find processes
+2. **Database connection works:**
+   ```bash
+   curl http://localhost:3000/api/db-test
+   # Should return success: true
+   ```
 
-**macOS/Linux Issues:**
-- PostgreSQL not starting: `brew services list` or `sudo systemctl status postgresql`
-- Permission denied: Check PostgreSQL user permissions
-- Port conflicts: Use `lsof -i :3000` to find processes
+3. **Can create API routes:**
+   ```bash
+   # Try creating a test endpoint in src/app/api/test/route.ts
+   # Verify it works locally
+   ```
 
-**All Platforms:**
-- See [CROSS-PLATFORM.md](../CROSS-PLATFORM.md#-common-cross-platform-issues) for common issues
+4. **Can deploy:**
+   ```bash
+   # Make a small change, commit, push to main
+   # Check DC Deploy dashboard - build should start
+   # Wait ~2-3 min, test deployed URL
+   ```
 
-**Deliverable:** ✅ Working dev environment with PostgreSQL connection
+---
 
-**Time Check:** If you're stuck for more than 30 minutes, reach out to Tanuj immediately.
+**✅ Deliverable:** Local development environment working, can access staging database, can deploy to DC Deploy
+
+---
 
 **Next:** Proceed to Stage 2 (Prisma Schema Design)
+
+---
+
 
 ---
 
@@ -2605,3 +2450,8 @@ By **Feb 7 evening**, you must have:
   - Architecture decisions
 
 **Good Luck! You're building the foundation for a platform that will help thousands of organizations serve women and children across India. 🚀**
+
+---
+
+**Last Updated:** Feb 3, 2026 19:00 IST
+**Status:** DC Deploy deployment configured and ready

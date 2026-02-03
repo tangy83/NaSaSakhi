@@ -1,8 +1,16 @@
-# DC Deploy Configuration - NASA Sakhi Staging
+# ⚠️ ARCHIVED - DC Deploy Configuration Planning Document
+
+**This document is ARCHIVED and describes the originally planned infrastructure approach (PM2 + Nginx on self-managed servers).**
+
+**The actual deployment uses DC Deploy PaaS with Docker containers. See [DC_DEPLOY_ACTUAL_CONFIG.md](DC_DEPLOY_ACTUAL_CONFIG.md) for current production configuration.**
+
+---
+
+# DC Deploy Configuration - NASA Sakhi Staging (ORIGINAL PLAN - NOT IMPLEMENTED)
 ## Fill in the actual values for your infrastructure
 
 **Date:** February 3, 2026
-**Status:** 🔄 Configuration in progress
+**Status:** ⚠️ ARCHIVED - Not implemented, kept for reference only
 
 ---
 

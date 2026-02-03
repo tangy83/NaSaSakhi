@@ -9,7 +9,7 @@
 - **Shashi's Work Plan:** [SHASHI_WORKPLAN.md](./SHASHI_WORKPLAN.md) (Backend - 45%)
 - **Sunitha's Work Plan:** [SUNITHA_WORKPLAN.md](./SUNITHA_WORKPLAN.md) (Frontend - 45%)
 - **Tanuj's Tasks:** Inline below (UI/UX Lead - 10%)
-- **Full Planning Document:** [/Users/tanujsaluja/.claude/plans/nifty-discovering-stroustrup.md]
+- **DC Deploy Configuration:** [DC_DEPLOY_ACTUAL_CONFIG.md](./DC_DEPLOY_ACTUAL_CONFIG.md)
 
 ---
 
@@ -202,33 +202,56 @@ Feb 3 (Mon)      Feb 4 (Tue)         Feb 5 (Wed)         Feb 6 (Thu)         Feb
 └───────────────────────────────────────────────────────────────┘
 ```
 
-### Staging Infrastructure
+### Deployment Infrastructure
+
+**Platform:** DC Deploy (Docker-based PaaS)
+**Status:** ✅ Successfully Deployed (Build #24 - Feb 3, 2026)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│               Staging Environment                           │
+│            DC Deploy Production Environment                  │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│  ┌──────────────────┐          ┌──────────────────┐        │
-│  │  NaSaSakhiFEStg  │          │  NaSaSakhiDB     │        │
-│  │                  │          │                  │        │
-│  │  • Nginx         │─────────▶│  PostgreSQL 15   │        │
-│  │  • PM2           │   :5432  │                  │        │
-│  │  • Next.js App   │          │  • Database:     │        │
-│  │  • Port 80/443   │          │    naarisamata_  │        │
-│  │                  │          │    staging       │        │
-│  └──────────────────┘          └──────────────────┘        │
-│           │                                                 │
-│           │ (Optional Split)                                │
-│           ▼                                                 │
-│  ┌──────────────────┐                                      │
-│  │ NaSaSakhiBEStg   │                                      │
-│  │  (API Only)      │                                      │
-│  │  • Port 4000     │                                      │
-│  └──────────────────┘                                      │
+│  ┌───────────────────────────────────────────────┐        │
+│  │  nasassakhibestg (Docker Container)           │        │
+│  │                                                │        │
+│  │  GitHub (main) ──push──▶ DC Deploy ──build──▶ │        │
+│  │                                                │        │
+│  │  • Node 20 Alpine                             │        │
+│  │  • Next.js 15 (Monolithic)                    │        │
+│  │  • Port 3000 (internal)                       │        │
+│  │  • Auto-deploy on push                        │        │
+│  │                                                │        │
+│  │  URL: https://nasassakhibestg.dcdeployapp.com │        │
+│  └───────────────┬───────────────────────────────┘        │
+│                  │                                          │
+│                  │ DATABASE_URL                             │
+│                  ▼                                          │
+│  ┌──────────────────────────────────────────────┐         │
+│  │  nasasakhidbstg (PostgreSQL 17.5)            │         │
+│  │                                               │         │
+│  │  • Managed Database (DC Deploy)              │         │
+│  │  • Port 5432                                 │         │
+│  │  • Automatic backups                         │         │
+│  └──────────────────────────────────────────────┘         │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
+
+**Deployment Process:**
+1. Developer: `git push origin main`
+2. DC Deploy detects push via webhook
+3. Runs Docker build from `backend/Dockerfile`
+4. Deploys new container automatically (~2-3 min)
+5. App available at https://nasassakhibestg.dcdeployapp.com
+
+**Environment Variables (configured in DC Deploy):**
+- `NODE_ENV=production`
+- `PORT=3000`
+- `DATABASE_URL=postgresql://JQZAEG:***@nasasakhidbstg:5432/nasasakhidbstg-db`
+- `NEXT_PUBLIC_APP_URL=https://nasassakhibestg.dcdeployapp.com`
+- `NEXTAUTH_URL=https://nasassakhibestg.dcdeployapp.com`
+- `NEXTAUTH_SECRET=[configured securely]`
 
 ### Tech Stack Summary
 
@@ -238,12 +261,12 @@ Feb 3 (Mon)      Feb 4 (Tue)         Feb 5 (Wed)         Feb 6 (Thu)         Feb
 | **Styling** | Tailwind CSS | Sunitha |
 | **Forms** | React Hook Form + Zod | Sunitha |
 | **Backend** | Next.js API Routes | Shashi |
-| **Database** | PostgreSQL 15 + Prisma | Shashi |
+| **Database** | PostgreSQL 17.5 + Prisma | Shashi |
 | **Auth** | NextAuth.js | Shashi |
 | **Validation** | Zod (client + server) | Both |
 | **File Storage** | Local filesystem (MVP) | Shashi |
-| **Deployment** | PM2 + Nginx (Staging) | Infrastructure |
-| **Orchestration** | Docker Compose (Optional) | Infrastructure |
+| **Deployment** | Docker (DC Deploy) | Automated |
+| **Container** | Node 20 Alpine | DC Deploy |
 
 ### Development Environment
 
@@ -1441,6 +1464,7 @@ This master plan is the single source of truth for project coordination. Update 
 
 ---
 
-**Last Updated:** Feb 3, 2026
-**Status:** 🔴 Project Kickoff
-**Next Milestone:** Design system & environment setup (Feb 3 EOD)
+**Last Updated:** Feb 3, 2026 19:00 IST
+**Status:** ✅ Successfully Deployed to DC Deploy (Build #24)
+**Deployed URL:** https://nasassakhibestg.dcdeployapp.com
+**Next Milestone:** Team onboarding & development start (Feb 4)

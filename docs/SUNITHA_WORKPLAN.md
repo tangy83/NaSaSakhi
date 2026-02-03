@@ -274,514 +274,250 @@ nasa_sakhi/
 ---
 
 ### Stage 1: Environment Setup
-**Date:** Feb 3 PM (2 hours)
+**Date:** Feb 3-4 (2 hours)
 
-**Important:** This project is cross-platform (Windows, macOS, Linux). See [CROSS-PLATFORM.md](../CROSS-PLATFORM.md) for platform-specific guidance.
+**🎯 Goal:** Set up local development environment to build frontend in monolithic Next.js app
 
-**Tasks:**
+---
 
-#### 1. Clone Repository and Install Dependencies
+#### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/tangy83/NaSaSakhi.git
 cd nasa_sakhi
 ```
 
-#### 2. Platform-Specific Setup
+#### 2. Navigate to Backend Directory
 
-**Choose your platform:**
-
-**🪟 Windows Users:**
-- See [WINDOWS-SETUP.md](../WINDOWS-SETUP.md) for detailed Windows guide
-- **Recommended:** Use WSL2 for best compatibility
-- **Alternative:** Native Windows setup works too
-
-**🍎 macOS / 🐧 Linux Users:**
-- Follow standard Unix setup
-- See [README.md](../README.md) for general instructions
-
-#### 3. Run Cross-Platform Setup
+**Important:** All development (frontend AND backend) happens in the `backend/` directory:
 
 ```bash
-# Automated setup script (works on all platforms)
-npm run setup
-
-# Generate secure secrets
-npm run generate-secrets
+cd backend
 ```
 
-This will:
-- Check prerequisites (Node.js 18+, npm)
-- Create environment files
-- Install all dependencies
+This is a **monolithic** application - frontend and backend are in the same Next.js app.
 
-#### 4. Create Feature Branch
+#### 3. Install Dependencies
 
 ```bash
-git checkout -b feature/registration-form
+npm install
 ```
 
-#### 5. Wait for Tanuj's Foundational Files
+This installs all required packages including:
+- Next.js 15
+- React 19
+- TypeScript
+- Tailwind CSS
+- React Hook Form + Zod
+- All other dependencies
 
-Before proceeding, you need these files from Tanuj:
-
-- ✅ `/src/types/api.ts` - API contract (TypeScript interfaces)
-- ✅ `/src/mocks/api.json` - Mock data for independent development
-- ✅ `/docs/DESIGN_SYSTEM.md` - Design guidelines (colors, typography, spacing)
-
-**Tanuj will create these on Feb 3 and commit to main branch.**
-
-Once ready, pull the latest:
-
-```bash
-git pull origin main
-git merge main  # Merge into your feature branch
-```
-
-#### 6. Create Mock Data Structure
-
-If Tanuj hasn't created `/src/mocks/api.json` yet, create it yourself:
-
-**Create `/src/mocks/api.json`:**
-
-```json
-{
-  "categories": [
-    {
-      "id": "1",
-      "name": "Education Support",
-      "targetGroup": "children",
-      "displayOrder": 1
-    },
-    {
-      "id": "2",
-      "name": "Child Protection",
-      "targetGroup": "children",
-      "displayOrder": 2
-    },
-    {
-      "id": "3",
-      "name": "Women's Healthcare",
-      "targetGroup": "women",
-      "displayOrder": 8
-    }
-  ],
-  "resources": [
-    {
-      "id": "1",
-      "categoryId": "1",
-      "name": "After-school tutoring",
-      "description": ""
-    },
-    {
-      "id": "2",
-      "categoryId": "1",
-      "name": "Scholarship programs",
-      "description": ""
-    },
-    {
-      "id": "3",
-      "categoryId": "3",
-      "name": "Maternal health services",
-      "description": ""
-    }
-  ],
-  "languages": [
-    {
-      "id": "1",
-      "name": "Hindi",
-      "code": "hi",
-      "isActive": true
-    },
-    {
-      "id": "2",
-      "name": "English",
-      "code": "en",
-      "isActive": true
-    },
-    {
-      "id": "3",
-      "name": "Bengali",
-      "code": "bn",
-      "isActive": true
-    }
-  ],
-  "cities": [
-    {
-      "id": "1",
-      "name": "Bangalore",
-      "stateId": "1",
-      "stateName": "Karnataka"
-    },
-    {
-      "id": "2",
-      "name": "Mumbai",
-      "stateId": "2",
-      "stateName": "Maharashtra"
-    },
-    {
-      "id": "3",
-      "name": "Delhi",
-      "stateId": "3",
-      "stateName": "Delhi"
-    }
-  ],
-  "states": [
-    {
-      "id": "1",
-      "name": "Karnataka",
-      "code": "KA"
-    },
-    {
-      "id": "2",
-      "name": "Maharashtra",
-      "code": "MH"
-    },
-    {
-      "id": "3",
-      "name": "Delhi",
-      "code": "DL"
-    }
-  ]
-}
-```
-
-#### 7. Create Mock API Client
-
-**Create `/src/lib/api/mock.ts`:**
-
-```typescript
-import mockData from '@/mocks/api.json';
-import { ServiceCategory, ServiceResource, Language, City, State } from '@/types/api';
-
-export async function fetchCategoriesMock(): Promise<ServiceCategory[]> {
-  // Simulate network delay
-  await new Promise((resolve) => setTimeout(resolve, 300));
-  return mockData.categories as ServiceCategory[];
-}
-
-export async function fetchResourcesMock(categoryId?: string): Promise<ServiceResource[]> {
-  await new Promise((resolve) => setTimeout(resolve, 300));
-  if (categoryId) {
-    return mockData.resources.filter((r) => r.categoryId === categoryId) as ServiceResource[];
-  }
-  return mockData.resources as ServiceResource[];
-}
-
-export async function fetchLanguagesMock(): Promise<Language[]> {
-  await new Promise((resolve) => setTimeout(resolve, 300));
-  return mockData.languages as Language[];
-}
-
-export async function fetchCitiesMock(search?: string): Promise<City[]> {
-  await new Promise((resolve) => setTimeout(resolve, 300));
-  if (search) {
-    return mockData.cities.filter((c) =>
-      c.name.toLowerCase().includes(search.toLowerCase())
-    ) as City[];
-  }
-  return mockData.cities as City[];
-}
-
-export async function fetchStatesMock(): Promise<State[]> {
-  await new Promise((resolve) => setTimeout(resolve, 300));
-  return mockData.states as State[];
-}
-
-export async function saveDraftMock(data: any): Promise<{ token: string }> {
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  // Store in localStorage for testing
-  const token = `draft-${Date.now()}`;
-  localStorage.setItem(token, JSON.stringify(data));
-  return { token };
-}
-
-export async function loadDraftMock(token: string): Promise<any> {
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  const data = localStorage.getItem(token);
-  if (!data) throw new Error('Draft not found');
-  return JSON.parse(data);
-}
-
-export async function submitRegistrationMock(data: any): Promise<{ organizationId: string }> {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  console.log('Mock submission:', data);
-  return { organizationId: `org-${Date.now()}` };
-}
-```
-
-#### 8. Test Next.js Dev Server
+#### 4. Start Development Server
 
 ```bash
 npm run dev
 ```
 
-Open http://localhost:3000 - you should see the homepage.
+Open browser: http://localhost:3000
 
-#### 9. Platform-Specific Troubleshooting
+You should see the homepage! ✅
 
-**Windows Issues:**
-- Line ending errors: See [WINDOWS-SETUP.md](../WINDOWS-SETUP.md#common-windows-issues)
-- `npm run dev` not working: Try using separate terminals for frontend/backend
-- Port conflicts: Use `netstat -ano | findstr :3000`
+---
 
-**macOS/Linux Issues:**
-- Port conflicts: Use `lsof -i :3000`
-- Permission denied: Check file permissions
+#### 5. Understanding the Project Structure for Frontend Work
 
-**All Platforms:**
-- See [CROSS-PLATFORM.md](../CROSS-PLATFORM.md#-common-cross-platform-issues) for common issues
-
-#### 10. DC Deploy Staging Access (Needed on Feb 6)
-
-**Important:** You don't need staging access until Feb 6 (integration day). Use mock data for Feb 4-5 development.
-
-**When You Need It:**
-- ✅ Feb 6 AM: Test frontend with Shashi's real API
-- ✅ Feb 6 PM: Deploy frontend to staging, integration testing
-- ✅ Feb 7: Final QA and mobile testing
-
-**What You Need from Infrastructure Team:**
-
-Before Feb 6, request from Tanuj or infrastructure team:
-
-1. **SSH Access to NaSaSakhiFEStg Server**
-   ```bash
-   # Server hostname or IP address
-   NaSaSakhiFEStg_HOST="<IP address or hostname>"
-
-   # SSH username
-   SSH_USER="<your-username>"
-
-   # SSH key (if using key-based auth)
-   # Add your public key to server's ~/.ssh/authorized_keys
-   ```
-
-2. **Staging Environment URLs**
-   ```bash
-   # Frontend application URL
-   STAGING_APP_URL="http://<NaSaSakhiFEStg_IP>"
-   # or
-   STAGING_APP_URL="https://staging.nasasakhi.org"
-
-   # API base URL (usually same as app)
-   STAGING_API_URL="http://<NaSaSakhiFEStg_IP>/api"
-   ```
-
-3. **Firewall/VPN Access (if required)**
-   ```bash
-   # If servers are behind firewall, you may need:
-   # - VPN credentials
-   # - IP whitelisting (provide your IP)
-   # - Bastion/jump host access
-   ```
-
-**How to Connect:**
-
-**A. Test Staging API from Your Browser:**
-
-Once Shashi deploys backend on Feb 6 AM:
-
-```bash
-# Open in browser or use curl
-curl http://<NaSaSakhiFEStg_IP>/api/reference/categories
-curl http://<NaSaSakhiFEStg_IP>/api/health
-
-# Should return JSON response
+```
+backend/                          ← Your workspace
+├── src/
+│   ├── app/                     ← YOUR PAGES GO HERE
+│   │   ├── page.tsx             ← Homepage (edit this!)
+│   │   ├── layout.tsx           ← Root layout
+│   │   └── register/            ← CREATE REGISTRATION FORM HERE
+│   │       ├── step1/           ← Step 1 page
+│   │       │   └── page.tsx
+│   │       ├── step2/           ← Step 2 page
+│   │       │   └── page.tsx
+│   │       └── ...              ← Steps 3-7
+│   ├── components/              ← YOUR COMPONENTS GO HERE
+│   │   ├── form/                ← Form components
+│   │   │   ├── TextInput.tsx
+│   │   │   ├── Dropdown.tsx
+│   │   │   └── ...
+│   │   └── layout/              ← Layout components
+│   │       ├── FormStep.tsx
+│   │       ├── ProgressIndicator.tsx
+│   │       └── ...
+│   └── lib/                     ← Utilities and helpers
+│       ├── validation/          ← Zod schemas
+│       └── api/                 ← API client functions
+├── public/                      ← Static assets (images, etc.)
+└── .env                         ← Environment variables (optional for you)
 ```
 
-**B. Update Your Local Frontend to Use Staging API:**
+---
 
-On Feb 6 AM, switch from mocks to real API:
+#### 6. API Integration (Monolithic Architecture)
+
+**Key Point:** Backend APIs are on the **same server** as your frontend!
+
+**Local Development:**
+- Frontend: http://localhost:3000
+- API: http://localhost:3000/api/health
+- API: http://localhost:3000/api/db-test
+
+**Deployed (after push to main):**
+- App: https://nasassakhibestg.dcdeployapp.com
+- API: https://nasassakhibestg.dcdeployapp.com/api/health
+
+**How to call APIs in your code:**
 
 ```typescript
-// Create .env.local for staging API
-NEXT_PUBLIC_API_URL="http://<NaSaSakhiFEStg_IP>/api"
-# or use localhost if Shashi's running locally
-NEXT_PUBLIC_API_URL="http://localhost:3000/api"
+// ✅ CORRECT - Use relative paths
+const response = await fetch('/api/health');
+const data = await response.json();
+
+// ✅ ALSO CORRECT - More explicit
+const response = await fetch('/api/reference/categories');
+
+// ❌ WRONG - Don't hardcode full URL
+const response = await fetch('http://localhost:3000/api/health');
 ```
 
-Update your API client:
+**Benefits:**
+- ✅ No CORS issues (same origin)
+- ✅ Simple API calls (just use `/api/...`)
+- ✅ Works locally and in production without changes
 
-```typescript
-// Before (mocks):
-import { fetchCategoriesMock } from '@/lib/api/mock';
+---
 
-// After (real API):
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || '/api';
+#### 7. Mock Data Strategy
 
-export async function fetchCategories() {
-  const response = await fetch(`${API_BASE}/reference/categories`);
-  const json = await response.json();
-  if (!json.success) throw new Error(json.error);
-  return json.data;
-}
-```
+Since Shashi is building the backend in parallel, you have options:
 
-**C. SSH into NaSaSakhiFEStg Server (for deployment):**
+**Option A: Wait for Shashi's APIs (Recommended)**
+- Coordinate with Shashi on Feb 4
+- Use his local API (`http://localhost:3000/api/...`)
+- Both of you run `npm run dev` locally
+- Your frontend calls his backend directly
 
-```bash
-# First time: Add server to known hosts
-ssh <SSH_USER>@<NaSaSakhiFEStg_HOST>
+**Option B: Use Mock Data (If Shashi not ready)**
+- Create `/src/mocks/api.json` with sample data
+- Create mock API functions in `/src/lib/api/mock.ts`
+- Switch to real APIs when ready (Feb 6)
 
-# Example (once you have actual details):
-# ssh deploy@192.168.1.100
-# or
-# ssh deploy@nasasakhi-staging.dcDeploy.com
+**Option C: Use Deployed API**
+- Shashi will deploy APIs to staging as he builds them
+- Call `https://nasassakhibestg.dcdeployapp.com/api/...` from your local dev
+- Requires CORS to be configured (should already be done)
 
-# You should see Ubuntu server prompt
-```
+---
 
-**D. Deploy Your Frontend to Staging:**
+#### 8. Development Workflow
 
-Once SSH'd into NaSaSakhiFEStg:
+**Daily Development Loop:**
 
-```bash
-# Navigate to app directory
-cd /var/www/nasa_sakhi  # or wherever app is deployed
-
-# Pull latest code
-git pull origin integration/mvp
-
-# Install dependencies
-npm install
-
-# Build frontend
-npm run build
-
-# Restart PM2
-pm2 reload all
-# or
-pm2 restart nasa-sakhi
-
-# Verify deployment
-pm2 status
-pm2 logs nasa-sakhi --lines 50
-```
-
-**E. Test Deployed Application:**
-
-```bash
-# From your local browser
-http://<NaSaSakhiFEStg_IP>
-
-# Should see your registration form
-# Test all 7 steps end-to-end
-```
-
-**Testing Workflow (Feb 6):**
-
-**Morning - Local Integration Testing:**
-
-1. Shashi deploys backend to staging
-2. You update `.env.local` to point to staging API
-3. Run your frontend locally: `npm run dev`
-4. Test registration flow with real API
-5. Fix any API contract mismatches
-6. Communicate with Shashi to adjust if needed
-
-**Afternoon - Staging Deployment:**
-
-1. Merge your code to `integration/mvp` branch:
+1. **Create a new page:**
    ```bash
-   git checkout integration/mvp
-   git merge feature/registration-form
-   git push origin integration/mvp
+   # Example: Create Step 1 page
+   mkdir -p src/app/register/step1
+   touch src/app/register/step1/page.tsx
    ```
 
-2. SSH into NaSaSakhiFEStg and deploy (see steps above)
-
-3. Test on staging from browser:
+2. **Create components:**
+   ```bash
+   # Example: Create TextInput component
+   mkdir -p src/components/form
+   touch src/components/form/TextInput.tsx
    ```
-   http://<NaSaSakhiFEStg_IP>/register/step1
+
+3. **Edit code:**
+   - Use your IDE (VS Code, etc.)
+   - Hot reload works - changes appear instantly!
+
+4. **Test locally:**
+   ```bash
+   npm run dev
+   # Open http://localhost:3000/register/step1
    ```
 
-4. Mobile testing:
-   - Open Chrome DevTools
-   - Toggle device toolbar (Ctrl+Shift+M or Cmd+Shift+M)
-   - Test on iPhone SE (375px), iPhone 12 Pro (390px), iPad (768px)
-   - Or test on actual mobile device (connect to same network)
+5. **Commit changes:**
+   ```bash
+   git add .
+   git commit -m "Add: Step 1 organization details form"
+   ```
 
-**Troubleshooting:**
+6. **Deploy to DC Deploy:**
+   ```bash
+   git push origin main
+   ```
 
-**Issue: Can't access staging URL from browser**
-```bash
-# Check if server is reachable
-ping <NaSaSakhiFEStg_IP>
+   DC Deploy automatically:
+   - Detects the push
+   - Builds Docker container
+   - Deploys to https://nasassakhibestg.dcdeployapp.com
+   - Takes ~2-3 minutes
 
-# Check if port 80 is open
-telnet <NaSaSakhiFEStg_IP> 80
+7. **Test deployed app:**
+   - Open https://nasassakhibestg.dcdeployapp.com/register/step1
+   - Verify your page works in production
 
-# May need VPN if server is behind firewall
-# Contact infrastructure team
-```
+---
 
-**Issue: API calls failing with CORS errors**
-```bash
-# Check browser console for errors
-# API should allow your frontend domain
-# Shashi may need to configure CORS headers
-```
+#### 9. Design System
 
-**Issue: Can't SSH into server**
-```bash
-# Check if you can ping the server
-ping <NaSaSakhiFEStg_IP>
+Tanuj will provide design guidelines in `/docs/DESIGN_SYSTEM.md`:
+- Color palette (primary, secondary, error, success colors)
+- Typography (font families, sizes, weights)
+- Spacing system (margins, padding)
+- Component styles (buttons, inputs, etc.)
 
-# Check if SSH port is open
-telnet <NaSaSakhiFEStg_IP> 22
+**Once available, follow the design system for all UI components.**
 
-# If using SSH key, ensure correct permissions
-chmod 600 ~/.ssh/id_rsa
-ssh -i ~/.ssh/id_rsa <SSH_USER>@<NaSaSakhiFEStg_HOST>
-```
+---
 
-**Issue: npm run build fails on server**
-```bash
-# Check Node.js version
-node --version  # Should be 18+
+#### 10. Testing Your Setup
 
-# Check disk space
-df -h
+**✅ Checklist:**
 
-# Check memory
-free -m
+1. **Can run dev server:**
+   ```bash
+   cd backend
+   npm run dev
+   # Should start without errors
+   ```
 
-# View full error logs
-pm2 logs --err --lines 100
-```
+2. **Can see homepage:**
+   ```bash
+   # Open http://localhost:3000
+   # Should see the NASA Sakhi homepage
+   ```
 
-**Pre-Feb 6 Checklist:**
+3. **Can create pages:**
+   ```bash
+   # Create a test page in src/app/test/page.tsx
+   # Should be accessible at http://localhost:3000/test
+   ```
 
-Before integration day (Feb 6), ensure you have:
+4. **Can use Tailwind CSS:**
+   ```bash
+   # Add Tailwind classes to a component
+   # Should see styling applied
+   ```
 
-- [ ] Staging application URL from infrastructure team
-- [ ] SSH access to NaSaSakhiFEStg server (if you'll deploy directly)
-- [ ] Tested SSH connection successfully
-- [ ] Know where app is deployed (`/var/www/nasa_sakhi` or similar)
-- [ ] Understand PM2 commands (restart, logs, status)
-- [ ] Reviewed [deployment/DEPLOYMENT-GUIDE.md](../deployment/DEPLOYMENT-GUIDE.md)
-- [ ] Contacted Tanuj if any credentials missing
-- [ ] Frontend built and tested locally with mocks
-- [ ] Ready to switch from mocks to real API
+5. **Can call APIs:**
+   ```bash
+   # Call /api/health from your code
+   # Should receive response
+   ```
 
-**Alternative: Shashi Deploys for You**
+---
 
-If you're not comfortable with server deployment, Shashi can deploy the integrated application:
+**✅ Deliverable:** Local development environment working, can create pages and components, understand monolithic architecture
 
-1. You merge your code to `integration/mvp`
-2. Shashi pulls and deploys
-3. You test the deployed application from browser
-4. Report any bugs to Shashi
-
-**Deliverable:** ✅ Working dev environment with mock data ready
-
-**Time Check:** If stuck for >30 minutes, reach out to Tanuj immediately.
+---
 
 **Next:** Wait for Tanuj's design system, then proceed to Stage 2 (Component Library)
 
 ---
-
 ### Stage 2: Component Library - Form Inputs
 **Date:** Feb 4 AM (4 hours)
 
@@ -1364,3 +1100,8 @@ By **Feb 7 evening**, you must have:
 - ✅ Keyboard navigation
 
 **Good luck! You're building the front door to a platform that will help thousands of organizations serve women and children. Make it welcoming! 🚀**
+
+---
+
+**Last Updated:** Feb 3, 2026 19:00 IST
+**Status:** DC Deploy deployment configured, backend/ directory ready
