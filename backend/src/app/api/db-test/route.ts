@@ -2,13 +2,15 @@
 // Test: curl http://localhost:3000/api/db-test
 
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
 
 // Prevent static generation - this route must be dynamic (requires database connection)
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
+    // Dynamic import to avoid loading Prisma during build phase
+    const { default: prisma } = await import('@/lib/prisma');
+
     // Test database connection by creating a health check record
     const healthCheck = await prisma.healthCheck.create({
       data: {
