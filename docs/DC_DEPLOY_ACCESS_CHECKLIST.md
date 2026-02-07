@@ -9,13 +9,13 @@
 
 ## Executive Summary
 
-Akshara and Sunitha need access to DC Deploy staging infrastructure on **February 6** for integration testing and deployment. This document lists all required credentials and access that must be obtained **by February 5** to avoid blocking integration work.
+Akarsha and Sunitha need access to DC Deploy staging infrastructure on **February 6** for integration testing and deployment. This document lists all required credentials and access that must be obtained **by February 5** to avoid blocking integration work.
 
 ---
 
 ## Required Access Matrix
 
-| Resource | Akshara Needs | Sunitha Needs | Tanuj Needs |
+| Resource | Akarsha Needs | Sunitha Needs | Tanuj Needs |
 |----------|--------------|---------------|-------------|
 | **SSH to NaSaSakhiFEStg** | ✅ Yes (deploy backend) | ⚠️ Optional (deploy frontend) | ⚠️ Optional (QA) |
 | **Database (NaSaSakhiDB)** | ✅ Yes (migrations, testing) | ❌ No | ⚠️ Optional (verify data) |
@@ -41,7 +41,7 @@ Authentication: "SSH key or password"
 
 **For Infrastructure Team:**
 
-- [ ] Create user accounts for Akshara, Sunitha (optional), Tanuj (optional)
+- [ ] Create user accounts for Akarsha, Sunitha (optional), Tanuj (optional)
 - [ ] Collect SSH public keys from team members
 - [ ] Add public keys to `~/.ssh/authorized_keys` on NaSaSakhiFEStg
 - [ ] Verify team members can SSH successfully
@@ -103,13 +103,13 @@ Database Password: "<secure password>"
 - [ ] Confirm PostgreSQL is accessible from outside (or requires SSH tunnel)
 - [ ] Configure `pg_hba.conf` to allow connections from team IPs
   ```
-  host    naarisamata_staging    naarisamata_user    <Akshara_IP>/32    md5
+  host    naarisamata_staging    naarisamata_user    <Akarsha_IP>/32    md5
   ```
 - [ ] Or document that SSH tunnel is required
 - [ ] Provide database credentials securely (encrypted email, password manager)
-- [ ] Verify Akshara can connect successfully
+- [ ] Verify Akarsha can connect successfully
 
-**For Akshara:**
+**For Akarsha:**
 
 - [ ] Receive database credentials
 - [ ] Test direct connection:
@@ -129,7 +129,7 @@ Database Password: "<secure password>"
 
 ### Database Connection Template
 
-**Fill this out and share with Akshara by Feb 5:**
+**Fill this out and share with Akarsha by Feb 5:**
 
 ```bash
 # NaSaSakhiDB Database Access
@@ -222,7 +222,7 @@ VPN server: "<VPN gateway URL>"
 - [ ] Determine if servers are behind firewall/VPN
 - [ ] If yes, provide VPN credentials to team
 - [ ] Alternative: Whitelist team member IPs in firewall
-  - Akshara's IP: `<IP address>`
+  - Akarsha's IP: `<IP address>`
   - Sunitha's IP: `<IP address>`
   - Tanuj's IP: `<IP address>`
 - [ ] Provide VPN setup instructions
@@ -286,7 +286,7 @@ Git repository accessible from server: "Yes / No"
 - [ ] Verify server can git pull from GitHub repo
 - [ ] If private repo, ensure SSH key or deploy token configured
 
-**For Akshara (will deploy backend):**
+**For Akarsha (will deploy backend):**
 
 - [ ] Know app directory: `/var/www/nasa_sakhi`
 - [ ] Know how to restart app:
@@ -311,7 +311,7 @@ Git repository accessible from server: "Yes / No"
 
 ### Deployment Details Template
 
-**Fill this out and share with Akshara by Feb 5:**
+**Fill this out and share with Akarsha by Feb 5:**
 
 ```bash
 # Application Deployment on NaSaSakhiFEStg
@@ -363,7 +363,7 @@ How to update .env: "<manual edit or deployment script>"
 - [ ] Ensure correct permissions (readable by app user, not world-readable)
 - [ ] Provide sample `.env` template to team
 
-**For Akshara:**
+**For Akarsha:**
 
 - [ ] Know how to update `.env` if needed
 - [ ] Verify `.env` has correct values after deployment
@@ -401,7 +401,7 @@ LOG_LEVEL=info
 
 - [ ] NaSaSakhiFEStg server provisioned and running
 - [ ] NaSaSakhiDB PostgreSQL server running and accessible
-- [ ] SSH access configured for Akshara (required)
+- [ ] SSH access configured for Akarsha (required)
 - [ ] SSH access configured for Sunitha (optional)
 - [ ] SSH access configured for Tanuj (optional)
 - [ ] Database credentials created and shared
@@ -415,7 +415,7 @@ LOG_LEVEL=info
 - [ ] Node.js 18+ installed
 - [ ] All credentials shared securely with team
 
-### Akshara's Checklist (by Feb 5)
+### Akarsha's Checklist (by Feb 5)
 
 - [ ] Received SSH credentials for NaSaSakhiFEStg
 - [ ] Tested SSH connection successfully
@@ -434,13 +434,13 @@ LOG_LEVEL=info
 - [ ] Tested URL accessible from browser
 - [ ] Know how to point frontend to staging API
 - [ ] (Optional) Received SSH credentials if deploying directly
-- [ ] Confirmed with Akshara: Who will deploy frontend?
+- [ ] Confirmed with Akarsha: Who will deploy frontend?
 - [ ] Know how to test on mobile (VPN if needed)
 
 ### Tanuj's Checklist (by Feb 5)
 
 - [ ] All credentials collected and shared with team
-- [ ] Verified Akshara can SSH and access database
+- [ ] Verified Akarsha can SSH and access database
 - [ ] Verified Sunitha can access staging URL
 - [ ] VPN setup complete (if required)
 - [ ] Documented all access in this checklist
@@ -453,8 +453,8 @@ LOG_LEVEL=info
 **Day of Integration (Feb 6):**
 
 1. **Don't wait** - escalate immediately if can't connect
-2. **Akshara blocked?** - Contact Tanuj + infrastructure team
-3. **Sunitha blocked?** - Akshara can deploy for her
+2. **Akarsha blocked?** - Contact Tanuj + infrastructure team
+3. **Sunitha blocked?** - Akarsha can deploy for her
 4. **Database unreachable?** - Use SSH tunnel as workaround
 5. **SSH not working?** - Use password auth temporarily
 
@@ -469,8 +469,8 @@ Infrastructure Team: <email/phone>
 
 If staging infrastructure not ready by Feb 6:
 - Continue development locally
-- Akshara deploys database to Heroku/Railway/Supabase (temporary)
-- Sunitha tests with Akshara's local backend
+- Akarsha deploys database to Heroku/Railway/Supabase (temporary)
+- Sunitha tests with Akarsha's local backend
 - Deploy to staging on Feb 7 instead
 - Adjust demo schedule if needed
 
@@ -491,12 +491,12 @@ NASA Sakhi MVP integration on February 6.
 Required Access:
 
 1. SSH Access to NaSaSakhiFEStg:
-   - Users: Akshara (required), Sunitha (optional), Tanuj (optional)
+   - Users: Akarsha (required), Sunitha (optional), Tanuj (optional)
    - Please add our SSH public keys (attached)
    - Confirm app directory path
 
 2. PostgreSQL Database Access (NaSaSakhiDB):
-   - User: Akshara (backend developer)
+   - User: Akarsha (backend developer)
    - Database: naarisamata_staging
    - Please provide connection string
 
@@ -522,7 +522,7 @@ Timeline:
 Please confirm by Feb 4 that all access will be ready.
 
 Attached:
-- Akshara's SSH public key
+- Akarsha's SSH public key
 - Sunitha's SSH public key (optional)
 - Tanuj's SSH public key (optional)
 
@@ -535,7 +535,7 @@ Thank you!
 
 **Run these commands to verify everything works:**
 
-### Akshara's Verification
+### Akarsha's Verification
 
 ```bash
 # 1. SSH into staging server
