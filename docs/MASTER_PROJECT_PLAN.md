@@ -6,7 +6,7 @@
 
 ## 📋 Quick Links
 
-- **Shashi's Work Plan:** [SHASHI_WORKPLAN.md](./SHASHI_WORKPLAN.md) (Backend - 45%)
+- **Akshara's Work Plan:** [AKSHARA_WORKPLAN.md](./AKSHARA_WORKPLAN.md) (Backend - 45%)
 - **Sunitha's Work Plan:** [SUNITHA_WORKPLAN.md](./SUNITHA_WORKPLAN.md) (Frontend - 45%)
 - **Tanuj's Tasks:** Inline below (UI/UX Lead - 10%)
 - **DC Deploy Configuration:** [DC_DEPLOY_ACTUAL_CONFIG.md](./DC_DEPLOY_ACTUAL_CONFIG.md)
@@ -22,7 +22,7 @@
 **Team:**
 - **Tanuj (10%)** - UI/UX Lead, Design Review, QA, Customer Demo
 - **Sunitha (45%)** - Frontend Lead, 7-Step Registration Form
-- **Shashi (45%)** - Backend Lead, Database, API, Migration
+- **Akshara (45%)** - Backend Lead, Database, API, Migration
 
 **Success Criteria:**
 - ✅ Complete 7-step registration form functional
@@ -50,7 +50,7 @@ Feb 3 (Mon)      Feb 4 (Tue)         Feb 5 (Wed)         Feb 6 (Thu)         Feb
 │ • Mock data    │ • Steps 1-3        │ • Step 7, draft    │ • Error handling   │ • Mobile test
 │                │ • Validation       │ • Navigation       │ • Merge to staging │ • Polish
 │                │                    │                    │                    │
-│ Shashi:        │ Shashi:            │ Shashi:            │ Shashi:            │ Shashi:
+│ Akshara:        │ Akshara:            │ Akshara:            │ Akshara:            │ Akshara:
 │ • Env setup    │ • Prisma schema    │ • Ref data APIs    │ • Validation       │ • API testing
 │ • Local DB     │ • Migrations       │ • Draft API        │ • Migration        │ • Bug fixes
 │                │ • Seed data        │ • Submit API       │ • Integration      │ • Deployment
@@ -127,7 +127,7 @@ Feb 3 (Mon)      Feb 4 (Tue)         Feb 5 (Wed)         Feb 6 (Thu)         Feb
 
 ---
 
-### Shashi (Backend Lead - 45%)
+### Akshara (Backend Lead - 45%)
 
 **Primary Responsibilities:**
 - Design and implement Prisma database schema
@@ -151,7 +151,7 @@ Feb 3 (Mon)      Feb 4 (Tue)         Feb 5 (Wed)         Feb 6 (Thu)         Feb
 
 **Time Allocation:** ~44 hours across 5 days
 
-**Detailed Progress:** See [SHASHI_WORKPLAN.md](./SHASHI_WORKPLAN.md)
+**Detailed Progress:** See [AKSHARA_WORKPLAN.md](./AKSHARA_WORKPLAN.md)
 
 **Progress Tracking (16 Stages):**
 - **Feb 3 PM:** ⬜ Stage 1: Environment setup
@@ -179,7 +179,7 @@ Feb 3 (Mon)      Feb 4 (Tue)         Feb 5 (Wed)         Feb 6 (Thu)         Feb
 │                                                               │
 │  ┌─────────────────────┐           ┌─────────────────────┐   │
 │  │   FRONTEND          │    HTTP   │    BACKEND          │   │
-│  │   (Sunitha)         │◄──────────┤    (Shashi)         │   │
+│  │   (Sunitha)         │◄──────────┤    (Akshara)         │   │
 │  │                     │           │                     │   │
 │  │ • Next.js 15        │  JSON     │ • Next.js API       │   │
 │  │ • React 19          │           │ • Prisma ORM        │   │
@@ -260,11 +260,11 @@ Feb 3 (Mon)      Feb 4 (Tue)         Feb 5 (Wed)         Feb 6 (Thu)         Feb
 | **Frontend** | Next.js 15, React 19, TypeScript | Sunitha |
 | **Styling** | Tailwind CSS | Sunitha |
 | **Forms** | React Hook Form + Zod | Sunitha |
-| **Backend** | Next.js API Routes | Shashi |
-| **Database** | PostgreSQL 17.5 + Prisma | Shashi |
-| **Auth** | NextAuth.js | Shashi |
+| **Backend** | Next.js API Routes | Akshara |
+| **Database** | PostgreSQL 17.5 + Prisma | Akshara |
+| **Auth** | NextAuth.js | Akshara |
 | **Validation** | Zod (client + server) | Both |
-| **File Storage** | Local filesystem (MVP) | Shashi |
+| **File Storage** | Local filesystem (MVP) | Akshara |
 | **Deployment** | Docker (DC Deploy) | Automated |
 | **Container** | Node 20 Alpine | DC Deploy |
 
@@ -341,7 +341,7 @@ The team needs access to DC Deploy staging infrastructure on Feb 6 for integrati
 
 | Team Member | SSH Access | Database Access | When Needed |
 |-------------|-----------|----------------|-------------|
-| **Shashi** | ✅ Yes (NaSaSakhiFEStg) | ✅ Yes (NaSaSakhiDB) | Feb 6 AM (deploy backend) |
+| **Akshara** | ✅ Yes (NaSaSakhiFEStg) | ✅ Yes (NaSaSakhiDB) | Feb 6 AM (deploy backend) |
 | **Sunitha** | ⚠️ Optional (NaSaSakhiFEStg) | ❌ No | Feb 6 PM (test/deploy frontend) |
 | **Tanuj** | ⚠️ Optional (for QA) | ⚠️ Optional (verify data) | Feb 7 (QA testing) |
 
@@ -426,7 +426,7 @@ APP_USER="deploy"  # or www-data, ubuntu, etc.
 
 #### Pre-Integration Setup (Before Feb 6)
 
-**Shashi's Setup Checklist:**
+**Akshara's Setup Checklist:**
 
 - [ ] Receive SSH credentials for NaSaSakhiFEStg
 - [ ] Test SSH connection: `ssh <USER>@<HOST>`
@@ -449,7 +449,7 @@ APP_USER="deploy"  # or www-data, ubuntu, etc.
 - [ ] Receive staging application URL: `http://<NaSaSakhiFEStg_IP>`
 - [ ] Test URL accessibility from browser
 - [ ] (Optional) Receive SSH credentials if deploying directly
-- [ ] Confirm with Shashi: Will he deploy or should you?
+- [ ] Confirm with Akshara: Will he deploy or should you?
 - [ ] Know how to test deployed app from mobile (VPN if needed)
 
 **Tanuj's Setup Checklist:**
@@ -599,7 +599,7 @@ If you encounter access issues on Feb 6:
 4. Implement client validation
 5. Test with mock API
 
-**Shashi's Tasks:**
+**Akshara's Tasks:**
 1. Set up local PostgreSQL
 2. Design Prisma schema
 3. Seed reference data
@@ -616,7 +616,7 @@ If you encounter access issues on Feb 6:
 
 **Morning (Integration Day 1):**
 
-1. **Shashi merges first**
+1. **Akshara merges first**
    ```bash
    git checkout -b integration/mvp
    git merge feature/backend-api
@@ -668,22 +668,22 @@ If you encounter access issues on Feb 6:
    Locally:
    ```bash
    git checkout feature/registration-form
-   git pull origin integration/mvp  # Get Shashi's changes
+   git pull origin integration/mvp  # Get Akshara's changes
    ```
 
-   Update API calls to use staging or Shashi's local:
+   Update API calls to use staging or Akshara's local:
    ```typescript
    // Before (mocks):
    import { fetchCategoriesMock } from '@/lib/api/mock';
 
-   // After (real API - point to Shashi's local or staging):
+   // After (real API - point to Akshara's local or staging):
    const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
    const response = await fetch(`${API_BASE}/api/reference/categories`);
    ```
 
 6. **Local integration testing**
    - Sunitha runs frontend locally
-   - Points to Shashi's local backend: `http://localhost:3000/api`
+   - Points to Akshara's local backend: `http://localhost:3000/api`
    - Or points to staging: `http://NaSaSakhiFEStg_IP/api`
    - Both test complete flow
    - Fix any contract mismatches
@@ -830,7 +830,7 @@ If you encounter access issues on Feb 6:
 
 **Afternoon - Bug Fixes (Both):**
 
-Sunitha and Shashi work through punch list:
+Sunitha and Akshara work through punch list:
 - Fix critical bugs first
 - Then high priority
 - Medium if time permits
@@ -865,12 +865,12 @@ Tanuj prepares:
 | API contract agreed | Tanuj | Feb 3 | 🔴 Not Started |
 | Mock data created | Tanuj | Feb 3 | 🔴 Not Started |
 | Component library built | Sunitha | Feb 4 | 🔴 Not Started |
-| Database schema complete | Shashi | Feb 4 | 🔴 Not Started |
-| Reference data seeded | Shashi | Feb 4 | 🔴 Not Started |
+| Database schema complete | Akshara | Feb 4 | 🔴 Not Started |
+| Reference data seeded | Akshara | Feb 4 | 🔴 Not Started |
 | Steps 1-3 built | Sunitha | Feb 4 | 🔴 Not Started |
 | Steps 4-7 built | Sunitha | Feb 5 | 🔴 Not Started |
-| All API endpoints ready | Shashi | Feb 5 | 🔴 Not Started |
-| Data migration complete | Shashi | Feb 6 | 🔴 Not Started |
+| All API endpoints ready | Akshara | Feb 5 | 🔴 Not Started |
+| Data migration complete | Akshara | Feb 6 | 🔴 Not Started |
 | Frontend integrated | Sunitha | Feb 6 | 🔴 Not Started |
 | Deployed to staging | Both | Feb 6 | 🔴 Not Started |
 | QA completed | Tanuj | Feb 7 | 🔴 Not Started |
@@ -892,7 +892,7 @@ Tanuj prepares:
 **Standup Notes:**
 - [ ] Tanuj: Design system status
 - [ ] Sunitha: Environment setup status
-- [ ] Shashi: Database setup status
+- [ ] Akshara: Database setup status
 
 **Completed Today:**
 -
@@ -909,7 +909,7 @@ Tanuj prepares:
 **Standup Notes:**
 - [ ] Tanuj: Reviews scheduled
 - [ ] Sunitha: Component library progress
-- [ ] Shashi: Schema progress
+- [ ] Akshara: Schema progress
 
 **Completed Today:**
 -
@@ -926,7 +926,7 @@ Tanuj prepares:
 **Standup Notes:**
 - [ ] Tanuj: UI reviews
 - [ ] Sunitha: Steps progress
-- [ ] Shashi: API endpoints progress
+- [ ] Akshara: API endpoints progress
 
 **Completed Today:**
 -
@@ -943,7 +943,7 @@ Tanuj prepares:
 **Standup Notes:**
 - [ ] Tanuj: Testing plan
 - [ ] Sunitha: API integration status
-- [ ] Shashi: Backend deployment status
+- [ ] Akshara: Backend deployment status
 
 **Integration Testing Results:**
 - ✅ Complete registration flow:
@@ -973,7 +973,7 @@ Tanuj prepares:
 **Standup Notes:**
 - [ ] Tanuj: QA findings
 - [ ] Sunitha: Bug fixes
-- [ ] Shashi: Bug fixes
+- [ ] Akshara: Bug fixes
 
 **QA Results:**
 - Total bugs found:
@@ -998,7 +998,7 @@ Tanuj prepares:
 **Importance:** HIGH
 **Mitigation:**
 - Define TypeScript interfaces upfront (Feb 3)
-- Both Sunitha and Shashi commit to exact format
+- Both Sunitha and Akshara commit to exact format
 - Verify with Postman before integration
 
 ### 2. Communication
@@ -1013,7 +1013,7 @@ Tanuj prepares:
 **Importance:** HIGH
 **Mitigation:**
 - Mock data allows Sunitha to work independently
-- Postman allows Shashi to test independently
+- Postman allows Akshara to test independently
 - No cross-dependencies until Feb 6
 
 ### 4. Tight Timeline
@@ -1104,7 +1104,7 @@ Use this before declaring integration successful:
 
 2. **Tag relevant person:**
    - Design: @Tanuj
-   - Backend: @Shashi
+   - Backend: @Akshara
    - Frontend: @Sunitha
 
 3. **Decision timeline:**
@@ -1154,7 +1154,7 @@ Each person shares:
 **Sunitha reviews:**
 - API response formats (matches expectations)
 
-**Shashi reviews:**
+**Akshara reviews:**
 - API calls from frontend (correct usage)
 
 **Review turnaround:** <2 hours during working hours
@@ -1238,7 +1238,7 @@ Each person shares:
 |----------|---------|-------|
 | [PRD.md](../PRD.md) | Complete product requirements | Tanuj |
 | [PRD-DataEntry-Validation.md](../PRD-DataEntry-Validation.md) | Field-level validation specs | Tanuj |
-| [SHASHI_WORKPLAN.md](./SHASHI_WORKPLAN.md) | Backend detailed plan | Shashi |
+| [AKSHARA_WORKPLAN.md](./AKSHARA_WORKPLAN.md) | Backend detailed plan | Akshara |
 | [SUNITHA_WORKPLAN.md](./SUNITHA_WORKPLAN.md) | Frontend detailed plan | Sunitha |
 | [DEPLOYMENT-GUIDE.md](../deployment/DEPLOYMENT-GUIDE.md) | Staging deployment | DevOps |
 | [DESIGN_SYSTEM.md](./DESIGN_SYSTEM.md) | UI design guidelines | Tanuj |
@@ -1289,12 +1289,12 @@ Each person shares:
 After customer demo and feedback, we'll iterate:
 
 **Week 2 Priorities:**
-1. **Admin Dashboard** (Shashi: backend, Sunitha: frontend)
+1. **Admin Dashboard** (Akshara: backend, Sunitha: frontend)
    - View pending submissions
    - Approve/reject organizations
    - Download documents
 
-2. **Email Notifications** (Shashi)
+2. **Email Notifications** (Akshara)
    - Submission confirmation
    - Approval/rejection notification
    - Draft expiry reminder
@@ -1305,7 +1305,7 @@ After customer demo and feedback, we'll iterate:
    - Success confirmations
    - Improved error messages
 
-4. **Translation Integration** (Shashi)
+4. **Translation Integration** (Akshara)
    - Google Cloud Translation API
    - Translate organization data
    - Cache translations
@@ -1318,7 +1318,7 @@ After customer demo and feedback, we'll iterate:
 **Work Distribution (Week 2):**
 - Tanuj: 10% (review, customer communication)
 - Sunitha: 45% (admin UI, polish)
-- Shashi: 45% (admin API, email, translation)
+- Akshara: 45% (admin API, email, translation)
 
 ---
 
@@ -1329,7 +1329,7 @@ After customer demo and feedback, we'll iterate:
 **Tanuj:**
 1. Read this master plan
 2. Create design system document
-3. Define API contract with Shashi and Sunitha
+3. Define API contract with Akshara and Sunitha
 4. Create mock data for Sunitha
 
 **Sunitha:**
@@ -1338,8 +1338,8 @@ After customer demo and feedback, we'll iterate:
 3. Wait for Tanuj's design system (Feb 3)
 4. Start Stage 1 (Environment Setup)
 
-**Shashi:**
-1. Read [SHASHI_WORKPLAN.md](./SHASHI_WORKPLAN.md)
+**Akshara:**
+1. Read [AKSHARA_WORKPLAN.md](./AKSHARA_WORKPLAN.md)
 2. Set up local PostgreSQL
 3. Wait for Tanuj's API contract (Feb 3)
 4. Start Stage 1 (Environment Setup)
@@ -1360,7 +1360,7 @@ After customer demo and feedback, we'll iterate:
 - [ ] Create `/src/types/api.ts` (API contract)
 - [ ] Create `/src/mocks/api.json` (mock data)
 - [ ] Commit to main branch
-- [ ] Notify Sunitha and Shashi
+- [ ] Notify Sunitha and Akshara
 
 **Sunitha:**
 - [ ] Clone repo
@@ -1373,7 +1373,7 @@ After customer demo and feedback, we'll iterate:
 - [ ] Verify dev server runs: `npm run dev`
 - [ ] Access http://localhost:3000
 
-**Shashi:**
+**Akshara:**
 - [ ] Clone repo
 - [ ] Platform-specific setup:
   - **Windows:** See [WINDOWS-SETUP.md](../WINDOWS-SETUP.md) (WSL2 recommended)
@@ -1420,7 +1420,7 @@ After customer demo and feedback, we'll iterate:
 - Customer representative
 - Tanuj (presenter)
 - Sunitha (support)
-- Shashi (support)
+- Akshara (support)
 
 **Demo Flow:**
 1. **Introduction** (2 min)

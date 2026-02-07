@@ -106,7 +106,7 @@ Before starting, you need to know:
    3. Staging application URL (http://<IP> or https://staging.domain.com)
 
    **Team Members Needing Access:**
-   - Shashi (Backend Developer) - needs SSH + database
+   - Akshara (Backend Developer) - needs SSH + database
    - Sunitha (Frontend Developer) - needs staging URL (SSH optional)
    - Tanuj (Project Lead) - needs SSH + database
 
@@ -289,7 +289,7 @@ Username: $STAGING_USER
 Database: $DATABASE_URL
 Staging URL: $STAGING_APP_URL
 
-Shashi's Access:
+Akshara's Access:
 - SSH: ssh -i ~/.ssh/nasasakhi_shashi $STAGING_USER@$STAGING_HOST
 - Database: psql "$DATABASE_URL"
 
@@ -314,7 +314,7 @@ DO NOT post in public channels
 ### 3. Update Workplan Documents
 
 Let me know the actual values, and I'll help update:
-- `docs/SHASHI_WORKPLAN.md`
+- `docs/AKSHARA_WORKPLAN.md`
 - `docs/SUNITHA_WORKPLAN.md`
 - `docs/MASTER_PROJECT_PLAN.md`
 
@@ -358,8 +358,8 @@ Before sharing with team, verify:
 - [ ] Nginx serves application on port 80
 
 ### Team Access
-- [ ] Shashi can SSH into server
-- [ ] Shashi can connect to database
+- [ ] Akshara can SSH into server
+- [ ] Akshara can connect to database
 - [ ] Sunitha can access staging URL from browser
 - [ ] All credentials documented and shared securely
 
@@ -442,7 +442,7 @@ After completing setup:
 1. ✅ Configuration tested and working
 2. ✅ Credentials securely shared with team
 3. ✅ Tell me the actual values so I can update workplans
-4. ✅ Team members test their access (Shashi, Sunitha)
+4. ✅ Team members test their access (Akshara, Sunitha)
 5. ✅ Schedule team sync to confirm everyone can access
 
 **Target:** Complete by end of Feb 3 or Feb 4 morning, so team has Feb 4-5 to prepare before Feb 6 integration.

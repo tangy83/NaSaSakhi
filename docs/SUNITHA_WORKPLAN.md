@@ -147,11 +147,11 @@ You are responsible for building the complete user-facing registration experienc
 
 **Independent Phase (Feb 4-5):**
 - You work independently with **mock data**
-- Shashi works independently testing with **Postman**
+- Akshara works independently testing with **Postman**
 - No dependencies between you
 
 **Integration Phase (Feb 6):**
-- Shashi merges his backend first
+- Akshara merges his backend first
 - You switch from mocks to his real API
 - You work together to fix any integration issues
 
@@ -173,7 +173,7 @@ You are responsible for building the complete user-facing registration experienc
 - Tag teammates when blocked
 
 **When to Reach Out Immediately:**
-- API response format doesn't match expectations (coordinate with Shashi)
+- API response format doesn't match expectations (coordinate with Akshara)
 - Blocker preventing progress
 - Design decision needed (ask Tanuj)
 - Integration failure on Feb 6
@@ -391,21 +391,21 @@ const response = await fetch('http://localhost:3000/api/health');
 
 #### 7. Mock Data Strategy
 
-Since Shashi is building the backend in parallel, you have options:
+Since Akshara is building the backend in parallel, you have options:
 
-**Option A: Wait for Shashi's APIs (Recommended)**
-- Coordinate with Shashi on Feb 4
+**Option A: Wait for Akshara's APIs (Recommended)**
+- Coordinate with Akshara on Feb 4
 - Use his local API (`http://localhost:3000/api/...`)
 - Both of you run `npm run dev` locally
 - Your frontend calls his backend directly
 
-**Option B: Use Mock Data (If Shashi not ready)**
+**Option B: Use Mock Data (If Akshara not ready)**
 - Create `/src/mocks/api.json` with sample data
 - Create mock API functions in `/src/lib/api/mock.ts`
 - Switch to real APIs when ready (Feb 6)
 
 **Option C: Use Deployed API**
-- Shashi will deploy APIs to staging as he builds them
+- Akshara will deploy APIs to staging as he builds them
 - Call `https://nasassakhibestg.dcdeployapp.com/api/...` from your local dev
 - Requires CORS to be configured (should already be done)
 
@@ -1036,15 +1036,15 @@ Key validation rules from PRD:
 
 ## 🔗 Integration Process
 
-### How Your Work Connects to Shashi's
+### How Your Work Connects to Akshara's
 
 **Phase 1: Independent (Feb 4-5)**
 - You build UI with mock data
-- Shashi builds API with Postman
+- Akshara builds API with Postman
 - No coordination needed
 
 **Phase 2: Integration (Feb 6 AM)**
-- Shashi merges backend first
+- Akshara merges backend first
 - You switch from mocks to real API
 - Test together locally
 - Fix any mismatches
@@ -1090,7 +1090,7 @@ By **Feb 7 evening**, you must have:
 - ✅ File upload UI working
 - ✅ Draft save/resume working
 - ✅ Mobile responsive (375px+)
-- ✅ Integrated with Shashi's backend
+- ✅ Integrated with Akshara's backend
 - ✅ Polished for customer demo
 
 ### Should-Have (P1):

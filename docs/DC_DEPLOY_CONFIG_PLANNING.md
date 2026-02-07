@@ -257,7 +257,7 @@ psql "postgresql://naarisamata_user:<PASSWORD>@<DB_IP>:5432/naarisamata_staging"
 #### Generate SSH Keys
 
 ```bash
-# Shashi's SSH key
+# Akshara's SSH key
 ssh-keygen -t rsa -b 4096 -C "shashi@nasasakhi.org" -f ~/.ssh/nasasakhi_shashi
 
 # Sunitha's SSH key (if she needs direct access)
@@ -270,13 +270,13 @@ ssh-keygen -t rsa -b 4096 -C "tanuj@nasasakhi.org" -f ~/.ssh/nasasakhi_tanuj
 #### Collect Public Keys
 
 ```bash
-# Shashi's public key
+# Akshara's public key
 cat ~/.ssh/nasasakhi_shashi.pub
 
 # Copy the output and save it here:
 ```
 
-**Shashi's Public Key:**
+**Akshara's Public Key:**
 ```
 # Paste here:
 
@@ -305,14 +305,14 @@ cat ~/.ssh/nasasakhi_shashi.pub
 # SSH into NaSaSakhiFEStg
 ssh <current-user>@<STAGING_HOST>
 
-# Add Shashi's key
-echo "<SHASHI_PUBLIC_KEY>" >> ~/.ssh/authorized_keys
+# Add Akshara's key
+echo "<AKSHARA_PUBLIC_KEY>" >> ~/.ssh/authorized_keys
 
 # Or if adding for different user:
 sudo su - deploy
 mkdir -p ~/.ssh
 chmod 700 ~/.ssh
-echo "<SHASHI_PUBLIC_KEY>" >> ~/.ssh/authorized_keys
+echo "<AKSHARA_PUBLIC_KEY>" >> ~/.ssh/authorized_keys
 chmod 600 ~/.ssh/authorized_keys
 ```
 
@@ -323,7 +323,7 @@ Send to infrastructure team:
 
 "Please add these SSH public keys to the NaSaSakhiFEStg server for user '<username>':
 
-Shashi's key:
+Akshara's key:
 <paste public key>
 
 Sunitha's key (optional):
@@ -338,7 +338,7 @@ Please confirm once added so we can test connectivity."
 #### Test SSH Connection
 
 ```bash
-# Shashi tests:
+# Akshara tests:
 ssh -i ~/.ssh/nasasakhi_shashi <username>@<STAGING_HOST>
 
 # Should see server prompt without password
@@ -400,7 +400,7 @@ listen_addresses = '*'
 # Edit pg_hba.conf
 sudo nano /etc/postgresql/15/main/pg_hba.conf
 
-# Add line (replace <ALLOWED_IP> with Shashi's IP or NaSaSakhiFEStg IP):
+# Add line (replace <ALLOWED_IP> with Akshara's IP or NaSaSakhiFEStg IP):
 host    naarisamata_staging    naarisamata_user    <ALLOWED_IP>/32    md5
 
 # Or allow from any IP (less secure, for staging only):
@@ -765,7 +765,7 @@ Before sharing with team, verify:
 - [ ] VPN configured (if required)
 
 **Team Access:**
-- [ ] Shashi's SSH key added and tested
+- [ ] Akshara's SSH key added and tested
 - [ ] Sunitha's SSH key added (if needed) and tested
 - [ ] Database credentials securely shared
 - [ ] All team members can access staging URL
@@ -780,7 +780,7 @@ After completing this configuration:
 2. **Share credentials securely** with team (use password manager or encrypted email)
 3. **Update workplan documents** with actual values (I'll help with this)
 4. **Test deployment workflow** end-to-end
-5. **Schedule pre-Feb 6 verification** with Shashi and Sunitha
+5. **Schedule pre-Feb 6 verification** with Akshara and Sunitha
 
 ---
 

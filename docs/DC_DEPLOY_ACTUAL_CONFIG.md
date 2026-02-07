@@ -144,7 +144,7 @@ Expected response:
 
 ## Local Development Setup
 
-### For Backend Development (Shashi)
+### For Backend Development (Akshara)
 
 1. **Clone Repository:**
    ```bash
@@ -429,12 +429,12 @@ Expected response:
 | Name | Role | Access Level | Responsibilities |
 |------|------|--------------|------------------|
 | Tanuj | Tech Lead / UI Lead | Admin | Infrastructure, design review, customer demo (10%) |
-| Shashi | Backend Lead | Developer | Database, API endpoints, migrations (45%) |
+| Akshara | Backend Lead | Developer | Database, API endpoints, migrations (45%) |
 | Sunitha | Frontend Lead | Developer | UI components, forms, validation (45%) |
 
 ### Development Directories
 
-**Shashi (Backend):**
+**Akshara (Backend):**
 - `backend/src/app/api/` - API routes
 - `backend/prisma/` - Database schema
 - `backend/src/lib/` - Server utilities

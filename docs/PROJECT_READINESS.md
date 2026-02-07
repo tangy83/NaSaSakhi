@@ -19,7 +19,7 @@ All planning and foundational files are complete. The team can begin development
 | Document | Location | Status | Purpose |
 |----------|----------|--------|---------|
 | Master Project Plan | `/docs/MASTER_PROJECT_PLAN.md` | ✅ Complete | Overall coordination, progress tracking, integration strategy |
-| Shashi's Work Plan | `/docs/SHASHI_WORKPLAN.md` | ✅ Complete | Backend development (16 stages, 45% effort) |
+| Akshara's Work Plan | `/docs/AKSHARA_WORKPLAN.md` | ✅ Complete | Backend development (16 stages, 45% effort) |
 | Sunitha's Work Plan | `/docs/SUNITHA_WORKPLAN.md` | ✅ Complete | Frontend development (16 stages, 45% effort) |
 
 ### 2. Foundational Files
@@ -49,9 +49,9 @@ All planning and foundational files are complete. The team can begin development
 
 1. **Share Work Plans with Team**
    ```bash
-   # Email Shashi with:
+   # Email Akshara with:
    - Subject: "NASA Sakhi Backend Work Plan - MVP by Feb 7"
-   - Attachment: docs/SHASHI_WORKPLAN.md
+   - Attachment: docs/AKSHARA_WORKPLAN.md
    - Attachment: docs/MASTER_PROJECT_PLAN.md
    - Message: "Please review your 16-stage work plan. We'll have daily 10 AM standups."
 
@@ -78,7 +78,7 @@ All planning and foundational files are complete. The team can begin development
 
 3. **Prepare for First Standup (Tomorrow 10 AM)**
    - Read through MASTER_PROJECT_PLAN.md
-   - Note any questions from Shashi/Sunitha
+   - Note any questions from Akshara/Sunitha
    - Be ready to clarify design system choices
 
 **Today's Deliverables:**
@@ -89,9 +89,9 @@ All planning and foundational files are complete. The team can begin development
 
 ---
 
-### Shashi (Today - Feb 3, ~2-3 hours)
+### Akshara (Today - Feb 3, ~2-3 hours)
 
-**Your Work Plan:** [SHASHI_WORKPLAN.md](./SHASHI_WORKPLAN.md)
+**Your Work Plan:** [AKSHARA_WORKPLAN.md](./AKSHARA_WORKPLAN.md)
 
 **Stage 1: Environment Setup** (Start immediately after receiving this)
 
@@ -155,7 +155,7 @@ All planning and foundational files are complete. The team can begin development
 
 **Critical Files to Review:**
 - `/src/types/api.ts` - This is your API contract. All endpoints must return data matching these interfaces.
-- `/docs/SHASHI_WORKPLAN.md` - Your 16 stages (Stage 1 is environment setup)
+- `/docs/AKSHARA_WORKPLAN.md` - Your 16 stages (Stage 1 is environment setup)
 - `/deployment/DEPLOYMENT-GUIDE.md` - Staging deployment reference
 
 **Success Criteria for Today:**
@@ -280,16 +280,16 @@ export async function fetchStatesMock(): Promise<State[]> {
 
 ### Today (Feb 3) - Setup & Preparation
 - ✅ Tanuj: Share plans, commit foundational files
-- 🔄 Shashi: Environment setup, PostgreSQL installation
+- 🔄 Akshara: Environment setup, PostgreSQL installation
 - 🔄 Sunitha: Environment setup, review mock data
 
 ### Tomorrow (Feb 4) - Core Development Begins
-- Shashi: Prisma schema design, seed reference data
+- Akshara: Prisma schema design, seed reference data
 - Sunitha: Component library, Steps 1-3
 - Tanuj: Design reviews (2 checkpoints)
 
 ### Feb 5 - Feature Development
-- Shashi: API endpoints, file upload, validation
+- Akshara: API endpoints, file upload, validation
 - Sunitha: Steps 4-6, draft save/resume
 - Tanuj: UI/UX reviews (2 checkpoints)
 
@@ -307,8 +307,8 @@ export async function fetchStatesMock(): Promise<State[]> {
 
 ## 🔗 Key Resources Quick Reference
 
-### For Shashi (Backend)
-- **Work Plan:** [/docs/SHASHI_WORKPLAN.md](./SHASHI_WORKPLAN.md)
+### For Akshara (Backend)
+- **Work Plan:** [/docs/AKSHARA_WORKPLAN.md](./AKSHARA_WORKPLAN.md)
 - **API Contract:** [/src/types/api.ts](../src/types/api.ts)
 - **Deployment Guide:** [/deployment/DEPLOYMENT-GUIDE.md](../deployment/DEPLOYMENT-GUIDE.md)
 - **Setup Guides:** [/CROSS-PLATFORM.md](../CROSS-PLATFORM.md), [/WINDOWS-SETUP.md](../WINDOWS-SETUP.md)
@@ -359,12 +359,12 @@ export async function fetchStatesMock(): Promise<State[]> {
 ## 🚨 Critical Reminders
 
 ### For Independent Development (Feb 4-5)
-1. **Sunitha:** Use mock data exclusively. Do NOT wait for Shashi's API.
-2. **Shashi:** Test all endpoints with Postman/Thunder Client. Do NOT wait for Sunitha's UI.
+1. **Sunitha:** Use mock data exclusively. Do NOT wait for Akshara's API.
+2. **Akshara:** Test all endpoints with Postman/Thunder Client. Do NOT wait for Sunitha's UI.
 3. **API Contract:** Both must follow `/src/types/api.ts` exactly. Any changes require mutual agreement.
 
 ### For Integration (Feb 6)
-1. **Shashi merges first** to `integration/mvp` branch
+1. **Akshara merges first** to `integration/mvp` branch
 2. **Backend deploys to staging first**
 3. **Sunitha switches from mocks to real API**
 4. **Test together, fix contract mismatches immediately**
@@ -386,7 +386,7 @@ Before starting development, confirm:
 - [ ] Repository cloned locally
 - [ ] Dependencies installed (`npm install`)
 - [ ] Environment configured (`.env` or `.env.local`)
-- [ ] Development environment working (database for Shashi, dev server for Sunitha)
+- [ ] Development environment working (database for Akshara, dev server for Sunitha)
 - [ ] Feature branch created (`feature/backend-api` or `feature/registration-form`)
 - [ ] API contract reviewed (`/src/types/api.ts`)
 - [ ] First standup scheduled (Feb 4, 10 AM)
