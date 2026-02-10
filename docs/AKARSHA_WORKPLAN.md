@@ -268,8 +268,8 @@ This installs all required packages including:
 Create `backend/.env`:
 
 ```env
-# Database (Use staging database for development)
-DATABASE_URL="postgresql://JQZAEG:%2B1h8t3x%7Baa@nasasakhidbstg:5432/nasasakhidbstg-db"
+# Database (Use EXTERNAL endpoint for local development)
+DATABASE_URL="postgresql://JQZAEG:%2B1h8t3x%7Baa@nasasakhidbstg-nmjuxe7e5m.tcp-proxy-2212.dcdeploy.cloud:30095/nasasakhidbstg-db"
 
 # Node Environment
 NODE_ENV=development
@@ -280,9 +280,10 @@ NEXTAUTH_SECRET="yiPTbj2ltp7Z01URNJhaNhxOsuyuqb2VMYwVAuAeeyQ"
 ```
 
 **⚠️ Important Notes:**
-- We use the **staging database** (nasasakhidbstg) for development
+- We use the **staging database** (nasasakhidbstg) for development via EXTERNAL endpoint
+- The external endpoint uses port **30095** (not 5432) and hostname **nasasakhidbstg-nmjuxe7e5m.tcp-proxy-2212.dcdeploy.cloud**
 - No local PostgreSQL installation needed
-- The database is already configured with all necessary tables
+- The database is already configured with all necessary tables and migrated data
 - This is the same database used in production (DC Deploy)
 
 #### 5. Generate Prisma Client
@@ -397,12 +398,14 @@ backend/                          ← DC Deploy deploys from here
 **Environment Variables (Configured in DC Deploy):**
 - `NODE_ENV=production`
 - `PORT=3000`
-- `DATABASE_URL=postgresql://JQZAEG:***@nasasakhidbstg:5432/nasasakhidbstg-db`
+- `DATABASE_URL=postgresql://JQZAEG:***@nasasakhidbstg:5432/nasasakhidbstg-db` *(internal DC Deploy endpoint)*
 - `NEXT_PUBLIC_APP_URL=https://nasassakhibestg.dcdeployapp.com`
 - `NEXTAUTH_URL=https://nasassakhibestg.dcdeployapp.com`
 - `NEXTAUTH_SECRET=[configured]`
 
-You don't need to configure these - they're already set up in DC Deploy.
+**Note:** The DC Deploy environment uses the **internal** database endpoint (`nasasakhidbstg:5432`). For your **local development**, use the external endpoint shown in section 4 above.
+
+You don't need to configure these DC Deploy variables - they're already set up in the deployment environment.
 
 ---
 

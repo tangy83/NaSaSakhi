@@ -1,0 +1,37 @@
+{
+  "name": "@naarisamata/backend",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc && tsc-alias",
+    "start": "node dist/server.js",
+    "type-check": "tsc --noEmit",
+    "prisma:generate": "prisma generate --schema=./prisma/schema.prisma",
+    "prisma:migrate": "prisma migrate dev --schema=./prisma/schema.prisma",
+    "prisma:deploy": "prisma migrate deploy --schema=./prisma/schema.prisma",
+    "prisma:studio": "prisma studio --schema=./prisma/schema.prisma"
+  },
+  "dependencies": {
+    "@naarisamata/shared-types": "*",
+    "express": "^4.19.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "next-auth": "^4.24.13",
+    "@next-auth/prisma-adapter": "^1.0.7",
+    "@prisma/client": "^7.3.0",
+    "bcryptjs": "^2.4.3",
+    "zod": "^4.3.6",
+    "dotenv": "^17.2.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/cors": "^2.8.17",
+    "@types/bcryptjs": "^2.4.6",
+    "typescript": "^5",
+    "tsx": "^4.21.0",
+    "tsc-alias": "^1.8.8",
+    "prisma": "^7.3.0"
+  }
+}
