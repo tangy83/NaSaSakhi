@@ -1,0 +1,409 @@
+{
+	"info": {
+		"_postman_id": "nasa-sakhi-api-v1",
+		"name": "NASA Sakhi API",
+		"description": "Complete API collection for NASA Sakhi backend endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "nasa-sakhi"
+	},
+	"item": [
+		{
+			"name": "Health & Testing",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": ["{{base_url}}"],
+							"path": ["health"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Database Test",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/db-test",
+							"host": ["{{base_url}}"],
+							"path": ["db-test"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"TestPassword123!\",\n  \"name\": \"Test User\",\n  \"role\": \"ORGANIZATION\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/signup",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "signup"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "test@example.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "TestPassword123!",
+									"type": "text"
+								},
+								{
+									"key": "redirect",
+									"value": "false",
+									"type": "text"
+								},
+								{
+									"key": "callbackUrl",
+									"value": "http://localhost:3000",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/signin/credentials",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "signin", "credentials"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Session",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/session",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "session"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sign Out",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/signout",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "signout"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reference Data",
+			"item": [
+				{
+					"name": "Get Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/reference/categories",
+							"host": ["{{base_url}}"],
+							"path": ["reference", "categories"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Resources",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/reference/resources",
+							"host": ["{{base_url}}"],
+							"path": ["reference", "resources"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Resources by Category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/reference/resources?categoryId={{category_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["reference", "resources"],
+							"query": [
+								{
+									"key": "categoryId",
+									"value": "{{category_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get States",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/reference/states",
+							"host": ["{{base_url}}"],
+							"path": ["reference", "states"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Cities",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/reference/cities",
+							"host": ["{{base_url}}"],
+							"path": ["reference", "cities"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Cities",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/reference/cities?search=Bangalore",
+							"host": ["{{base_url}}"],
+							"path": ["reference", "cities"],
+							"query": [
+								{
+									"key": "search",
+									"value": "Bangalore"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Languages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/reference/languages",
+							"host": ["{{base_url}}"],
+							"path": ["reference", "languages"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Registration",
+			"item": [
+				{
+					"name": "Save Draft",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"user@example.com\",\n  \"draftData\": {\n    \"organizationName\": \"Example NGO\",\n    \"registrationType\": \"NGO\",\n    \"registrationNumber\": \"NGO123456\",\n    \"yearEstablished\": 2020\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/registration/draft",
+							"host": ["{{base_url}}"],
+							"path": ["registration", "draft"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Load Draft",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/registration/draft/{{draft_token}}",
+							"host": ["{{base_url}}"],
+							"path": ["registration", "draft", "{{draft_token}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Draft",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/registration/draft/{{draft_token}}",
+							"host": ["{{base_url}}"],
+							"path": ["registration", "draft", "{{draft_token}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Submit Registration",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"organizationName\": \"Example NGO\",\n  \"registrationType\": \"NGO\",\n  \"registrationNumber\": \"NGO123456\",\n  \"yearEstablished\": 2020,\n  \"websiteUrl\": \"https://example.com\",\n  \"primaryContact\": {\n    \"name\": \"John Doe\",\n    \"phone\": \"9876543210\",\n    \"email\": \"john@example.com\"\n  },\n  \"categoryIds\": [\"{{category_id}}\"],\n  \"resourceIds\": [\"{{resource_id}}\"],\n  \"branches\": [\n    {\n      \"addressLine1\": \"123 Main Street, Koramangala\",\n      \"cityId\": \"{{city_id}}\",\n      \"stateId\": \"{{state_id}}\",\n      \"pinCode\": \"560095\"\n    }\n  ],\n  \"languageIds\": [\"{{language_id}}\"],\n  \"documents\": {\n    \"registrationCertificateUrl\": \"/uploads/documents/certificate.pdf\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/registration/submit",
+							"host": ["{{base_url}}"],
+							"path": ["registration", "submit"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "File Upload",
+			"item": [
+				{
+					"name": "Upload Document",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/upload/document",
+							"host": ["{{base_url}}"],
+							"path": ["upload", "document"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Logo",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/upload/logo",
+							"host": ["{{base_url}}"],
+							"path": ["upload", "logo"]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000/api",
+			"type": "string"
+		},
+		{
+			"key": "draft_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "category_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "resource_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "city_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "state_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "language_id",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
