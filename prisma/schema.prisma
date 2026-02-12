@@ -1,0 +1,45 @@
+// NASA Sakhi - Minimal Prisma Schema for Testing
+// This is a simplified schema to test database connectivity
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Test model - simple table to verify database connection
+model HealthCheck {
+  id        String   @id @default(uuid())
+  status    String   @default("ok")
+  timestamp DateTime @default(now())
+  message   String?
+
+  @@map("health_checks")
+}
+
+// User model - minimal auth
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  role      String   @default("user")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+// Organization model - minimal registration
+model Organization {
+  id          String   @id @default(uuid())
+  name        String
+  email       String?
+  phone       String?
+  status      String   @default("pending")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("organizations")
+}

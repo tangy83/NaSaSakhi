@@ -1,0 +1,574 @@
+{
+  "categories": [
+    {
+      "id": "cat-1",
+      "name": "Education Support",
+      "targetGroup": "CHILDREN",
+      "displayOrder": 1
+    },
+    {
+      "id": "cat-2",
+      "name": "Child Protection",
+      "targetGroup": "CHILDREN",
+      "displayOrder": 2
+    },
+    {
+      "id": "cat-3",
+      "name": "Healthcare",
+      "targetGroup": "CHILDREN",
+      "displayOrder": 3
+    },
+    {
+      "id": "cat-4",
+      "name": "Nutrition",
+      "targetGroup": "CHILDREN",
+      "displayOrder": 4
+    },
+    {
+      "id": "cat-5",
+      "name": "Recreation",
+      "targetGroup": "CHILDREN",
+      "displayOrder": 5
+    },
+    {
+      "id": "cat-6",
+      "name": "Skill Development",
+      "targetGroup": "CHILDREN",
+      "displayOrder": 6
+    },
+    {
+      "id": "cat-7",
+      "name": "Legal Aid for Children",
+      "targetGroup": "CHILDREN",
+      "displayOrder": 7
+    },
+    {
+      "id": "cat-8",
+      "name": "Women's Healthcare",
+      "targetGroup": "WOMEN",
+      "displayOrder": 8
+    },
+    {
+      "id": "cat-9",
+      "name": "Legal Support for Women",
+      "targetGroup": "WOMEN",
+      "displayOrder": 9
+    },
+    {
+      "id": "cat-10",
+      "name": "Skill Training",
+      "targetGroup": "WOMEN",
+      "displayOrder": 10
+    },
+    {
+      "id": "cat-11",
+      "name": "Shelter/Safe Housing",
+      "targetGroup": "WOMEN",
+      "displayOrder": 11
+    },
+    {
+      "id": "cat-12",
+      "name": "Counseling Services",
+      "targetGroup": "WOMEN",
+      "displayOrder": 12
+    },
+    {
+      "id": "cat-13",
+      "name": "Economic Empowerment",
+      "targetGroup": "WOMEN",
+      "displayOrder": 13
+    },
+    {
+      "id": "cat-14",
+      "name": "Awareness Programs",
+      "targetGroup": "WOMEN",
+      "displayOrder": 14
+    }
+  ],
+  "resources": [
+    {
+      "id": "res-1",
+      "categoryId": "cat-1",
+      "name": "After-school tutoring",
+      "description": "Educational support after regular school hours"
+    },
+    {
+      "id": "res-2",
+      "categoryId": "cat-1",
+      "name": "Scholarship programs",
+      "description": "Financial assistance for education"
+    },
+    {
+      "id": "res-3",
+      "categoryId": "cat-1",
+      "name": "School supplies distribution",
+      "description": "Providing books, uniforms, and stationery"
+    },
+    {
+      "id": "res-4",
+      "categoryId": "cat-1",
+      "name": "Digital literacy programs",
+      "description": "Computer and technology education"
+    },
+    {
+      "id": "res-5",
+      "categoryId": "cat-2",
+      "name": "Child abuse prevention",
+      "description": "Programs to prevent and address child abuse"
+    },
+    {
+      "id": "res-6",
+      "categoryId": "cat-2",
+      "name": "Rescue and rehabilitation",
+      "description": "Services for children in distress"
+    },
+    {
+      "id": "res-7",
+      "categoryId": "cat-2",
+      "name": "Child helpline services",
+      "description": "24/7 helpline for children in need"
+    },
+    {
+      "id": "res-8",
+      "categoryId": "cat-3",
+      "name": "Health checkups",
+      "description": "Regular medical examinations"
+    },
+    {
+      "id": "res-9",
+      "categoryId": "cat-3",
+      "name": "Vaccination programs",
+      "description": "Immunization services"
+    },
+    {
+      "id": "res-10",
+      "categoryId": "cat-3",
+      "name": "Medical treatment",
+      "description": "Healthcare services and treatment"
+    },
+    {
+      "id": "res-11",
+      "categoryId": "cat-4",
+      "name": "Mid-day meals",
+      "description": "Nutritious meals during school"
+    },
+    {
+      "id": "res-12",
+      "categoryId": "cat-4",
+      "name": "Nutrition supplements",
+      "description": "Vitamins and nutritional support"
+    },
+    {
+      "id": "res-13",
+      "categoryId": "cat-5",
+      "name": "Sports programs",
+      "description": "Physical activities and sports"
+    },
+    {
+      "id": "res-14",
+      "categoryId": "cat-5",
+      "name": "Arts and crafts",
+      "description": "Creative activities for children"
+    },
+    {
+      "id": "res-15",
+      "categoryId": "cat-6",
+      "name": "Vocational training",
+      "description": "Skill development for employment"
+    },
+    {
+      "id": "res-16",
+      "categoryId": "cat-7",
+      "name": "Legal counseling",
+      "description": "Legal advice and support for children"
+    },
+    {
+      "id": "res-17",
+      "categoryId": "cat-8",
+      "name": "Maternal health services",
+      "description": "Pregnancy and childbirth care"
+    },
+    {
+      "id": "res-18",
+      "categoryId": "cat-8",
+      "name": "Reproductive health services",
+      "description": "Family planning and reproductive care"
+    },
+    {
+      "id": "res-19",
+      "categoryId": "cat-8",
+      "name": "General health checkups",
+      "description": "Regular medical examinations"
+    },
+    {
+      "id": "res-20",
+      "categoryId": "cat-9",
+      "name": "Legal counseling",
+      "description": "Legal advice and support"
+    },
+    {
+      "id": "res-21",
+      "categoryId": "cat-9",
+      "name": "Court representation",
+      "description": "Legal representation in court"
+    },
+    {
+      "id": "res-22",
+      "categoryId": "cat-10",
+      "name": "Computer training",
+      "description": "IT and computer skills"
+    },
+    {
+      "id": "res-23",
+      "categoryId": "cat-10",
+      "name": "Tailoring and stitching",
+      "description": "Garment making skills"
+    },
+    {
+      "id": "res-24",
+      "categoryId": "cat-10",
+      "name": "Beauty and wellness",
+      "description": "Cosmetology and spa training"
+    },
+    {
+      "id": "res-25",
+      "categoryId": "cat-11",
+      "name": "Temporary shelter",
+      "description": "Safe housing for women in distress"
+    },
+    {
+      "id": "res-26",
+      "categoryId": "cat-11",
+      "name": "Long-term housing",
+      "description": "Permanent housing solutions"
+    },
+    {
+      "id": "res-27",
+      "categoryId": "cat-12",
+      "name": "Psychological counseling",
+      "description": "Mental health support"
+    },
+    {
+      "id": "res-28",
+      "categoryId": "cat-12",
+      "name": "Trauma counseling",
+      "description": "Support for trauma survivors"
+    },
+    {
+      "id": "res-29",
+      "categoryId": "cat-13",
+      "name": "Microfinance programs",
+      "description": "Small loans for business"
+    },
+    {
+      "id": "res-30",
+      "categoryId": "cat-13",
+      "name": "Entrepreneurship training",
+      "description": "Business skills development"
+    },
+    {
+      "id": "res-31",
+      "categoryId": "cat-14",
+      "name": "Women's rights awareness",
+      "description": "Education on legal rights"
+    },
+    {
+      "id": "res-32",
+      "categoryId": "cat-14",
+      "name": "Health awareness programs",
+      "description": "Health education and awareness"
+    }
+  ],
+  "languages": [
+    {
+      "id": "lang-1",
+      "name": "Hindi",
+      "code": "hi",
+      "isActive": true
+    },
+    {
+      "id": "lang-2",
+      "name": "English",
+      "code": "en",
+      "isActive": true
+    },
+    {
+      "id": "lang-3",
+      "name": "Bengali",
+      "code": "bn",
+      "isActive": true
+    },
+    {
+      "id": "lang-4",
+      "name": "Telugu",
+      "code": "te",
+      "isActive": true
+    },
+    {
+      "id": "lang-5",
+      "name": "Marathi",
+      "code": "mr",
+      "isActive": true
+    },
+    {
+      "id": "lang-6",
+      "name": "Tamil",
+      "code": "ta",
+      "isActive": true
+    },
+    {
+      "id": "lang-7",
+      "name": "Gujarati",
+      "code": "gu",
+      "isActive": true
+    },
+    {
+      "id": "lang-8",
+      "name": "Urdu",
+      "code": "ur",
+      "isActive": true
+    },
+    {
+      "id": "lang-9",
+      "name": "Kannada",
+      "code": "kn",
+      "isActive": true
+    },
+    {
+      "id": "lang-10",
+      "name": "Odia",
+      "code": "or",
+      "isActive": true
+    },
+    {
+      "id": "lang-11",
+      "name": "Malayalam",
+      "code": "ml",
+      "isActive": true
+    },
+    {
+      "id": "lang-12",
+      "name": "Punjabi",
+      "code": "pa",
+      "isActive": true
+    },
+    {
+      "id": "lang-13",
+      "name": "Assamese",
+      "code": "as",
+      "isActive": true
+    }
+  ],
+  "states": [
+    {
+      "id": "state-1",
+      "name": "Karnataka",
+      "code": "KA"
+    },
+    {
+      "id": "state-2",
+      "name": "Maharashtra",
+      "code": "MH"
+    },
+    {
+      "id": "state-3",
+      "name": "Delhi",
+      "code": "DL"
+    },
+    {
+      "id": "state-4",
+      "name": "Tamil Nadu",
+      "code": "TN"
+    },
+    {
+      "id": "state-5",
+      "name": "West Bengal",
+      "code": "WB"
+    },
+    {
+      "id": "state-6",
+      "name": "Gujarat",
+      "code": "GJ"
+    },
+    {
+      "id": "state-7",
+      "name": "Rajasthan",
+      "code": "RJ"
+    },
+    {
+      "id": "state-8",
+      "name": "Uttar Pradesh",
+      "code": "UP"
+    },
+    {
+      "id": "state-9",
+      "name": "Telangana",
+      "code": "TG"
+    },
+    {
+      "id": "state-10",
+      "name": "Kerala",
+      "code": "KL"
+    }
+  ],
+  "cities": [
+    {
+      "id": "city-1",
+      "name": "Bangalore",
+      "stateId": "state-1",
+      "stateName": "Karnataka"
+    },
+    {
+      "id": "city-2",
+      "name": "Mysore",
+      "stateId": "state-1",
+      "stateName": "Karnataka"
+    },
+    {
+      "id": "city-3",
+      "name": "Mangalore",
+      "stateId": "state-1",
+      "stateName": "Karnataka"
+    },
+    {
+      "id": "city-4",
+      "name": "Mumbai",
+      "stateId": "state-2",
+      "stateName": "Maharashtra"
+    },
+    {
+      "id": "city-5",
+      "name": "Pune",
+      "stateId": "state-2",
+      "stateName": "Maharashtra"
+    },
+    {
+      "id": "city-6",
+      "name": "Nagpur",
+      "stateId": "state-2",
+      "stateName": "Maharashtra"
+    },
+    {
+      "id": "city-7",
+      "name": "New Delhi",
+      "stateId": "state-3",
+      "stateName": "Delhi"
+    },
+    {
+      "id": "city-8",
+      "name": "Chennai",
+      "stateId": "state-4",
+      "stateName": "Tamil Nadu"
+    },
+    {
+      "id": "city-9",
+      "name": "Coimbatore",
+      "stateId": "state-4",
+      "stateName": "Tamil Nadu"
+    },
+    {
+      "id": "city-10",
+      "name": "Kolkata",
+      "stateId": "state-5",
+      "stateName": "West Bengal"
+    },
+    {
+      "id": "city-11",
+      "name": "Ahmedabad",
+      "stateId": "state-6",
+      "stateName": "Gujarat"
+    },
+    {
+      "id": "city-12",
+      "name": "Surat",
+      "stateId": "state-6",
+      "stateName": "Gujarat"
+    },
+    {
+      "id": "city-13",
+      "name": "Jaipur",
+      "stateId": "state-7",
+      "stateName": "Rajasthan"
+    },
+    {
+      "id": "city-14",
+      "name": "Lucknow",
+      "stateId": "state-8",
+      "stateName": "Uttar Pradesh"
+    },
+    {
+      "id": "city-15",
+      "name": "Hyderabad",
+      "stateId": "state-9",
+      "stateName": "Telangana"
+    },
+    {
+      "id": "city-16",
+      "name": "Thiruvananthapuram",
+      "stateId": "state-10",
+      "stateName": "Kerala"
+    },
+    {
+      "id": "city-17",
+      "name": "Kochi",
+      "stateId": "state-10",
+      "stateName": "Kerala"
+    }
+  ],
+  "faiths": [
+    {
+      "id": "faith-1",
+      "name": "Hindu"
+    },
+    {
+      "id": "faith-2",
+      "name": "Muslim"
+    },
+    {
+      "id": "faith-3",
+      "name": "Christian"
+    },
+    {
+      "id": "faith-4",
+      "name": "Sikh"
+    },
+    {
+      "id": "faith-5",
+      "name": "Buddhist"
+    },
+    {
+      "id": "faith-6",
+      "name": "Jain"
+    },
+    {
+      "id": "faith-7",
+      "name": "Other"
+    },
+    {
+      "id": "faith-8",
+      "name": "Prefer not to say"
+    }
+  ],
+  "socialCategories": [
+    {
+      "id": "social-1",
+      "name": "General"
+    },
+    {
+      "id": "social-2",
+      "name": "Scheduled Caste (SC)"
+    },
+    {
+      "id": "social-3",
+      "name": "Scheduled Tribe (ST)"
+    },
+    {
+      "id": "social-4",
+      "name": "Other Backward Class (OBC)"
+    },
+    {
+      "id": "social-5",
+      "name": "Economically Weaker Section (EWS)"
+    }
+  ]
+}

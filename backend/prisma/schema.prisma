@@ -1,0 +1,365 @@
+// NASA Sakhi - Complete Prisma Schema
+// This is the complete schema combining Stages 2, 3, and 4
+// Replace your current schema.prisma with this content
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================================================
+// STAGE 2: Core Models
+// ============================================================================
+
+model Organization {
+  id                 String             @id @default(uuid())
+  name               String
+  registrationType   RegistrationType
+  registrationNumber String
+  yearEstablished    Int
+  faithId            String?
+  status             OrganizationStatus @default(PENDING)
+  websiteUrl         String?
+
+  // Relationships
+  branches  OrganizationBranch[]
+  contacts  ContactInformation[]
+  languages OrganizationLanguage[]
+  documents Document[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name, status])
+  @@map("organizations")
+}
+
+enum RegistrationType {
+  NGO
+  TRUST
+  GOVERNMENT
+  PRIVATE
+  OTHER
+}
+
+enum OrganizationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CLARIFICATION_REQUESTED
+}
+
+model OrganizationBranch {
+  id             String   @id @default(uuid())
+  organizationId String
+  addressLine1   String
+  addressLine2   String?
+  cityId         String
+  stateId        String
+  pinCode        String   @db.VarChar(6)
+  latitude       Decimal? @db.Decimal(10, 8)
+  longitude      Decimal? @db.Decimal(11, 8)
+
+  // Relationships
+  organization Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  city         City             @relation(fields: [cityId], references: [id])
+  state        State            @relation(fields: [stateId], references: [id])
+  timings      BranchTimings[]
+  categories   BranchCategory[]
+  resources    BranchResource[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([cityId, stateId])
+  @@index([pinCode])
+  @@map("organization_branches")
+}
+
+model ContactInformation {
+  id              String  @id @default(uuid())
+  organizationId  String
+  isPrimary       Boolean @default(false)
+  name            String
+  phone           String  @db.VarChar(10)
+  email           String
+  facebookUrl     String?
+  instagramHandle String?
+  twitterHandle   String?
+
+  // Relationships
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("contact_information")
+}
+
+model BranchTimings {
+  id        String    @id @default(uuid())
+  branchId  String
+  dayOfWeek DayOfWeek
+  openTime  String? // Format: "HH:MM" (24-hour)
+  closeTime String? // Format: "HH:MM" (24-hour)
+  isClosed  Boolean   @default(false)
+
+  // Relationships
+  branch OrganizationBranch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+
+  @@unique([branchId, dayOfWeek])
+  @@map("branch_timings")
+}
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+// ============================================================================
+// STAGE 3: Reference Data Models
+// ============================================================================
+
+model ServiceCategory {
+  id           String      @id @default(uuid())
+  name         String
+  targetGroup  TargetGroup
+  displayOrder Int
+
+  // Relationships
+  resources ServiceResource[]
+  branches  BranchCategory[]
+
+  @@unique([name, targetGroup])
+  @@map("service_categories")
+}
+
+enum TargetGroup {
+  CHILDREN
+  WOMEN
+}
+
+model ServiceResource {
+  id          String  @id @default(uuid())
+  categoryId  String
+  name        String
+  description String?
+
+  // Relationships
+  category ServiceCategory  @relation(fields: [categoryId], references: [id])
+  branches BranchResource[]
+
+  @@map("service_resources")
+}
+
+model State {
+  id   String @id @default(uuid())
+  name String @unique
+  code String @unique @db.VarChar(2)
+
+  // Relationships
+  cities   City[]
+  branches OrganizationBranch[]
+
+  @@map("states")
+}
+
+model City {
+  id      String @id @default(uuid())
+  name    String
+  stateId String
+
+  // Relationships
+  state    State                @relation(fields: [stateId], references: [id])
+  branches OrganizationBranch[]
+
+  @@unique([name, stateId])
+  @@map("cities")
+}
+
+model Language {
+  id       String  @id @default(uuid())
+  name     String  @unique
+  code     String  @unique @db.VarChar(3)
+  isActive Boolean @default(true)
+
+  // Relationships
+  organizations OrganizationLanguage[]
+
+  @@map("languages")
+}
+
+model Faith {
+  id   String @id @default(uuid())
+  name String @unique
+
+  @@map("faiths")
+}
+
+model SocialCategory {
+  id   String @id @default(uuid())
+  name String @unique
+
+  @@map("social_categories")
+}
+
+// Junction Tables (Many-to-Many relationships)
+model BranchCategory {
+  branchId   String
+  categoryId String
+
+  branch   OrganizationBranch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  category ServiceCategory    @relation(fields: [categoryId], references: [id])
+
+  @@id([branchId, categoryId])
+  @@map("branch_categories")
+}
+
+model BranchResource {
+  branchId   String
+  resourceId String
+
+  branch   OrganizationBranch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  resource ServiceResource    @relation(fields: [resourceId], references: [id])
+
+  @@id([branchId, resourceId])
+  @@map("branch_resources")
+}
+
+model OrganizationLanguage {
+  organizationId String
+  languageId     String
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  language     Language     @relation(fields: [languageId], references: [id])
+
+  @@id([organizationId, languageId])
+  @@map("organization_languages")
+}
+
+// ============================================================================
+// STAGE 4: Auth & Documents
+// ============================================================================
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  emailVerified DateTime?
+  name          String?
+  password      String? // Hashed
+  role          UserRole  @default(ORGANIZATION)
+
+  // Relationships
+  accounts Account[]
+  sessions Session[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+enum UserRole {
+  ORGANIZATION
+  ADMIN
+  SUPER_ADMIN
+}
+
+model Account {
+  id                String  @id @default(uuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+model Document {
+  id             String       @id @default(uuid())
+  organizationId String
+  type           DocumentType
+  filename       String
+  fileUrl        String
+  fileSize       Int // in bytes
+  mimeType       String
+
+  // Relationships
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  uploadedAt DateTime @default(now())
+
+  @@map("documents")
+}
+
+enum DocumentType {
+  REGISTRATION_CERTIFICATE
+  LOGO
+  ADDITIONAL_CERTIFICATE
+}
+
+model RegistrationDraft {
+  id        String   @id @default(uuid())
+  token     String   @unique @default(uuid())
+  email     String?
+  draftData Json // Stores entire form state as JSON
+  expiresAt DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([token])
+  @@index([email])
+  @@map("registration_drafts")
+}
+
+// ============================================================================
+// Keep HealthCheck model for testing (from current schema)
+// ============================================================================
+
+model HealthCheck {
+  id        String   @id @default(uuid())
+  status    String   @default("ok")
+  timestamp DateTime @default(now())
+  message   String?
+
+  @@map("health_checks")
+}
