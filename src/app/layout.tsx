@@ -1,5 +1,6 @@
 // Root Layout
 import type { Metadata } from 'next';
+import './globals.css';  // ← Add this line
 
 export const metadata: Metadata = {
   title: 'NASA Sakhi - Organization Registration Portal',

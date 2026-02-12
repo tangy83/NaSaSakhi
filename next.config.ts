@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import path from 'path';
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -7,6 +8,9 @@ const nextConfig: NextConfig = {
 
   // Enable standalone output for deployment
   output: 'standalone',
+
+  // Fix lockfile warning - set workspace root explicitly
+  outputFileTracingRoot: path.join(__dirname),
 
   // Optimize for production
   compress: true,
