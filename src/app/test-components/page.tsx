@@ -4,6 +4,7 @@
 
 'use client';
 
+import Link from 'next/link';
 import { TextInput } from '@/components/form/TextInput';
 import { Dropdown } from '@/components/form/Dropdown';
 import { Checkbox } from '@/components/form/Checkbox';
@@ -323,9 +324,9 @@ export default function TestComponentsPage() {
         <div className="mt-8 text-center text-gray-500 text-sm">
           <p>This test page is for development purposes only.</p>
           <p className="mt-2">
-            <a href="/" className="text-primary-500 hover:text-primary-600 underline">
+            <Link href="/" className="text-primary-500 hover:text-primary-600 underline">
               ← Back to Homepage
-            </a>
+            </Link>
           </p>
         </div>
       </div>

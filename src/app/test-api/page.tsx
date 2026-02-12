@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import {
   fetchCategoriesMock,
   fetchResourcesMock,
@@ -225,9 +226,9 @@ export default function TestApiPage() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <a href="/" className="text-primary-500 hover:text-primary-600 underline mb-4 block">
+          <Link href="/" className="text-primary-500 hover:text-primary-600 underline mb-4 block">
             ← Back to Homepage
-          </a>
+          </Link>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Mock API Test Page</h1>
           <p className="text-gray-600">
             Test all mock API functions to verify they work correctly before using in forms

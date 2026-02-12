@@ -217,7 +217,7 @@ export default function Step5Page() {
           {searchQuery && (
             <div className="p-3 bg-info-50 border border-info-500 rounded-md">
               <p className="text-sm text-info-800">
-                Found {filteredLanguages.length} language{filteredLanguages.length !== 1 ? 's' : ''} matching "{searchQuery}"
+                Found {filteredLanguages.length} language{filteredLanguages.length !== 1 ? 's' : ''} matching &ldquo;{searchQuery}&rdquo;
               </p>
             </div>
           )}
