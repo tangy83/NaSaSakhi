@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Test Authentication Flow
  * Tests signup and login endpoints

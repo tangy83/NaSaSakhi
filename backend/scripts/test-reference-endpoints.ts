@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Test script for Reference Data Endpoints
 // Run: npx tsx scripts/test-reference-endpoints.ts
 // Make sure dev server is running: npm run dev

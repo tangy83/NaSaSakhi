@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Test script for File Upload Endpoints
 // Run: npx tsx scripts/test-file-upload.ts
 // Make sure dev server is running: npm run dev

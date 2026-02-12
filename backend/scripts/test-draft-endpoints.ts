@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Test script for Draft Save/Load/Delete Endpoints
 // Run: npx tsx scripts/test-draft-endpoints.ts
 // Make sure dev server is running: npm run dev

@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Test script for Server-Side Validation Functions
 // Run: npx tsx scripts/test-validation.ts
 

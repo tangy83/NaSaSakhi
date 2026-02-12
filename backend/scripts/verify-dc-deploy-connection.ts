@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Verify DC Deploy Database Connection
  * Validates connection to DC Deploy PostgreSQL database

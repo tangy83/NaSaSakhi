@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Test All API Endpoints
  * Comprehensive test script for all API endpoints

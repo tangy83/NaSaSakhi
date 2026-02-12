@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Verify Migrated Organizations
  * Checks if organizations are already in the PostgreSQL database

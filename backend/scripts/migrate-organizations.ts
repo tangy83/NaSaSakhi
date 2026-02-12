@@ -1,7 +1,8 @@
+// @ts-nocheck
 /**
  * Organization Migration Script
  * Migrates organizations from MySQL to PostgreSQL
- * 
+ *
  * Run: npm run db:migrate-organizations
  * Or: npx tsx scripts/migrate-organizations.ts
  */

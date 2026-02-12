@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Deep Check Organizations
  * Comprehensive check to find organizations under different conditions

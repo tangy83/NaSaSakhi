@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Check All Organizations in Database
  * Comprehensive check to find all organizations

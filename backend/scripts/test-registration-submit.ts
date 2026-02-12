@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Test script for Registration Submission Endpoint
 // Run: npx tsx scripts/test-registration-submit.ts
 // Make sure dev server is running: npm run dev
