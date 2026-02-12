@@ -14,12 +14,31 @@ export default function HomePage() {
       color: 'white',
       padding: '20px',
     }}>
+    
       <h1 style={{ fontSize: '3rem', marginBottom: '1rem' }}>
         🌟 NASA Sakhi
       </h1>
       <p style={{ fontSize: '1.5rem', marginBottom: '2rem', textAlign: 'center' }}>
         Organization Registration Portal
       </p>
+
+      {/* Links to Test Pages */}
+      <div className="mb-4 flex gap-4">
+        <a
+          href="/test-components"
+          className="bg-white text-primary-600 px-6 py-3 rounded-md font-medium hover:bg-gray-100 transition-colors inline-block"
+          style={{ textDecoration: 'none' }}
+        >
+          🧪 Test Components
+        </a>
+        <a
+          href="/test-api"
+          className="bg-white text-success-600 px-6 py-3 rounded-md font-medium hover:bg-gray-100 transition-colors inline-block"
+          style={{ textDecoration: 'none' }}
+        >
+          🔌 Test API Mocks
+        </a>
+      </div>
 
       <div style={{
         background: 'rgba(255, 255, 255, 0.1)',
