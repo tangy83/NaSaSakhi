@@ -63,4 +63,8 @@ logs/
 /tmp/
 temp/
 
+# Large archives (do not commit)
+NaSaSakhi-Backend.zip
+*.zip
+
 /src/generated/prisma
