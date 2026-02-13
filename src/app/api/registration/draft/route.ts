@@ -15,15 +15,20 @@ export async function POST(request: NextRequest) {
     // Generate new token if not provided
     const draftToken = token || randomUUID();
 
+    // Calculate expiry (30 days from now)
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 30);
+
     // Upsert the draft
     const draft = await prisma.registrationDraft.upsert({
       where: { token: draftToken },
       create: {
         token: draftToken,
-        data: data,
+        draftData: data,
+        expiresAt: expiresAt,
       },
       update: {
-        data: data,
+        draftData: data,
         updatedAt: new Date(),
       },
     });
@@ -72,7 +77,7 @@ export async function GET(request: NextRequest) {
       where: { token },
       select: {
         token: true,
-        data: true,
+        draftData: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -90,7 +95,12 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      data: draft,
+      data: {
+        token: draft.token,
+        data: draft.draftData, // Normalize field name for frontend
+        createdAt: draft.createdAt,
+        updatedAt: draft.updatedAt,
+      },
     });
   } catch (error) {
     console.error('Error loading draft:', error);

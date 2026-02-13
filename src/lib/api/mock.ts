@@ -297,7 +297,12 @@ const MOCK_DRAFT_STORAGE_KEY = 'nasa_sakhi_mock_drafts';
 // Initialize mock storage from localStorage if available
 function getMockDraftStorage(): Map<string, { data: any; createdAt: string; updatedAt: string }> {
   const storage = new Map<string, { data: any; createdAt: string; updatedAt: string }>();
-  
+
+  // Check if we're in browser environment
+  if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+    return storage;
+  }
+
   try {
     const stored = localStorage.getItem(MOCK_DRAFT_STORAGE_KEY);
     if (stored) {
@@ -309,7 +314,7 @@ function getMockDraftStorage(): Map<string, { data: any; createdAt: string; upda
   } catch (error) {
     console.warn('Failed to load mock drafts from localStorage:', error);
   }
-  
+
   return storage;
 }
 

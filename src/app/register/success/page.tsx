@@ -1,10 +1,14 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
-export default function SuccessPage() {
+// Force dynamic rendering - don't pre-render this page
+export const dynamic = 'force-dynamic';
+
+// Inner component that uses useSearchParams
+function SuccessPageContent() {
   const searchParams = useSearchParams();
   const [registrationId, setRegistrationId] = useState<string | null>(null);
 
@@ -160,5 +164,21 @@ export default function SuccessPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Outer component with Suspense boundary
+export default function SuccessPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <SuccessPageContent />
+    </Suspense>
   );
 }

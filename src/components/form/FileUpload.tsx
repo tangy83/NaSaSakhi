@@ -70,9 +70,9 @@ export function FileUpload({
   // Validate file
   const validateFile = (file: File): string | null => {
     // Check file type
-    if (!allowedTypes.includes(file.type)) {
-      const allowedExtensions = uploadType === 'document' 
-        ? 'PDF, JPEG, and PNG' 
+    if (!allowedTypes.includes(file.type as any)) {
+      const allowedExtensions = uploadType === 'document'
+        ? 'PDF, JPEG, and PNG'
         : 'JPEG, PNG, and SVG';
       return `Only ${allowedExtensions} files are allowed.`;
     }

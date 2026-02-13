@@ -298,14 +298,14 @@ export function useFormState() {
         }
         case 6: {
           // Extract documents data - handle both { documents: {...} } and direct documents object
-          const documentsData = data.documents || {};
-          
+          const documentsData = (data.documents || {}) as any;
+
           // Ensure registrationCertificateUrl is valid (required field)
           if (!documentsData.registrationCertificateUrl || documentsData.registrationCertificateUrl.trim() === '') {
             errors.registrationCertificateUrl = 'Registration certificate is required';
             return { isValid: false, errors };
           }
-          
+
           // Ensure logoUrl is handled correctly - keep empty string or undefined as-is
           const cleanedDocuments = {
             registrationCertificateUrl: documentsData.registrationCertificateUrl,

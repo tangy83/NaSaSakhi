@@ -7,7 +7,7 @@ export const organizationSchema = z.object({
     .max(100, 'Organization name cannot exceed 100 characters'),
 
   registrationType: z.enum(['NGO', 'TRUST', 'GOVERNMENT', 'PRIVATE', 'OTHER'], {
-    required_error: 'Please select a registration type',
+    message: 'Please select a registration type',
   }),
 
   registrationNumber: z
@@ -16,10 +16,7 @@ export const organizationSchema = z.object({
     .max(50, 'Registration number cannot exceed 50 characters'),
 
   yearEstablished: z
-    .number({
-      required_error: 'Year of establishment is required',
-      invalid_type_error: 'Year must be a number',
-    })
+    .number()
     .int()
     .min(1800, 'Year must be 1800 or later')
     .max(new Date().getFullYear(), 'Year cannot be in the future'),

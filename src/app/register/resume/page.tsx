@@ -1,12 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useFormState } from '@/lib/hooks/useFormState';
 import { loadDraft } from '@/lib/api';
 import { DraftLoadResponse } from '@/types/api';
 import { ToastProvider, useToast } from '@/contexts/ToastContext';
 import { ToastContainer } from '@/components/ui/ToastContainer';
+
+// Force dynamic rendering - don't pre-render this page
+export const dynamic = 'force-dynamic';
 
 // Helper function to determine last completed step from draft data
 function getLastCompletedStep(draftData: Partial<any>): number {
@@ -321,12 +324,21 @@ function ResumePageContent() {
   return null;
 }
 
-// Outer component with ToastProvider
+// Outer component with ToastProvider and Suspense boundary
 export default function ResumePage() {
   return (
     <ToastProvider>
       <ToastContainer />
-      <ResumePageContent />
+      <Suspense fallback={
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mb-4"></div>
+            <p className="text-gray-600">Loading your draft...</p>
+          </div>
+        </div>
+      }>
+        <ResumePageContent />
+      </Suspense>
     </ToastProvider>
   );
 }

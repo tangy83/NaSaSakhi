@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     const stateId = searchParams.get('stateId');
 
     const where = stateId
-      ? { stateId: parseInt(stateId, 10) }
+      ? { stateId: stateId }
       : {};
 
     const cities = await prisma.city.findMany({

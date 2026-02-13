@@ -3,7 +3,8 @@
 // This allows easy testing with mocks while backend is being developed
 
 // Check if we should use real API
-const USE_REAL_API = process.env.NEXT_PUBLIC_USE_REAL_API === 'true';
+// Force real API now that backend is implemented
+const USE_REAL_API = true; // process.env.NEXT_PUBLIC_USE_REAL_API === 'true';
 
 // Import API functions
 import * as clientApi from './client';

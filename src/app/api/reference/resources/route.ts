@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     const categoryId = searchParams.get('categoryId');
 
     const where = categoryId
-      ? { categoryId: parseInt(categoryId, 10) }
+      ? { categoryId: categoryId }
       : {};
 
     const resources = await prisma.serviceResource.findMany({

@@ -111,52 +111,50 @@ export async function POST(request: NextRequest) {
           name: organizationName,
           registrationType,
           registrationNumber,
-          yearEstablished: yearEstablished ? parseInt(yearEstablished, 10) : null,
-          faithId: faithId ? parseInt(faithId, 10) : null,
-          website: website || null,
-          facebookUrl: facebookUrl || null,
-          instagramUrl: instagramUrl || null,
-          twitterUrl: twitterUrl || null,
-          logoUrl: logoUrl || null,
+          yearEstablished: yearEstablished ? parseInt(yearEstablished, 10) : 2000,
+          faithId: faithId || null,
+          websiteUrl: website || null,
           status: 'PENDING', // Default status, admin will approve
         },
       });
 
-      // 2. Link social categories (if provided)
-      if (socialCategoryIds && socialCategoryIds.length > 0) {
-        await tx.organizationSocialCategory.createMany({
-          data: socialCategoryIds.map((categoryId: string) => ({
+      // 2. Create Primary Contact Information
+      await tx.contactInformation.create({
+        data: {
+          organizationId: organization.id,
+          isPrimary: true,
+          name: primaryContact.name,
+          email: primaryContact.email,
+          phone: primaryContact.phone,
+          facebookUrl: facebookUrl || null,
+          instagramHandle: instagramUrl || null,
+          twitterHandle: twitterUrl || null,
+        },
+      });
+
+      // 3. Create Secondary Contact Information (if provided)
+      if (secondaryContact && secondaryContact.name) {
+        await tx.contactInformation.create({
+          data: {
             organizationId: organization.id,
-            socialCategoryId: parseInt(categoryId, 10),
-          })),
+            isPrimary: false,
+            name: secondaryContact.name,
+            email: secondaryContact.email || '',
+            phone: secondaryContact.phone || '',
+          },
         });
       }
-
-      // 3. Create Contact Information
-      const contactData: any = {
-        organizationId: organization.id,
-        primaryContactName: primaryContact.name,
-        primaryContactEmail: primaryContact.email,
-        primaryContactPhone: primaryContact.phone,
-      };
-
-      if (secondaryContact && secondaryContact.name) {
-        contactData.secondaryContactName = secondaryContact.name;
-        contactData.secondaryContactEmail = secondaryContact.email || null;
-        contactData.secondaryContactPhone = secondaryContact.phone || null;
-      }
-
-      await tx.contactInformation.create({ data: contactData });
 
       // 4. Create Branches with addresses and timings
       for (const branch of branches) {
         const organizationBranch = await tx.organizationBranch.create({
           data: {
             organizationId: organization.id,
-            address: branch.address,
-            cityId: parseInt(branch.cityId, 10),
-            stateId: parseInt(branch.stateId, 10),
-            postalCode: branch.postalCode,
+            addressLine1: branch.address || branch.addressLine1 || '',
+            addressLine2: branch.addressLine2 || null,
+            cityId: branch.cityId,
+            stateId: branch.stateId,
+            pinCode: branch.postalCode || branch.pinCode || '',
             latitude: branch.latitude ? parseFloat(branch.latitude) : null,
             longitude: branch.longitude ? parseFloat(branch.longitude) : null,
           },
@@ -167,7 +165,7 @@ export async function POST(request: NextRequest) {
           await tx.branchCategory.createMany({
             data: categoryIds.map((categoryId: string) => ({
               branchId: organizationBranch.id,
-              categoryId: parseInt(categoryId, 10),
+              categoryId: categoryId,
             })),
           });
         }
@@ -177,20 +175,22 @@ export async function POST(request: NextRequest) {
           await tx.branchResource.createMany({
             data: resourceIds.map((resourceId: string) => ({
               branchId: organizationBranch.id,
-              resourceId: parseInt(resourceId, 10),
+              resourceId: resourceId,
             })),
           });
         }
 
-        // 7. Create branch timings
+        // 7. Create branch timings (one for each day of the week)
         if (branch.timings && branch.timings.openTime && branch.timings.closeTime) {
-          await tx.branchTimings.create({
-            data: {
+          const daysOfWeek = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
+          await tx.branchTimings.createMany({
+            data: daysOfWeek.map((dayOfWeek) => ({
               branchId: organizationBranch.id,
+              dayOfWeek: dayOfWeek as any,
               openTime: branch.timings.openTime,
               closeTime: branch.timings.closeTime,
-              allDays: branch.timings.allDays !== false, // Default to true
-            },
+              isClosed: false,
+            })),
           });
         }
       }
@@ -200,7 +200,7 @@ export async function POST(request: NextRequest) {
         await tx.organizationLanguage.createMany({
           data: languageIds.map((languageId: string) => ({
             organizationId: organization.id,
-            languageId: parseInt(languageId, 10),
+            languageId: languageId,
           })),
         });
       }
@@ -208,11 +208,25 @@ export async function POST(request: NextRequest) {
       // 9. Create document records
       const documents = [];
 
+      if (logoUrl) {
+        documents.push({
+          organizationId: organization.id,
+          type: 'LOGO' as const,
+          filename: logoUrl.split('/').pop() || 'logo',
+          fileUrl: logoUrl,
+          fileSize: 0, // Size not available from upload response
+          mimeType: 'image/png', // Default, actual type not tracked
+        });
+      }
+
       if (registrationCertificateUrl) {
         documents.push({
           organizationId: organization.id,
           type: 'REGISTRATION_CERTIFICATE' as const,
-          url: registrationCertificateUrl,
+          filename: registrationCertificateUrl.split('/').pop() || 'certificate',
+          fileUrl: registrationCertificateUrl,
+          fileSize: 0,
+          mimeType: 'application/pdf',
         });
       }
 
@@ -222,7 +236,10 @@ export async function POST(request: NextRequest) {
             documents.push({
               organizationId: organization.id,
               type: 'ADDITIONAL_CERTIFICATE' as const,
-              url,
+              filename: url.split('/').pop() || 'certificate',
+              fileUrl: url,
+              fileSize: 0,
+              mimeType: 'application/pdf',
             });
           }
         }

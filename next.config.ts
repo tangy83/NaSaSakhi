@@ -6,8 +6,8 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
 
-  // Enable standalone output for deployment
-  output: 'standalone',
+  // Disable standalone output to fix pre-rendering issues
+  // output: 'standalone',
 
   // Fix lockfile warning - set workspace root explicitly
   outputFileTracingRoot: path.join(__dirname),
