@@ -46,15 +46,17 @@ RUN adduser --system --uid 1001 nextjs
 # Copy necessary files
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/node_modules ./node_modules
 
-# Copy Next.js build output
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+# Copy Next.js build output (non-standalone mode)
+COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 
 # Copy Prisma files
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
+
+# Copy Next.js config
+COPY --from=builder /app/next.config.ts ./next.config.ts
 
 # Switch to non-root user
 USER nextjs
@@ -65,5 +67,5 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# Start application
-CMD ["node", "server.js"]
+# Start application (using npm start for non-standalone mode)
+CMD ["npm", "start"]
