@@ -68,7 +68,7 @@ export function DocumentsSection({ register, errors, setValue, watch }: Document
           value={registrationCertificateUrl}
           onChange={handleRegistrationCertificateChange}
           onRemove={handleRegistrationCertificateRemove}
-          error={errors.documents?.registrationCertificateUrl?.message as string}
+          error={errors.registrationCertificateUrl?.message as string}
           helperText="Upload your organization's registration certificate (PDF, JPEG, or PNG, max 5MB)"
         />
       </div>
@@ -81,7 +81,7 @@ export function DocumentsSection({ register, errors, setValue, watch }: Document
           value={logoUrl}
           onChange={handleLogoChange}
           onRemove={handleLogoRemove}
-          error={errors.documents?.logoUrl?.message as string}
+          error={errors.logoUrl?.message as string}
           helperText="Upload your organization's logo (JPEG, PNG, or SVG, max 2MB). This will be displayed on your profile."
         />
       </div>
@@ -155,10 +155,10 @@ export function DocumentsSection({ register, errors, setValue, watch }: Document
         )}
 
         {/* Additional Certificates Error */}
-        {errors.documents?.additionalCertificateUrls && (
+        {errors.additionalCertificateUrls && (
           <p role="alert" className="text-sm text-error-500 flex items-center gap-1">
             <span>⚠️</span>
-            {errors.documents.additionalCertificateUrls.message as string}
+            {errors.additionalCertificateUrls.message as string}
           </p>
         )}
 
