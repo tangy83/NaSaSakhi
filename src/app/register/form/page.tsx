@@ -96,9 +96,9 @@ export default function AccordionFormPage() {
       // Languages
       languageIds: formData.languageIds || [],
       // Documents
-      registrationCertificateUrl: formData.registrationCertificateUrl || '',
-      logoUrl: formData.logoUrl || '',
-      additionalCertificateUrls: formData.additionalCertificateUrls || [],
+      registrationCertificateUrl: formData.documents?.registrationCertificateUrl || '',
+      logoUrl: formData.documents?.logoUrl || '',
+      additionalCertificateUrls: formData.documents?.additionalCertificateUrls || [],
     },
   });
 
