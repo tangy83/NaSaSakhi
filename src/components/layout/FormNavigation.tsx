@@ -29,11 +29,12 @@ export function FormNavigation({
             onClick={onNext}
             disabled={isSubmitting}
             aria-label={isLastStep ? 'Submit registration form' : `Continue to ${nextLabel}`}
-            className="w-full min-h-[44px] px-6 py-3 bg-primary-500 text-white rounded-md
-                       hover:bg-primary-600 active:bg-primary-700
-                       focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
-                       disabled:opacity-50 disabled:cursor-not-allowed
-                       transition-colors duration-150 font-medium"
+            className="w-full min-h-[48px] px-6 py-3 bg-primary-600 text-white rounded-lg font-ui font-semibold
+                       shadow-md hover:shadow-lg hover:bg-primary-700 hover:-translate-y-0.5
+                       active:bg-primary-800 active:translate-y-0 active:shadow-md
+                       focus:outline-none focus:ring-4 focus:ring-primary-100 focus:ring-offset-2
+                       disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0
+                       transition-all duration-200"
           >
             {isSubmitting ? 'Loading...' : isLastStep ? 'Submit Registration' : `${nextLabel} →`}
           </button>
@@ -46,27 +47,28 @@ export function FormNavigation({
               onClick={onBack}
               disabled={isSubmitting}
               aria-label="Go back to previous step"
-              className="flex-1 min-h-[44px] px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-md
-                         hover:bg-gray-50 active:bg-gray-100
-                         focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
+              className="flex-1 min-h-[48px] px-6 py-3 bg-white border-2 border-gray-300 text-gray-700 rounded-lg font-ui font-semibold
+                         hover:bg-gray-50 hover:border-gray-400
+                         active:bg-gray-100
+                         focus:outline-none focus:ring-4 focus:ring-gray-100 focus:ring-offset-2
                          disabled:opacity-50 disabled:cursor-not-allowed
-                         transition-colors duration-150 font-medium"
+                         transition-colors duration-150"
             >
               ← Back
             </button>
           )}
-          
+
           {onSaveDraft && (
             <button
               type="button"
               onClick={onSaveDraft}
               disabled={isSubmitting}
               aria-label="Save current progress as draft"
-              className="flex-1 min-h-[44px] px-6 py-3 text-gray-700 border border-gray-300 rounded-md
-                         hover:bg-gray-50 hover:border-gray-400
-                         focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
+              className="flex-1 min-h-[48px] px-6 py-3 text-gray-700 border-2 border-gray-300 rounded-lg font-ui font-semibold
+                         bg-white hover:bg-gray-50 hover:border-gray-400
+                         focus:outline-none focus:ring-4 focus:ring-gray-100 focus:ring-offset-2
                          disabled:opacity-50 disabled:cursor-not-allowed
-                         transition-colors duration-150 font-medium"
+                         transition-colors duration-150"
             >
               Save Draft
             </button>
@@ -83,9 +85,10 @@ export function FormNavigation({
               onClick={onBack}
               disabled={isSubmitting}
               aria-label="Go back to previous step"
-              className="min-h-[44px] px-6 py-2 bg-white border border-gray-300 text-gray-700 rounded-md
-                         hover:bg-gray-50 active:bg-gray-100
-                         focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
+              className="min-h-[48px] px-6 py-2.5 bg-white border-2 border-gray-300 text-gray-700 rounded-lg font-ui font-semibold
+                         hover:bg-gray-50 hover:border-gray-400
+                         active:bg-gray-100
+                         focus:outline-none focus:ring-4 focus:ring-gray-100 focus:ring-offset-2
                          disabled:opacity-50 disabled:cursor-not-allowed
                          transition-colors duration-150"
             >
@@ -101,8 +104,9 @@ export function FormNavigation({
               onClick={onSaveDraft}
               disabled={isSubmitting}
               aria-label="Save current progress as draft"
-              className="min-h-[44px] px-6 py-2 text-gray-700 hover:text-gray-900
-                         focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded-md
+              className="min-h-[48px] px-6 py-2.5 text-gray-700 hover:text-gray-900 font-ui font-semibold
+                         border-2 border-gray-300 rounded-lg bg-white hover:bg-gray-50 hover:border-gray-400
+                         focus:outline-none focus:ring-4 focus:ring-gray-100 focus:ring-offset-2
                          disabled:opacity-50 disabled:cursor-not-allowed
                          transition-colors duration-150"
             >
@@ -116,11 +120,12 @@ export function FormNavigation({
               onClick={onNext}
               disabled={isSubmitting}
               aria-label={isLastStep ? 'Submit registration form' : `Continue to ${nextLabel}`}
-              className="min-h-[44px] px-8 py-2 bg-primary-500 text-white rounded-md
-                         hover:bg-primary-600 active:bg-primary-700
-                         focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
-                         disabled:opacity-50 disabled:cursor-not-allowed
-                         transition-colors duration-150"
+              className="min-h-[48px] px-8 py-2.5 bg-primary-600 text-white rounded-lg font-ui font-semibold
+                         shadow-md hover:shadow-lg hover:bg-primary-700 hover:-translate-y-0.5
+                         active:bg-primary-800 active:translate-y-0 active:shadow-md
+                         focus:outline-none focus:ring-4 focus:ring-primary-100 focus:ring-offset-2
+                         disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0
+                         transition-all duration-200"
             >
               {isSubmitting ? 'Loading...' : isLastStep ? 'Submit' : `${nextLabel} →`}
             </button>

@@ -22,12 +22,12 @@ export function LoadingSpinner({
   const spinner = (
     <div className={`flex flex-col items-center justify-center gap-3 ${className}`}>
       <div
-        className={`${sizeClasses[size]} border-2 border-primary-200 border-t-primary-600 rounded-full animate-spin`}
+        className={`${sizeClasses[size]} border-4 border-primary-100 border-t-primary-500 rounded-full animate-spin`}
         role="status"
         aria-label="Loading"
       />
       {text && (
-        <p className="text-sm text-gray-600">{text}</p>
+        <p className="text-sm font-body text-gray-700">{text}</p>
       )}
     </div>
   );

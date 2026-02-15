@@ -56,16 +56,29 @@ export function ToastComponent({ toast, onDismiss, duration = 5000 }: ToastProps
     }
   };
 
-  const getStyles = () => {
+  const getLeftBorderColor = () => {
     switch (toast.type) {
       case 'success':
-        return 'bg-success-50 border-success-500/30 text-success-600';
+        return 'border-l-success-500';
       case 'error':
-        return 'bg-error-50 border-error-500/30 text-error-600';
+        return 'border-l-error-500';
       case 'warning':
-        return 'bg-yellow-50 border-yellow-500/30 text-yellow-800';
+        return 'border-l-warning-500';
       case 'info':
-        return 'bg-primary-50 border-primary-500/30 text-primary-600';
+        return 'border-l-info-500';
+    }
+  };
+
+  const getIconBgColor = () => {
+    switch (toast.type) {
+      case 'success':
+        return 'bg-success-50 text-success-600';
+      case 'error':
+        return 'bg-error-50 text-error-600';
+      case 'warning':
+        return 'bg-warning-50 text-warning-600';
+      case 'info':
+        return 'bg-info-50 text-info-600';
     }
   };
 
@@ -82,22 +95,27 @@ export function ToastComponent({ toast, onDismiss, duration = 5000 }: ToastProps
       role="alert"
       aria-live="polite"
       className={`
-        flex items-start gap-2 sm:gap-3 p-3 sm:p-4 rounded-md border shadow-lg
-        w-full sm:min-w-[300px] sm:max-w-md
-        ${getStyles()}
+        flex items-start gap-3 sm:gap-4 p-4 sm:p-5 rounded-xl
+        bg-white border-l-4 ${getLeftBorderColor()}
+        shadow-lg hover:shadow-xl
+        w-full sm:min-w-[320px] sm:max-w-md
+        transition-shadow duration-200
       `}
       style={{
-        animation: 'slideIn 0.3s ease-out',
+        animation: 'slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.05)',
       }}
     >
       {/* Icon */}
-      <div className="flex-shrink-0 mt-0.5" aria-hidden="true">{getIcon()}</div>
+      <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${getIconBgColor()}`} aria-hidden="true">
+        {getIcon()}
+      </div>
 
       {/* Content */}
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium">{toast.message}</p>
+        <p className="text-sm font-body font-medium text-gray-900">{toast.message}</p>
         {toast.timestamp && (
-          <p className="text-xs opacity-75 mt-1">
+          <p className="text-xs font-technical text-gray-500 mt-1">
             {formatTimestamp(toast.timestamp)}
           </p>
         )}
@@ -107,7 +125,7 @@ export function ToastComponent({ toast, onDismiss, duration = 5000 }: ToastProps
       <button
         type="button"
         onClick={() => onDismiss(toast.id)}
-        className="flex-shrink-0 p-1 rounded-md hover:bg-black/10 transition-colors min-h-[32px] min-w-[32px] flex items-center justify-center"
+        className="flex-shrink-0 p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors min-h-[32px] min-w-[32px] flex items-center justify-center"
         aria-label={`Dismiss ${toast.type} notification: ${toast.message}`}
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

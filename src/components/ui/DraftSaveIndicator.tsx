@@ -13,7 +13,7 @@ export function DraftSaveIndicator({
 }: DraftSaveIndicatorProps) {
   if (isSaving) {
     return (
-      <div className="flex items-center gap-2 text-sm text-gray-600">
+      <div className="flex items-center gap-2 text-sm font-technical text-primary-600 font-medium">
         <div className="w-2 h-2 bg-primary-500 rounded-full animate-pulse" />
         <span>Saving draft...</span>
       </div>
@@ -33,7 +33,7 @@ export function DraftSaveIndicator({
   };
 
   return (
-    <div className="flex items-center gap-2 text-sm text-success-600">
+    <div className="flex items-center gap-2 text-sm font-technical text-success-600 font-medium">
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
           strokeLinecap="round"

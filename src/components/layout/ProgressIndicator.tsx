@@ -23,15 +23,15 @@ export function ProgressIndicator({ steps, currentStep }: ProgressIndicatorProps
         {/* Mobile: Simplified progress bar */}
         <div className="block sm:hidden">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-xs font-medium text-gray-900" aria-live="polite">
+            <p className="text-xs font-ui font-semibold text-gray-900" aria-live="polite">
               Step {currentStep} of {steps.length}
             </p>
-            <p className="text-xs text-gray-600">
+            <p className="text-xs font-ui text-gray-600">
               {steps[currentStep - 1]?.title}
             </p>
           </div>
-          <div 
-            className="w-full bg-gray-200 rounded-full h-2"
+          <div
+            className="w-full bg-gray-200 rounded-full h-1.5"
             role="progressbar"
             aria-valuenow={currentStep}
             aria-valuemin={1}
@@ -39,7 +39,7 @@ export function ProgressIndicator({ steps, currentStep }: ProgressIndicatorProps
             aria-label={`Registration progress: Step ${currentStep} of ${steps.length}, ${progressPercentage}% complete`}
           >
             <div
-              className="bg-primary-600 h-2 rounded-full transition-all duration-300"
+              className="bg-gradient-to-r from-primary-500 to-primary-600 h-1.5 rounded-full transition-all duration-300"
               style={{ width: `${progressPercentage}%` }}
               aria-hidden="true"
             />
@@ -63,14 +63,14 @@ export function ProgressIndicator({ steps, currentStep }: ProgressIndicatorProps
                 <div className="flex flex-col items-center">
                   <div
                     className={`
-                      w-10 h-10 rounded-full flex items-center justify-center
-                      font-semibold text-sm transition-colors
+                      w-12 h-12 rounded-full flex items-center justify-center
+                      font-ui font-bold text-sm transition-all duration-200
                       ${
                         isCompleted
                           ? 'bg-success-500 text-white' // Completed
                           : isCurrent
-                          ? 'bg-primary-600 text-white' // Active
-                          : 'bg-gray-200 text-gray-500' // Inactive
+                          ? 'bg-gradient-to-br from-primary-500 to-primary-600 text-white animate-pulse' // Active
+                          : 'bg-gray-100 border-2 border-gray-300 text-gray-500' // Inactive
                       }
                     `}
                     aria-label={`Step ${step.number}: ${step.title} - ${stepStatus}`}
@@ -82,12 +82,12 @@ export function ProgressIndicator({ steps, currentStep }: ProgressIndicatorProps
                     )}
                   </div>
 
-                  <p className={`text-xs mt-2 text-center ${
+                  <p className={`text-xs font-ui mt-2 text-center ${
                     isCompleted
-                      ? 'text-gray-600'
+                      ? 'text-gray-600 font-medium'
                       : isCurrent
-                      ? 'text-gray-900 font-medium'
-                      : 'text-gray-500'
+                      ? 'text-gray-900 font-semibold'
+                      : 'text-gray-500 font-medium'
                   }`}>
                     {step.title}
                   </p>
@@ -97,7 +97,7 @@ export function ProgressIndicator({ steps, currentStep }: ProgressIndicatorProps
                 {index < steps.length - 1 && (
                   <div
                     className={`
-                      flex-1 h-1 mx-2 transition-colors
+                      flex-1 h-0.5 mx-2 transition-colors duration-300
                       ${isCompleted ? 'bg-success-500' : 'bg-gray-200'}
                     `}
                     aria-hidden="true"
@@ -109,8 +109,8 @@ export function ProgressIndicator({ steps, currentStep }: ProgressIndicatorProps
         </ol>
 
         <div className="hidden sm:block mt-4 text-center">
-          <p 
-            className="text-sm text-gray-600"
+          <p
+            className="text-sm font-body text-gray-600"
             aria-live="polite"
             aria-atomic="true"
           >

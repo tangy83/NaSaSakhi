@@ -219,7 +219,7 @@ export function FileUpload({
     const preview = fileInfo?.preview;
 
     return (
-      <div className="mt-4 p-3 sm:p-4 bg-gray-50 border border-gray-300 rounded-md">
+      <div className="mt-4 p-3 sm:p-4 bg-gray-50 border border-gray-200 rounded-lg shadow-sm">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
           {/* Image preview for logos and image documents */}
           {preview && (
@@ -232,11 +232,11 @@ export function FileUpload({
 
           {/* File info */}
           <div className="flex-1 min-w-0 w-full sm:w-auto">
-            <p className="text-sm font-medium text-gray-900 truncate">
+            <p className="text-sm font-medium font-body text-gray-900 truncate">
               {fileName}
             </p>
             {fileSize && (
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-600 font-body mt-1">
                 {formatFileSize(fileSize)}
               </p>
             )}
@@ -249,9 +249,10 @@ export function FileUpload({
                 href={fileUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 sm:flex-none min-h-[44px] px-4 py-2.5 text-sm text-primary-600 hover:text-primary-700
-                           border border-primary-300 rounded-md hover:bg-primary-50
-                           focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
+                className="flex-1 sm:flex-none min-h-[44px] px-4 py-2.5 text-sm font-ui font-semibold
+                           text-primary-600 hover:text-primary-700
+                           border-2 border-primary-500 rounded-lg hover:bg-primary-50
+                           focus:outline-none focus:ring-4 focus:ring-primary-100 focus:ring-offset-2
                            transition-colors duration-150
                            flex items-center justify-center"
                 aria-label="View uploaded file"
@@ -262,9 +263,10 @@ export function FileUpload({
             <button
               type="button"
               onClick={handleRemove}
-              className="flex-1 sm:flex-none min-h-[44px] px-4 py-2.5 text-sm text-error-600 hover:text-error-700
-                         border border-error-300 rounded-md hover:bg-error-50
-                         focus:outline-none focus:ring-2 focus:ring-error-500 focus:ring-offset-2
+              className="flex-1 sm:flex-none min-h-[44px] px-4 py-2.5 text-sm font-ui font-semibold
+                         text-error-600 hover:text-error-700
+                         border-2 border-error-300 rounded-lg hover:bg-error-50
+                         focus:outline-none focus:ring-4 focus:ring-error-100 focus:ring-offset-2
                          transition-colors duration-150
                          flex items-center justify-center"
               aria-label="Remove uploaded file"
@@ -285,7 +287,7 @@ export function FileUpload({
   return (
     <div className={`space-y-1 ${className}`}>
       {/* Label */}
-      <label htmlFor={id} className="block text-sm font-medium text-gray-700">
+      <label htmlFor={id} className="block text-sm font-medium font-body text-gray-700">
         {label}
         {required && (
           <span className="text-error-500 ml-1" aria-label="required">*</span>
@@ -309,14 +311,14 @@ export function FileUpload({
             }
           }}
           className={`
-            relative border-2 border-dashed rounded-md p-6 sm:p-8 text-center
+            relative border-2 border-dashed rounded-lg p-6 sm:p-8 text-center
             transition-colors duration-150 cursor-pointer min-h-[120px] sm:min-h-[150px] flex items-center justify-center
-            focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
-            ${isDragging 
-              ? 'border-primary-500 bg-primary-50' 
-              : 'border-gray-300 hover:border-primary-400 hover:bg-gray-50'
+            focus:outline-none focus:ring-4 focus:ring-primary-100 focus:ring-offset-2
+            ${isDragging
+              ? 'border-primary-400 bg-primary-100'
+              : 'border-primary-300 bg-primary-50 hover:border-primary-400 hover:bg-primary-100'
             }
-            ${error ? 'border-error-500' : ''}
+            ${error ? 'border-error-500 bg-error-50' : ''}
           `}
           onClick={() => fileInputRef.current?.click()}
         >
@@ -336,7 +338,7 @@ export function FileUpload({
           {/* Upload Icon */}
           <div className="flex flex-col items-center gap-2">
             <svg
-              className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400"
+              className="w-10 h-10 sm:w-12 sm:h-12 text-primary-500"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -350,15 +352,15 @@ export function FileUpload({
               />
             </svg>
 
-            <div className="text-xs sm:text-sm text-gray-600">
-              <span className="text-primary-600 font-medium">
+            <div className="text-xs sm:text-sm text-gray-700 font-body">
+              <span className="text-primary-600 font-semibold">
                 Click to upload
               </span>
               <span className="hidden sm:inline"> or drag and drop</span>
             </div>
 
-            <p className="text-xs text-gray-500 mt-1">
-              {uploadType === 'document' 
+            <p className="text-xs text-gray-600 font-body mt-1">
+              {uploadType === 'document'
                 ? 'PDF, JPEG, PNG (max 5MB)'
                 : 'JPEG, PNG, SVG (max 2MB)'
               }
@@ -382,7 +384,7 @@ export function FileUpload({
                   aria-hidden="true"
                 />
               </div>
-              <p id={progressId} className="text-xs text-gray-500 mt-2">
+              <p id={progressId} className="text-xs text-primary-600 font-body font-medium mt-2">
                 Uploading... {uploadProgress}%
               </p>
             </div>
@@ -395,7 +397,7 @@ export function FileUpload({
 
       {/* Error Message */}
       {(error || uploadError) && (
-        <p role="alert" className="text-sm text-error-500 flex items-center gap-1">
+        <p role="alert" className="text-sm text-error-500 font-body font-medium flex items-center gap-1">
           <span>⚠️</span>
           {error || uploadError}
         </p>
@@ -403,7 +405,7 @@ export function FileUpload({
 
       {/* Helper Text */}
       {helperText && !error && !uploadError && (
-        <p className="text-sm text-gray-500">{helperText}</p>
+        <p className="text-sm text-gray-600 font-body">{helperText}</p>
       )}
     </div>
   );
