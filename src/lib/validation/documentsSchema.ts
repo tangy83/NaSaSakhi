@@ -66,7 +66,6 @@ export const documentsSchema = z.object({
   additionalCertificateUrls: z
     .array(urlSchema)
     .max(3, 'You can upload a maximum of 3 additional certificates')
-    .optional()
     .default([]),
 });
 
