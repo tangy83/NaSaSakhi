@@ -1,3 +1,0 @@
-# Exclude workspace directories from Vercel build
-apps/
-packages/
