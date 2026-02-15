@@ -2,5 +2,8 @@
   "installCommand": "npm install --include=dev",
   "env": {
     "SKIP_ENV_VALIDATION": "1"
+  },
+  "git": {
+    "deploymentEnabled": true
   }
 }
