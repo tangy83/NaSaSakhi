@@ -92,7 +92,7 @@ export default function HomePage() {
       <section className="py-16 sm:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-semibold text-gray-900 text-center mb-12">
-            Why Register with NASA Sakhi?
+            Why Register with NaariSamata Sakhi?
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Benefit 1 */}
@@ -405,14 +405,22 @@ export default function HomePage() {
             <p className="text-gray-700 font-body mb-2">
               Need help? Contact us at{' '}
               <a
-                href="mailto:support@nasasakhi.org"
+                href="mailto:support@naarisamata.org"
                 className="text-primary-600 underline hover:text-primary-700 font-medium"
               >
-                support@nasasakhi.org
+                support@naarisamata.org
               </a>
             </p>
-            <p className="text-sm text-gray-600 font-body">
-              Your data is secure and will be reviewed by our team within 48 hours
+            <p className="text-sm text-gray-500">
+              Built by{' '}
+              <a
+                href="https://www.contextfirstai.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary-600 hover:text-primary-700 underline"
+              >
+                Context First AI
+              </a>
             </p>
           </div>
 

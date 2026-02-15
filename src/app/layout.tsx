@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import './globals.css';  // ← Add this line
 
 export const metadata: Metadata = {
-  title: 'NASA Sakhi - Organization Registration Portal',
+  title: 'NaariSamata Sakhi - Organization Registration Portal',
   description: 'Empowering women and vulnerable children across India',
 };
 

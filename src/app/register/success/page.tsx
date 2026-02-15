@@ -41,7 +41,7 @@ function SuccessPageContent() {
               Registration Submitted Successfully!
             </h1>
             <p className="text-lg text-gray-600">
-              Thank you for registering your organization with NASA Sakhi
+              Thank you for registering your organization with NaariSamata Sakhi
             </p>
           </div>
 
@@ -64,7 +64,7 @@ function SuccessPageContent() {
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="mt-0.5">•</span>
-                    <span>Once approved, your organization will be visible in the NASA Sakhi directory.</span>
+                    <span>Once approved, your organization will be visible in the NaariSamata Sakhi directory.</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="mt-0.5">•</span>
@@ -154,10 +154,10 @@ function SuccessPageContent() {
             <p className="text-sm text-gray-600">
               Need help? Contact us at{' '}
               <a
-                href="mailto:support@nasasakhi.org"
+                href="mailto:support@naarisamata.org"
                 className="text-primary-600 hover:text-primary-700 underline"
               >
-                support@nasasakhi.org
+                support@naarisamata.org
               </a>
             </p>
           </div>

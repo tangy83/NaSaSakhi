@@ -361,7 +361,7 @@ export default function AccordionFormPage() {
                 Organization Registration
               </h1>
               <p className="text-gray-600">
-                Complete all required sections to register your organization with NASA Sakhi
+                Complete all required sections to register your organization with NaariSamata Sakhi
               </p>
             </div>
 

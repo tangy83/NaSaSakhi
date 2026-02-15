@@ -17,7 +17,7 @@ export default function RegisterStartPage() {
           />
         </div>
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-gray-900 mb-4">
-          Welcome to NASA Sakhi Registration
+          Welcome to NaariSamata Sakhi Registration
         </h1>
         <p className="text-lg sm:text-xl font-body text-gray-700 max-w-2xl mx-auto">
           Join 500+ organizations empowering women and vulnerable children across India
@@ -176,7 +176,7 @@ export default function RegisterStartPage() {
       {/* Key Benefits Section */}
       <section className="mb-12 sm:mb-16">
         <h2 className="text-2xl sm:text-3xl font-heading font-semibold text-gray-900 text-center mb-8">
-          Why Register with NASA Sakhi?
+          Why Register with NaariSamata Sakhi?
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Benefit 1 */}
