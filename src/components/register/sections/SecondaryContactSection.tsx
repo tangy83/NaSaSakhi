@@ -47,7 +47,7 @@ export function SecondaryContactSection({
           <TextInput
             label="Name"
             placeholder="Enter full name"
-            error={errors.secondaryContact?.name?.message as string}
+            error={(errors.secondaryContact as any)?.name?.message as string}
             {...register('secondaryContact.name')}
           />
 
@@ -56,7 +56,7 @@ export function SecondaryContactSection({
             type="tel"
             placeholder="9876543210"
             maxLength={10}
-            error={errors.secondaryContact?.phone?.message as string}
+            error={(errors.secondaryContact as any)?.phone?.message as string}
             helperText="10-digit mobile number starting with 6, 7, 8, or 9"
             {...register('secondaryContact.phone')}
           />
@@ -65,7 +65,7 @@ export function SecondaryContactSection({
             label="Email"
             type="email"
             placeholder="contact2@organization.org"
-            error={errors.secondaryContact?.email?.message as string}
+            error={(errors.secondaryContact as any)?.email?.message as string}
             {...register('secondaryContact.email')}
           />
         </div>

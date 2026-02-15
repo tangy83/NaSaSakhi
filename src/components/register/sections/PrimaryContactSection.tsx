@@ -15,7 +15,7 @@ export function PrimaryContactSection({ register, errors }: PrimaryContactSectio
         label="Name"
         required
         placeholder="Enter full name"
-        error={errors.primaryContact?.name?.message as string}
+        error={(errors.primaryContact as any)?.name?.message as string}
         helperText="Name of the primary contact person"
         {...register('primaryContact.name')}
       />
@@ -26,7 +26,7 @@ export function PrimaryContactSection({ register, errors }: PrimaryContactSectio
         required
         placeholder="9876543210"
         maxLength={10}
-        error={errors.primaryContact?.phone?.message as string}
+        error={(errors.primaryContact as any)?.phone?.message as string}
         helperText="10-digit mobile number starting with 6, 7, 8, or 9"
         {...register('primaryContact.phone')}
       />
@@ -36,7 +36,7 @@ export function PrimaryContactSection({ register, errors }: PrimaryContactSectio
         type="email"
         required
         placeholder="contact@organization.org"
-        error={errors.primaryContact?.email?.message as string}
+        error={(errors.primaryContact as any)?.email?.message as string}
         helperText="Primary email address for communications"
         {...register('primaryContact.email')}
       />
