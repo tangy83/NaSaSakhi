@@ -1,0 +1,6 @@
+# Ignore workspace directories during build
+apps/backend
+apps/frontend
+
+# Ignore node_modules in subdirectories
+apps/*/node_modules
