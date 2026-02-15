@@ -28,20 +28,12 @@ import { useApiError } from '@/hooks/useApiError';
 import { useToast } from '@/contexts/ToastContext';
 
 // Combined validation schema for all sections
-const fullFormSchema = z.object({
-  // Section 1: Organization
-  ...organizationSchema.shape,
-  // Section 2-4: Contact (primary, secondary, online presence)
-  ...contactSchema.shape,
-  // Section 5: Services
-  ...servicesSchema.shape,
-  // Section 6: Branches
-  ...branchesSchema.shape,
-  // Section 7: Languages
-  ...languagesSchema.shape,
-  // Section 8: Documents
-  ...documentsSchema.shape,
-});
+const fullFormSchema = organizationSchema
+  .merge(contactSchema)
+  .merge(servicesSchema)
+  .merge(branchesSchema)
+  .merge(languagesSchema)
+  .merge(documentsSchema);
 
 type FullFormData = z.infer<typeof fullFormSchema>;
 
