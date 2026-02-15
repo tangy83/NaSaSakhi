@@ -1,6 +1,6 @@
 {
   "buildCommand": "npm run prisma:generate && npm run build --workspace-root",
-  "installCommand": "npm install",
+  "installCommand": "npm install --include=dev",
   "framework": "nextjs",
   "env": {
     "SKIP_ENV_VALIDATION": "1"
