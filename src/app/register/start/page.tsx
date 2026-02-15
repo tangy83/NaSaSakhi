@@ -150,7 +150,7 @@ export default function RegisterStartPage() {
       {/* What You'll Need Section */}
       <section className="mb-12 sm:mb-16">
         <h2 className="text-2xl sm:text-3xl font-heading font-semibold text-gray-900 text-center mb-8">
-          What You'll Need
+          What You&apos;ll Need
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {[
