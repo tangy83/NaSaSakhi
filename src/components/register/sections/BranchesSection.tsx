@@ -143,7 +143,7 @@ export function BranchesSection({
       {/* Branches List */}
       <div className="space-y-6">
         {fields.map((field, branchIndex) => {
-          const branchErrors = errors.branches?.[branchIndex];
+          const branchErrors = Array.isArray(errors.branches) ? errors.branches[branchIndex] : undefined;
           const currentStateId = watchedBranches[branchIndex]?.stateId || '';
           const availableCities = getCitiesForState(currentStateId);
 
