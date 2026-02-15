@@ -40,7 +40,7 @@ const fullFormSchema = z.object({
   // Section 7: Languages
   ...languagesSchema.shape,
   // Section 8: Documents
-  documents: documentsSchema,
+  ...documentsSchema.shape,
 });
 
 type FullFormData = z.infer<typeof fullFormSchema>;
@@ -104,11 +104,9 @@ export default function AccordionFormPage() {
       // Languages
       languageIds: formData.languageIds || [],
       // Documents
-      documents: formData.documents || {
-        registrationCertificateUrl: '',
-        logoUrl: '',
-        additionalCertificateUrls: [],
-      },
+      registrationCertificateUrl: formData.registrationCertificateUrl || '',
+      logoUrl: formData.logoUrl || '',
+      additionalCertificateUrls: formData.additionalCertificateUrls || [],
     },
   });
 
@@ -306,10 +304,10 @@ export default function AccordionFormPage() {
         languageIds: data.languageIds,
         // Documents
         documents: {
-          registrationCertificateUrl: data.documents.registrationCertificateUrl,
-          logoUrl: data.documents.logoUrl || undefined,
+          registrationCertificateUrl: data.registrationCertificateUrl,
+          logoUrl: data.logoUrl || undefined,
           additionalCertificateUrls:
-            data.documents.additionalCertificateUrls?.filter((url) => url.trim().length > 0) || [],
+            data.additionalCertificateUrls?.filter((url) => url.trim().length > 0) || [],
         },
       };
 
