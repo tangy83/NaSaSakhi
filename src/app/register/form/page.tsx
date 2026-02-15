@@ -59,7 +59,7 @@ export default function AccordionFormPage() {
     watch,
     control,
     trigger,
-  } = useForm<FullFormData>({
+  } = useForm({
     resolver: zodResolver(fullFormSchema),
     mode: 'onBlur',
     reValidateMode: 'onBlur',
