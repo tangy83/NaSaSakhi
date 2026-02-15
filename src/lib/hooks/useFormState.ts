@@ -425,7 +425,7 @@ export function useFormState() {
     setLastSaveTimestamp(null);
     lastSavedDataRef.current = '';
     if (navigate) {
-      router.push('/register/step1');
+      router.push('/register/start');
     }
   }, [router]);
 

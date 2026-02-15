@@ -79,10 +79,10 @@ export default function DiagnosticPage() {
 
         <div className="mt-6">
           <a
-            href="/register/step1"
+            href="/register/start"
             className="inline-block px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700"
           >
-            Go to Registration Step 1
+            Go to Registration
           </a>
         </div>
       </div>

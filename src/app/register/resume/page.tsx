@@ -128,7 +128,7 @@ function ResumePageContent() {
   const handleStartFresh = () => {
     // Clear draft without navigating (we'll navigate manually)
     clearDraft(false);
-    router.push('/register/step1');
+    router.push('/register/start');
   };
 
   // Format date for display

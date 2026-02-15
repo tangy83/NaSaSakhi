@@ -138,7 +138,7 @@ function SuccessPageContent() {
               onClick={() => {
                 // Clear form data and start new registration
                 localStorage.removeItem('nasa_sakhi_registration_draft');
-                window.location.href = '/register/step1';
+                window.location.href = '/register/start';
               }}
               className="flex-1 px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-md
                          hover:bg-gray-50 active:bg-gray-100

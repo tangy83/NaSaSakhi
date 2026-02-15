@@ -27,7 +27,7 @@ export default function HomePage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
-                  href="/register/step1"
+                  href="/register/start"
                   className="inline-flex items-center justify-center min-h-[56px] px-8 py-4 bg-primary-600 text-white rounded-lg font-ui font-semibold text-lg
                              shadow-lg hover:shadow-xl hover:bg-primary-700 hover:-translate-y-0.5
                              active:bg-primary-800 active:translate-y-0 active:shadow-md
