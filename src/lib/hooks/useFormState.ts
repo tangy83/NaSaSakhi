@@ -27,6 +27,7 @@ const initialFormData: Partial<RegistrationFormData> = {
   // Step 2: Contact Information
   primaryContact: {
     name: '',
+    isdCode: '+91',
     phone: '',
     email: '',
   },
