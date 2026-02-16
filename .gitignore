@@ -68,3 +68,8 @@ NaSaSakhi-Backend.zip
 *.zip
 
 /src/generated/prisma
+
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
