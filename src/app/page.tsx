@@ -222,7 +222,7 @@ export default function HomePage() {
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-semibold text-gray-900 text-center mb-12">
             How It Works
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Step 1 */}
             <div className="relative">
               <div className="flex flex-col items-center text-center">
@@ -262,23 +262,6 @@ export default function HomePage() {
               <div className="flex flex-col items-center text-center">
                 <div className="w-16 h-16 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center font-ui font-bold text-2xl mb-4">
                   3
-                </div>
-                <h3 className="text-xl font-ui font-semibold text-gray-900 mb-2">
-                  Access Resources
-                </h3>
-                <p className="text-base font-body text-gray-600">
-                  Get connected to funding, training, and support network
-                </p>
-              </div>
-              {/* Connector line - hidden on mobile */}
-              <div className="hidden lg:block absolute top-8 left-[calc(50%+2rem)] w-[calc(100%-4rem)] h-0.5 bg-primary-200" />
-            </div>
-
-            {/* Step 4 */}
-            <div className="relative">
-              <div className="flex flex-col items-center text-center">
-                <div className="w-16 h-16 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center font-ui font-bold text-2xl mb-4">
-                  4
                 </div>
                 <h3 className="text-xl font-ui font-semibold text-gray-900 mb-2">
                   Make Impact
