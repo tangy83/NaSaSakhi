@@ -41,14 +41,14 @@ export function ProgressSidebar({
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center gap-3">
           <Image
-            src="/assets/logo/nasa-sakhi-logo.svg"
-            alt="NASA Sakhi"
-            width={40}
-            height={40}
+            src="/assets/logo/coloured.png"
+            alt="NaariSamata Sakhi"
+            width={48}
+            height={48}
             className="flex-shrink-0"
           />
           <div>
-            <h1 className="text-lg font-semibold text-gray-900 font-ui">NASA Sakhi</h1>
+            <h1 className="text-lg font-semibold text-gray-900 font-ui">NaariSamata Sakhi</h1>
             <p className="text-xs text-gray-600">Registration</p>
           </div>
         </div>
