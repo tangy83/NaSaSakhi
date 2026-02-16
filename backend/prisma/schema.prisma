@@ -84,7 +84,8 @@ model ContactInformation {
   organizationId  String
   isPrimary       Boolean @default(false)
   name            String
-  phone           String  @db.VarChar(10)
+  isdCode         String  @default("+91") @db.VarChar(5)
+  phone           String  @db.VarChar(15)
   email           String
   facebookUrl     String?
   instagramHandle String?

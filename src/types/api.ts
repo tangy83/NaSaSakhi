@@ -69,7 +69,8 @@ export type RegistrationType = 'NGO' | 'TRUST' | 'GOVERNMENT' | 'PRIVATE' | 'OTH
 
 export interface ContactInfo {
   name: string;
-  phone: string; // 10 digits, no formatting
+  isdCode: string; // Country code (e.g., +91)
+  phone: string; // Phone number without country code
   email: string;
 }
 
@@ -285,7 +286,8 @@ export interface ContactInformation {
   id: string;
   isPrimary: boolean;
   name: string;
-  phone: string;
+  isdCode: string; // Country code (e.g., +91)
+  phone: string; // Phone number without country code
   email: string;
   facebookUrl?: string;
   instagramHandle?: string;

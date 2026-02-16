@@ -8,11 +8,17 @@ const contactInfoSchema = z.object({
     .max(100, 'Name cannot exceed 100 characters')
     .regex(/^[a-zA-Z\s]+$/, 'Name can only contain letters and spaces'),
 
+  isdCode: z
+    .string()
+    .min(1, 'ISD code is required')
+    .max(5, 'ISD code cannot exceed 5 characters')
+    .regex(/^\+\d{1,4}$/, 'ISD code must start with + followed by 1-4 digits'),
+
   phone: z
     .string()
-    .min(10, 'Phone number must be exactly 10 digits')
-    .max(10, 'Phone number must be exactly 10 digits')
-    .regex(/^[6-9]\d{9}$/, 'Phone number must start with 6, 7, 8, or 9'),
+    .min(6, 'Phone number must be at least 6 digits')
+    .max(15, 'Phone number cannot exceed 15 digits')
+    .regex(/^\d+$/, 'Phone number can only contain digits'),
 
   email: z
     .string()

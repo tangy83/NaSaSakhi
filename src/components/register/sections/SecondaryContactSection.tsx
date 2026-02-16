@@ -51,15 +51,30 @@ export function SecondaryContactSection({
             {...register('secondaryContact.name')}
           />
 
-          <TextInput
-            label="Phone"
-            type="tel"
-            placeholder="9876543210"
-            maxLength={10}
-            error={(errors.secondaryContact as any)?.phone?.message as string}
-            helperText="10-digit mobile number starting with 6, 7, 8, or 9"
-            {...register('secondaryContact.phone')}
-          />
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+            <div className="sm:col-span-1">
+              <TextInput
+                label="ISD Code"
+                type="text"
+                placeholder="+91"
+                maxLength={5}
+                error={(errors.secondaryContact as any)?.isdCode?.message as string}
+                helperText="Country code"
+                {...register('secondaryContact.isdCode')}
+              />
+            </div>
+            <div className="sm:col-span-3">
+              <TextInput
+                label="Phone Number"
+                type="tel"
+                placeholder="9876543210"
+                maxLength={15}
+                error={(errors.secondaryContact as any)?.phone?.message as string}
+                helperText="Phone number without country code"
+                {...register('secondaryContact.phone')}
+              />
+            </div>
+          </div>
 
           <TextInput
             label="Email"
