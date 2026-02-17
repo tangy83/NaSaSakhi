@@ -105,7 +105,8 @@ export interface DocumentInfo {
 // ============================================================================
 
 /**
- * Service Category (14 total: 7 for children, 7 for women)
+ * Service Category (19 total: 10 for children, 9 for women)
+ * IDs use SQL CategoryID format (C001-C010 for Children, W001-W009 for Women)
  * GET /api/reference/categories
  */
 export interface ServiceCategory {
@@ -118,7 +119,8 @@ export interface ServiceCategory {
 export type TargetGroup = 'CHILDREN' | 'WOMEN';
 
 /**
- * Service Resource (76 total across all categories)
+ * Service Resource (sourced from SQL sakhi_new_service_resource.sql)
+ * IDs use SQL ResourceID format (e.g., CR0011, WR0021)
  * GET /api/reference/resources?categoryId=<id>
  */
 export interface ServiceResource {

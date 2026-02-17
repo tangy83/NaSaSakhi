@@ -25,76 +25,72 @@ test.describe('Registration Form E2E Tests', () => {
   test('should validate required fields in Organization Details section', async ({ page }) => {
     await page.goto('/register/form', { waitUntil: 'networkidle' });
 
+    // Clear any saved form data from previous test runs to ensure clean state
+    await page.evaluate(() => localStorage.clear());
+    await page.reload({ waitUntil: 'networkidle' });
+
     // Wait for React hydration
     await page.waitForLoadState('domcontentloaded');
 
-    // Open Organization Details section (Section 1) - use ID to avoid ambiguity
-    const section1Header = page.locator('#section-1-header');
+    // Section 1 starts open by default (useState(1))
+    // Wait for the Organization Name field to be ready (API loading complete)
+    const orgNameInput = page.getByLabel(/Organization Name/i);
+    await expect(orgNameInput).toBeVisible({ timeout: 15000 });
 
-    // Ensure header is interactive before clicking
-    await section1Header.waitFor({ state: 'attached' });
-    await page.waitForTimeout(1000); // Wait for hydration
-    await section1Header.click();
+    // Clear the field to ensure it's empty for validation testing
+    await orgNameInput.fill('');
 
-    // Wait longer for CSS animation
-    await page.waitForTimeout(1000);
-
-    // Validate button should be visible now - use simpler selector
-    const validateButton = page.getByRole('button', { name: /Validate & Continue/i }).first();
+    // Click validate without filling required fields
+    const validateButton = page.locator('#section-1-content').getByRole('button', { name: /Validate and continue/i });
     await validateButton.click({ force: true });
 
     // Check for validation errors
-    await expect(page.getByText(/Organization name is required/i)).toBeVisible();
+    await expect(page.getByText(/Organization name must be at least/i)).toBeVisible({ timeout: 5000 });
   });
 
   test('should fill Organization Details correctly', async ({ page }) => {
-    await page.goto('/register/form');
+    await page.goto('/register/form', { waitUntil: 'networkidle' });
 
-    // Open Organization Details section - use ID to avoid ambiguity
-    await page.locator('#section-1-header').click();
-
-    // Wait for section content to be visible
+    // Section 1 starts open by default - wait for form to fully load (API response)
     const section1Content = page.locator('#section-1-content');
-    await expect(section1Content).toBeVisible();
-    await page.waitForTimeout(500);
+    const orgNameInput = page.getByLabel(/Organization Name/i);
+    await expect(orgNameInput).toBeVisible({ timeout: 15000 });
 
     // Fill organization details
-    const orgNameInput = page.getByLabel(/Organization Name/i);
     await orgNameInput.fill('Test NGO Organization');
     await page.getByLabel(/Registration Type/i).selectOption('NGO');
     await page.getByLabel(/Registration Number/i).fill('REG123456');
     await page.getByLabel(/Year Established/i).fill('2010');
 
-    // Validate section - find button within section
-    await section1Content.getByRole('button', { name: /Validate & Continue/i }).click({ force: true });
+    // Validate section
+    await section1Content.getByRole('button', { name: /Validate and continue/i }).click({ force: true });
 
-    // Wait for section to close and verify completion
-    await expect(orgNameInput).not.toBeVisible();
+    // Verify section 1 is marked as complete (success indicator appears in header)
+    await expect(page.locator('#section-1-header').getByText(/Complete/i)).toBeVisible({ timeout: 5000 });
   });
 
   test('should fill Primary Contact with ISD Code and Phone', async ({ page }) => {
-    await page.goto('/register/form');
+    await page.goto('/register/form', { waitUntil: 'networkidle' });
 
     // Open Primary Contact section (Section 2) - use ID to avoid ambiguity
     await page.locator('#section-2-header').click();
 
     // Wait for section content to be visible
     const section2Content = page.locator('#section-2-content');
-    await expect(section2Content).toBeVisible();
-    await page.waitForTimeout(500);
+    await expect(section2Content).toBeVisible({ timeout: 10000 });
 
     // Fill contact details with new ISD Code + Phone format
-    const nameInput = page.getByLabel(/^Name/i).first();
+    const nameInput = page.locator('#section-2-content').getByLabel(/^Name/i);
     await nameInput.fill('John Doe');
-    await page.getByLabel(/ISD Code/i).first().fill('+91');
-    await page.getByLabel(/Phone Number/i).first().fill('9876543210');
-    await page.getByLabel(/Email/i).first().fill('john@testngo.org');
+    await page.locator('#section-2-content').getByLabel(/ISD Code/i).fill('+91');
+    await page.locator('#section-2-content').getByLabel(/Phone Number/i).fill('9876543210');
+    await page.locator('#section-2-content').getByLabel(/Email/i).fill('john@testngo.org');
 
-    // Validate section - find button within section
-    await section2Content.getByRole('button', { name: /Validate & Continue/i }).click({ force: true });
+    // Validate section
+    await section2Content.getByRole('button', { name: /Validate and continue/i }).click({ force: true });
 
-    // Check no errors and section closes
-    await expect(nameInput).not.toBeVisible();
+    // Verify section 2 is marked as complete (success indicator appears in header)
+    await expect(page.locator('#section-2-header').getByText(/Complete/i)).toBeVisible({ timeout: 5000 });
   });
 
   test('should select multiple languages from checkbox list', async ({ page }) => {

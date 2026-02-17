@@ -387,198 +387,202 @@ async function main() {
   await prisma.city.createMany({ data: cities, skipDuplicates: true });
   console.log('✅ Seeded major cities');
 
-  // 4. Seed Service Categories (14 categories)
+  // 4. Seed Service Categories (19 total — aligned with SQL sakhi_new_service_category.sql)
   const categories = [
-    // For Children (7)
-    { name: 'Education Support', targetGroup: TargetGroup.CHILDREN, displayOrder: 1 },
-    { name: 'Child Protection', targetGroup: TargetGroup.CHILDREN, displayOrder: 2 },
-    { name: 'Healthcare', targetGroup: TargetGroup.CHILDREN, displayOrder: 3 },
-    { name: 'Nutrition', targetGroup: TargetGroup.CHILDREN, displayOrder: 4 },
-    { name: 'Recreation', targetGroup: TargetGroup.CHILDREN, displayOrder: 5 },
-    { name: 'Skill Development', targetGroup: TargetGroup.CHILDREN, displayOrder: 6 },
-    { name: 'Legal Aid for Children', targetGroup: TargetGroup.CHILDREN, displayOrder: 7 },
-    // For Women (7)
-    { name: "Women's Healthcare", targetGroup: TargetGroup.WOMEN, displayOrder: 8 },
-    { name: 'Legal Support for Women', targetGroup: TargetGroup.WOMEN, displayOrder: 9 },
-    { name: 'Skill Training', targetGroup: TargetGroup.WOMEN, displayOrder: 10 },
-    { name: 'Shelter/Safe Housing', targetGroup: TargetGroup.WOMEN, displayOrder: 11 },
-    { name: 'Counseling Services', targetGroup: TargetGroup.WOMEN, displayOrder: 12 },
+    // For Children (10)
+    { name: 'Health & Well-being', targetGroup: TargetGroup.CHILDREN, displayOrder: 1 },
+    { name: 'Education & Skill Development', targetGroup: TargetGroup.CHILDREN, displayOrder: 2 },
+    { name: 'Child Protection & Rights', targetGroup: TargetGroup.CHILDREN, displayOrder: 3 },
+    { name: 'Shelter & Basic Needs', targetGroup: TargetGroup.CHILDREN, displayOrder: 4 },
+    { name: 'Economic & Social Empowerment', targetGroup: TargetGroup.CHILDREN, displayOrder: 5 },
+    { name: 'Gender & Inclusion', targetGroup: TargetGroup.CHILDREN, displayOrder: 6 },
+    { name: 'Safety & Emergency Response', targetGroup: TargetGroup.CHILDREN, displayOrder: 7 },
+    { name: 'Environment & Sustainability', targetGroup: TargetGroup.CHILDREN, displayOrder: 8 },
+    { name: 'Recreation & Sports', targetGroup: TargetGroup.CHILDREN, displayOrder: 9 },
+    { name: 'Mental Health Support', targetGroup: TargetGroup.CHILDREN, displayOrder: 10 },
+    // For Women (9)
+    { name: 'Health & Well-being', targetGroup: TargetGroup.WOMEN, displayOrder: 11 },
+    { name: 'Education & Skills Development', targetGroup: TargetGroup.WOMEN, displayOrder: 12 },
     { name: 'Economic Empowerment', targetGroup: TargetGroup.WOMEN, displayOrder: 13 },
-    { name: 'Awareness Programs', targetGroup: TargetGroup.WOMEN, displayOrder: 14 },
+    { name: 'Legal & Human Rights', targetGroup: TargetGroup.WOMEN, displayOrder: 14 },
+    { name: 'Safety & Shelter', targetGroup: TargetGroup.WOMEN, displayOrder: 15 },
+    { name: 'Social Support & Community Building', targetGroup: TargetGroup.WOMEN, displayOrder: 16 },
+    { name: 'Environmental & Rural Development', targetGroup: TargetGroup.WOMEN, displayOrder: 17 },
+    { name: 'Financial Literacy', targetGroup: TargetGroup.WOMEN, displayOrder: 18 },
+    { name: 'Mental Health & Counseling', targetGroup: TargetGroup.WOMEN, displayOrder: 19 },
   ];
 
   await prisma.serviceCategory.createMany({ data: categories, skipDuplicates: true });
-  console.log('✅ Seeded 14 service categories');
+  console.log('✅ Seeded 19 service categories');
 
-  // 5. Seed Service Resources (76 resources)
-  // Get all categories
+  // 5. Seed Service Resources — sourced from SQL sakhi_new_service_resource.sql
   const allCategories = await prisma.serviceCategory.findMany();
-  const categoryMap = new Map(allCategories.map(cat => [cat.name, cat]));
+  // Build map keyed by "name|targetGroup" to disambiguate identically-named categories across groups
+  const categoryMap = new Map(allCategories.map(cat => [`${cat.name}|${cat.targetGroup}`, cat]));
 
-  const educationSupport = categoryMap.get('Education Support');
-  const childProtection = categoryMap.get('Child Protection');
-  const healthcare = categoryMap.get('Healthcare');
-  const nutrition = categoryMap.get('Nutrition');
-  const recreation = categoryMap.get('Recreation');
-  const skillDevelopment = categoryMap.get('Skill Development');
-  const legalAidChildren = categoryMap.get('Legal Aid for Children');
-  const womensHealthcare = categoryMap.get("Women's Healthcare");
-  const legalSupportWomen = categoryMap.get('Legal Support for Women');
-  const skillTraining = categoryMap.get('Skill Training');
-  const shelter = categoryMap.get('Shelter/Safe Housing');
-  const counseling = categoryMap.get('Counseling Services');
-  const economicEmpowerment = categoryMap.get('Economic Empowerment');
-  const awarenessPrograms = categoryMap.get('Awareness Programs');
+  const healthChildren    = categoryMap.get('Health & Well-being|CHILDREN');
+  const eduChildren       = categoryMap.get('Education & Skill Development|CHILDREN');
+  const protectionC       = categoryMap.get('Child Protection & Rights|CHILDREN');
+  const shelterC          = categoryMap.get('Shelter & Basic Needs|CHILDREN');
+  const empowermentC      = categoryMap.get('Economic & Social Empowerment|CHILDREN');
+  const genderC           = categoryMap.get('Gender & Inclusion|CHILDREN');
+  const safetyC           = categoryMap.get('Safety & Emergency Response|CHILDREN');
+  const envC              = categoryMap.get('Environment & Sustainability|CHILDREN');
+  const recreationC       = categoryMap.get('Recreation & Sports|CHILDREN');
+  const mentalHealthC     = categoryMap.get('Mental Health Support|CHILDREN');
+  const healthWomen       = categoryMap.get('Health & Well-being|WOMEN');
+  const eduWomen          = categoryMap.get('Education & Skills Development|WOMEN');
+  const economicW         = categoryMap.get('Economic Empowerment|WOMEN');
+  const legalW            = categoryMap.get('Legal & Human Rights|WOMEN');
+  const safetyW           = categoryMap.get('Safety & Shelter|WOMEN');
+  const socialW           = categoryMap.get('Social Support & Community Building|WOMEN');
+  const envW              = categoryMap.get('Environmental & Rural Development|WOMEN');
+  const finLitW           = categoryMap.get('Financial Literacy|WOMEN');
+  const mentalHealthW     = categoryMap.get('Mental Health & Counseling|WOMEN');
 
-  if (!educationSupport || !childProtection || !healthcare || !nutrition || !recreation || 
-      !skillDevelopment || !legalAidChildren || !womensHealthcare || !legalSupportWomen || 
-      !skillTraining || !shelter || !counseling || !economicEmpowerment || !awarenessPrograms) {
+  if (!healthChildren || !eduChildren || !protectionC || !shelterC || !empowermentC ||
+      !genderC || !safetyC || !envC || !recreationC || !mentalHealthC ||
+      !healthWomen || !eduWomen || !economicW || !legalW || !safetyW ||
+      !socialW || !envW || !finLitW || !mentalHealthW) {
     throw new Error('Required categories not found. Please seed categories first.');
   }
 
   const resources = [
-    // Education Support (5+ resources)
-    { name: 'After-school tutoring', categoryId: educationSupport.id },
-    { name: 'Scholarship programs', categoryId: educationSupport.id },
-    { name: 'School supplies distribution', categoryId: educationSupport.id },
-    { name: 'Digital literacy programs', categoryId: educationSupport.id },
-    { name: 'Career counseling', categoryId: educationSupport.id },
-    { name: 'Educational workshops', categoryId: educationSupport.id },
-    { name: 'Library access', categoryId: educationSupport.id },
-    { name: 'Study groups', categoryId: educationSupport.id },
-    
-    // Child Protection (5+ resources)
-    { name: 'Child helpline support', categoryId: childProtection.id },
-    { name: 'Safe spaces for children', categoryId: childProtection.id },
-    { name: 'Child abuse prevention programs', categoryId: childProtection.id },
-    { name: 'Foster care services', categoryId: childProtection.id },
-    { name: 'Child rights awareness', categoryId: childProtection.id },
-    { name: 'Emergency shelter for children', categoryId: childProtection.id },
-    
-    // Healthcare (5+ resources)
-    { name: 'Pediatric health checkups', categoryId: healthcare.id },
-    { name: 'Vaccination programs', categoryId: healthcare.id },
-    { name: 'Nutritional supplements', categoryId: healthcare.id },
-    { name: 'Mental health support for children', categoryId: healthcare.id },
-    { name: 'Dental care for children', categoryId: healthcare.id },
-    { name: 'Vision and hearing tests', categoryId: healthcare.id },
-    
-    // Nutrition (5+ resources)
-    { name: 'Mid-day meal programs', categoryId: nutrition.id },
-    { name: 'Nutrition education', categoryId: nutrition.id },
-    { name: 'Food distribution', categoryId: nutrition.id },
-    { name: 'Growth monitoring', categoryId: nutrition.id },
-    { name: 'Supplemental nutrition programs', categoryId: nutrition.id },
-    
-    // Recreation (5+ resources)
-    { name: 'Sports activities', categoryId: recreation.id },
-    { name: 'Arts and crafts programs', categoryId: recreation.id },
-    { name: 'Music and dance classes', categoryId: recreation.id },
-    { name: 'Playground facilities', categoryId: recreation.id },
-    { name: 'Summer camps', categoryId: recreation.id },
-    { name: 'Cultural programs', categoryId: recreation.id },
-    
-    // Skill Development (5+ resources)
-    { name: 'Vocational training', categoryId: skillDevelopment.id },
-    { name: 'Computer skills training', categoryId: skillDevelopment.id },
-    { name: 'Life skills workshops', categoryId: skillDevelopment.id },
-    { name: 'Entrepreneurship training', categoryId: skillDevelopment.id },
-    { name: 'Job placement assistance', categoryId: skillDevelopment.id },
-    { name: 'Apprenticeship programs', categoryId: skillDevelopment.id },
-    
-    // Legal Aid for Children (5+ resources)
-    { name: 'Legal counseling for children', categoryId: legalAidChildren.id },
-    { name: 'Child custody support', categoryId: legalAidChildren.id },
-    { name: 'Education rights advocacy', categoryId: legalAidChildren.id },
-    { name: 'Child labor prevention', categoryId: legalAidChildren.id },
-    { name: 'Legal representation for minors', categoryId: legalAidChildren.id },
-    
-    // Women's Healthcare (5+ resources)
-    { name: 'Gynecological services', categoryId: womensHealthcare.id },
-    { name: 'Maternal health care', categoryId: womensHealthcare.id },
-    { name: 'Reproductive health services', categoryId: womensHealthcare.id },
-    { name: 'Breast cancer screening', categoryId: womensHealthcare.id },
-    { name: 'Mental health counseling for women', categoryId: womensHealthcare.id },
-    { name: 'Prenatal and postnatal care', categoryId: womensHealthcare.id },
-    { name: 'Family planning services', categoryId: womensHealthcare.id },
-    
-    // Legal Support for Women (5+ resources)
-    { name: 'Domestic violence legal aid', categoryId: legalSupportWomen.id },
-    { name: 'Divorce and separation support', categoryId: legalSupportWomen.id },
-    { name: 'Property rights advocacy', categoryId: legalSupportWomen.id },
-    { name: 'Dowry-related legal support', categoryId: legalSupportWomen.id },
-    { name: 'Legal counseling for women', categoryId: legalSupportWomen.id },
-    { name: 'Court representation', categoryId: legalSupportWomen.id },
-    
-    // Skill Training (5+ resources)
-    { name: 'Vocational training for women', categoryId: skillTraining.id },
-    { name: 'Entrepreneurship programs', categoryId: skillTraining.id },
-    { name: 'Computer literacy for women', categoryId: skillTraining.id },
-    { name: 'Financial literacy workshops', categoryId: skillTraining.id },
-    { name: 'Handicraft training', categoryId: skillTraining.id },
-    { name: 'Beauty and wellness training', categoryId: skillTraining.id },
-    
-    // Shelter/Safe Housing (5+ resources)
-    { name: 'Emergency shelter', categoryId: shelter.id },
-    { name: 'Transitional housing', categoryId: shelter.id },
-    { name: 'Safe homes for women', categoryId: shelter.id },
-    { name: 'Crisis accommodation', categoryId: shelter.id },
-    { name: 'Long-term housing support', categoryId: shelter.id },
-    
-    // Counseling Services (5+ resources)
-    { name: 'Individual counseling', categoryId: counseling.id },
-    { name: 'Group therapy sessions', categoryId: counseling.id },
-    { name: 'Crisis counseling', categoryId: counseling.id },
-    { name: 'Family counseling', categoryId: counseling.id },
-    { name: 'Trauma counseling', categoryId: counseling.id },
-    { name: 'Support groups', categoryId: counseling.id },
-    
-    // Economic Empowerment (5+ resources)
-    { name: 'Microfinance programs', categoryId: economicEmpowerment.id },
-    { name: 'Self-help groups', categoryId: economicEmpowerment.id },
-    { name: 'Business development support', categoryId: economicEmpowerment.id },
-    { name: 'Market linkage programs', categoryId: economicEmpowerment.id },
-    { name: 'Savings and credit groups', categoryId: economicEmpowerment.id },
-    { name: 'Income generation programs', categoryId: economicEmpowerment.id },
-    
-    // Awareness Programs (5+ resources)
-    { name: 'Women\'s rights awareness', categoryId: awarenessPrograms.id },
-    { name: 'Health awareness campaigns', categoryId: awarenessPrograms.id },
-    { name: 'Legal rights education', categoryId: awarenessPrograms.id },
-    { name: 'Gender equality programs', categoryId: awarenessPrograms.id },
-    { name: 'Community awareness workshops', categoryId: awarenessPrograms.id },
-    { name: 'Digital safety awareness', categoryId: awarenessPrograms.id },
+    // Health & Well-being (Children)
+    { name: 'Mental Health & Emotional Support', description: 'Counseling, trauma therapy, play therapy', categoryId: healthChildren.id },
+    { name: 'Disease Prevention & Treatment', description: 'Vaccination drives, hygiene awareness', categoryId: healthChildren.id },
+    { name: 'Substance Abuse Prevention', description: 'Anti-drug programs, peer support groups', categoryId: healthChildren.id },
+    { name: 'Maternal & Infant Health', description: 'Newborn care, breastfeeding support, immunizations', categoryId: healthChildren.id },
+    { name: 'Nutrition & Malnutrition Prevention', description: 'Feeding programs, vitamin supplements', categoryId: healthChildren.id },
+    // Education & Skill Development (Children)
+    { name: 'Early Childhood Education', description: 'Preschool programs, daycare centers', categoryId: eduChildren.id },
+    { name: 'Primary & Secondary Education', description: 'School enrollment drives, scholarships', categoryId: eduChildren.id },
+    { name: 'Vocational Training for Youth', description: 'Carpentry, tailoring, agriculture, mechanics', categoryId: eduChildren.id },
+    { name: 'STEM & Digital Literacy', description: 'Coding, robotics, internet safety', categoryId: eduChildren.id },
+    { name: 'Workplace Readiness Programs', description: 'Internships, career coaching', categoryId: eduChildren.id },
+    { name: 'Disability & Special Needs Support', description: 'Inclusive education, therapy, assistive devices', categoryId: eduChildren.id },
+    { name: 'Library & Learning Resource Centers', description: 'Books, reading programs, homework help', categoryId: eduChildren.id },
+    { name: "Girls' Education & Empowerment", description: 'STEM training, leadership workshops', categoryId: eduChildren.id },
+    // Child Protection & Rights (Children)
+    { name: 'Child Abuse Prevention & Response', description: 'Helplines, legal aid, safe spaces', categoryId: protectionC.id },
+    { name: 'Anti-Trafficking & Exploitation Programs', description: 'Awareness, rescue operations', categoryId: protectionC.id },
+    { name: 'Juvenile Justice & Legal Aid', description: 'Rehabilitation, reintegration programs', categoryId: protectionC.id },
+    { name: 'Child-friendly Legal Support', description: 'Advocacy for birth registration, legal rights', categoryId: protectionC.id },
+    // Shelter & Basic Needs (Children)
+    { name: 'Orphan & Foster Care Support', description: 'Adoption services, alternative care models', categoryId: shelterC.id },
+    { name: 'Street Outreach & Reintegration', description: 'Counseling, education, family reunification', categoryId: shelterC.id },
+    { name: 'Food & Clothing Distribution', description: 'School meal programs, warm clothing drives', categoryId: shelterC.id },
+    // Economic & Social Empowerment (Children)
+    { name: 'Financial & Life Skills Training', description: 'Budgeting, leadership, communication skills', categoryId: empowermentC.id },
+    { name: 'Street Children & Homelessness Assistance', description: 'Shelters, rehabilitation programs', categoryId: empowermentC.id },
+    { name: 'Prevention of Child Labor', description: 'Advocacy, education support, skill training', categoryId: empowermentC.id },
+    { name: 'Microfinance for Young Entrepreneurs', description: 'Financial aid, savings programs', categoryId: empowermentC.id },
+    { name: 'Support for Working Children & Families', description: 'After-school programs, skill development', categoryId: empowermentC.id },
+    { name: 'Rural & Indigenous Child Support', description: 'Language preservation, cultural education', categoryId: empowermentC.id },
+    { name: 'Youth Entrepreneurship & Job Training', description: 'Mentorship, startup grants', categoryId: empowermentC.id },
+    // Gender & Inclusion (Children)
+    { name: 'Support for LGBTQ+ Youth', description: 'Safe spaces, mental health support', categoryId: genderC.id },
+    // Safety & Emergency Response (Children)
+    { name: 'Disaster Preparedness & Relief for Children', description: 'Safe zones, trauma care', categoryId: safetyC.id },
+    { name: 'Refugee & Displaced Children Support', description: 'Education, mental health services', categoryId: safetyC.id },
+    { name: 'Conflict-Affected Children Programs', description: 'Rehabilitation, reintegration support', categoryId: safetyC.id },
+    { name: 'Emergency Shelters for Abandoned or At-Risk Children', description: 'Temporary homes, foster homes', categoryId: safetyC.id },
+    // Environment & Sustainability (Children)
+    { name: 'Safe Spaces for Play & Recreation', description: 'Playgrounds, sports clubs, art centers', categoryId: envC.id },
+    { name: 'Eco-Schools & Green Learning Spaces', description: 'Gardening, recycling programs', categoryId: envC.id },
+    { name: 'Climate Change Awareness for Kids', description: 'Interactive workshops, action projects', categoryId: envC.id },
+    { name: 'Clean Water & Sanitation Programs', description: 'Hygiene kits, access to safe drinking water', categoryId: envC.id },
+    // Recreation & Sports (Children)
+    { name: 'Sports & Athletics Programs', description: 'Team sports, athletics, fitness activities', categoryId: recreationC.id },
+    { name: 'Arts & Cultural Activities', description: 'Music, dance, visual arts programs', categoryId: recreationC.id },
+    { name: 'Community Play Spaces', description: 'Safe play areas and recreational facilities', categoryId: recreationC.id },
+    // Mental Health Support (Children)
+    { name: 'Child & Adolescent Counseling', description: 'Individual and group therapy sessions', categoryId: mentalHealthC.id },
+    { name: 'School Mental Health Programs', description: 'In-school psychological support', categoryId: mentalHealthC.id },
+    { name: 'Trauma Recovery Services', description: 'Specialized care for trauma and abuse survivors', categoryId: mentalHealthC.id },
+    // Health & Well-being (Women)
+    { name: 'Maternal Health', description: 'Prenatal & postnatal care, breastfeeding support', categoryId: healthWomen.id },
+    { name: 'Mental Health', description: 'Counseling, trauma support, depression & anxiety resources', categoryId: healthWomen.id },
+    { name: 'Nutrition & Wellness', description: 'Healthy eating, fitness programs, disease prevention', categoryId: healthWomen.id },
+    { name: 'Reproductive Health', description: 'Family planning, menstrual health, contraception', categoryId: healthWomen.id },
+    { name: 'Substance Abuse Support', description: 'Addiction recovery programs, rehabilitation centers', categoryId: healthWomen.id },
+    // Education & Skills Development (Women)
+    { name: 'Literacy Programs', description: 'Basic reading & writing skills', categoryId: eduWomen.id },
+    { name: 'STEM Education', description: 'Scholarships, coding & tech training', categoryId: eduWomen.id },
+    { name: 'Vocational Training', description: 'Tailoring, beauty services, agriculture, handicrafts', categoryId: eduWomen.id },
+    { name: 'Digital Literacy', description: 'Computer skills, online safety, social media training', categoryId: eduWomen.id },
+    // Economic Empowerment (Women)
+    { name: 'Entrepreneurship Support', description: 'Business training, startup grants, mentorship', categoryId: economicW.id },
+    { name: 'Microfinance & Loans', description: 'Small business funding, cooperative banking', categoryId: economicW.id },
+    { name: 'Financial Literacy Training', description: 'Budgeting, banking, investment skills', categoryId: economicW.id },
+    { name: 'Home-based & Remote Work Opportunities', description: 'Freelancing, online work training', categoryId: economicW.id },
+    { name: 'Job Placement & Career Guidance', description: 'Resume building, interview prep, job matching', categoryId: economicW.id },
+    { name: 'Leadership & Empowerment', description: 'Public speaking, confidence-building workshops', categoryId: economicW.id },
+    // Legal & Human Rights (Women)
+    { name: "Fair Wages & Workers' Rights", description: 'Awareness, legal assistance, advocacy', categoryId: legalW.id },
+    { name: 'Legal Aid & Representation', description: 'Domestic abuse, divorce, child custody', categoryId: legalW.id },
+    { name: 'Land & Property Rights', description: 'Inheritance rights, land ownership support', categoryId: legalW.id },
+    { name: 'Sexual Harassment & Workplace Safety', description: 'Policy advocacy, case reporting', categoryId: legalW.id },
+    { name: 'Child & Forced Marriage Prevention', description: 'Legal action, awareness campaigns', categoryId: legalW.id },
+    { name: 'Citizenship & Documentation Support', description: 'ID cards, birth certificates, legal status', categoryId: legalW.id },
+    { name: "LGBTQ+ Women's Resources", description: 'Safe spaces, mental health support, legal aid', categoryId: legalW.id },
+    { name: 'Refugee & Migrant Women Support', description: 'Language classes, resettlement help', categoryId: legalW.id },
+    // Safety & Shelter (Women)
+    { name: 'Sexual & Domestic Violence Support', description: 'Crisis helplines, safe spaces, legal aid', categoryId: safetyW.id },
+    { name: 'Domestic Violence Shelters', description: 'Safe houses, emergency housing', categoryId: safetyW.id },
+    { name: 'Transitional Housing', description: 'Long-term support for homeless or abused women', categoryId: safetyW.id },
+    { name: 'Self-defense Training', description: 'Martial arts, situational awareness', categoryId: safetyW.id },
+    { name: 'Crisis Helplines', description: '24/7 support for violence victims', categoryId: safetyW.id },
+    { name: 'Community Watch Programs', description: 'Women-led safety initiatives', categoryId: safetyW.id },
+    // Social Support & Community Building (Women)
+    { name: "Women's Support Groups", description: 'Peer-to-peer counseling, discussion forums', categoryId: socialW.id },
+    { name: "Single Mothers' Support", description: 'Daycare, legal aid, financial aid', categoryId: socialW.id },
+    { name: 'Elderly Women Support', description: 'Healthcare, social engagement programs', categoryId: socialW.id },
+    // Environmental & Rural Development (Women)
+    { name: 'Sustainable Farming Programs', description: 'Organic agriculture, eco-friendly practices', categoryId: envW.id },
+    { name: 'Clean Water & Sanitation', description: 'Hygiene awareness, access to safe drinking water', categoryId: envW.id },
+    { name: "Climate Change & Women's Rights", description: 'Eco-activism, climate resilience training', categoryId: envW.id },
+    { name: 'Renewable Energy Access', description: 'Solar projects, energy-efficient cooking methods', categoryId: envW.id },
+    // Financial Literacy (Women)
+    { name: 'Personal Finance Management', description: 'Savings, budgeting and debt management', categoryId: finLitW.id },
+    { name: 'Banking & Credit Access', description: 'Bank account opening, credit score guidance', categoryId: finLitW.id },
+    { name: 'Investment Awareness', description: 'SIPs, government schemes, insurance basics', categoryId: finLitW.id },
+    // Mental Health & Counseling (Women)
+    { name: 'Individual Counseling', description: 'One-on-one therapy sessions', categoryId: mentalHealthW.id },
+    { name: 'Group Therapy & Support Circles', description: 'Peer support in safe group settings', categoryId: mentalHealthW.id },
+    { name: 'Trauma-informed Care', description: 'Specialized therapy for abuse and trauma survivors', categoryId: mentalHealthW.id },
   ];
 
   await prisma.serviceResource.createMany({ data: resources, skipDuplicates: true });
   console.log(`✅ Seeded ${resources.length} service resources`);
 
-  // 6. Seed Faith options
+  // 6. Seed Faith options — aligned with SQL sakhi_faith.sql naming
   const faiths = [
-    { name: 'Hindu' },
-    { name: 'Muslim' },
-    { name: 'Christian' },
-    { name: 'Sikh' },
-    { name: 'Buddhist' },
-    { name: 'Jain' },
+    { name: 'Hinduism' },
+    { name: 'Islam' },
+    { name: 'Christianity' },
+    { name: 'Sikhism' },
+    { name: 'Buddhism' },
+    { name: 'Jainism' },
     { name: 'Other' },
-    { name: 'Prefer not to say' },
+    { name: 'No Preference' },
   ];
 
   await prisma.faith.createMany({ data: faiths, skipDuplicates: true });
   console.log('✅ Seeded faith options');
 
-  // 7. Seed Social Categories
+  // 7. Seed Social Categories — aligned with SQL sakhi_social_category.sql
   const socialCategories = [
-    { name: 'General' },
     { name: 'Scheduled Caste (SC)' },
     { name: 'Scheduled Tribe (ST)' },
     { name: 'Other Backward Class (OBC)' },
+    { name: 'Backward Class (BC)' },
     { name: 'Economically Weaker Section (EWS)' },
+    { name: 'General Class (GC)' },
   ];
 
   await prisma.socialCategory.createMany({ data: socialCategories, skipDuplicates: true });
-  console.log('✅ Seeded social categories');
+  console.log('✅ Seeded 6 social categories');
 
   console.log('🎉 Database seeding completed successfully!');
 }

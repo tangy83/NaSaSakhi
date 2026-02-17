@@ -25,57 +25,138 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 // Mock Reference Data
 // ============================================================================
 
-// Mock Service Categories (14 total: 7 for children, 7 for women)
+// Mock Service Categories (19 total: 10 for children, 9 for women)
+// IDs prefixed with SQL CategoryID where available (C001-C008 for Children, W001-W007 for Women)
 const mockCategories: ServiceCategory[] = [
   // Children categories
-  { id: 'cat-1', name: 'Education & Learning', targetGroup: 'CHILDREN', displayOrder: 1 },
-  { id: 'cat-2', name: 'Healthcare & Nutrition', targetGroup: 'CHILDREN', displayOrder: 2 },
-  { id: 'cat-3', name: 'Child Protection', targetGroup: 'CHILDREN', displayOrder: 3 },
-  { id: 'cat-4', name: 'Recreation & Sports', targetGroup: 'CHILDREN', displayOrder: 4 },
-  { id: 'cat-5', name: 'Skill Development', targetGroup: 'CHILDREN', displayOrder: 5 },
-  { id: 'cat-6', name: 'Mental Health Support', targetGroup: 'CHILDREN', displayOrder: 6 },
-  { id: 'cat-7', name: 'Emergency Shelter', targetGroup: 'CHILDREN', displayOrder: 7 },
+  { id: 'C001', name: 'Health & Well-being', targetGroup: 'CHILDREN', displayOrder: 1 },
+  { id: 'C002', name: 'Education & Skill Development', targetGroup: 'CHILDREN', displayOrder: 2 },
+  { id: 'C003', name: 'Child Protection & Rights', targetGroup: 'CHILDREN', displayOrder: 3 },
+  { id: 'C004', name: 'Shelter & Basic Needs', targetGroup: 'CHILDREN', displayOrder: 4 },
+  { id: 'C005', name: 'Economic & Social Empowerment', targetGroup: 'CHILDREN', displayOrder: 5 },
+  { id: 'C006', name: 'Gender & Inclusion', targetGroup: 'CHILDREN', displayOrder: 6 },
+  { id: 'C007', name: 'Safety & Emergency Response', targetGroup: 'CHILDREN', displayOrder: 7 },
+  { id: 'C008', name: 'Environment & Sustainability', targetGroup: 'CHILDREN', displayOrder: 8 },
+  { id: 'C009', name: 'Recreation & Sports', targetGroup: 'CHILDREN', displayOrder: 9 },
+  { id: 'C010', name: 'Mental Health Support', targetGroup: 'CHILDREN', displayOrder: 10 },
   // Women categories
-  { id: 'cat-8', name: 'Education & Literacy', targetGroup: 'WOMEN', displayOrder: 8 },
-  { id: 'cat-9', name: 'Healthcare Services', targetGroup: 'WOMEN', displayOrder: 9 },
-  { id: 'cat-10', name: 'Legal Aid & Support', targetGroup: 'WOMEN', displayOrder: 10 },
-  { id: 'cat-11', name: 'Skill Training & Employment', targetGroup: 'WOMEN', displayOrder: 11 },
-  { id: 'cat-12', name: 'Financial Literacy', targetGroup: 'WOMEN', displayOrder: 12 },
-  { id: 'cat-13', name: 'Mental Health & Counseling', targetGroup: 'WOMEN', displayOrder: 13 },
-  { id: 'cat-14', name: 'Domestic Violence Support', targetGroup: 'WOMEN', displayOrder: 14 },
+  { id: 'W001', name: 'Health & Well-being', targetGroup: 'WOMEN', displayOrder: 11 },
+  { id: 'W002', name: 'Education & Skills Development', targetGroup: 'WOMEN', displayOrder: 12 },
+  { id: 'W003', name: 'Economic Empowerment', targetGroup: 'WOMEN', displayOrder: 13 },
+  { id: 'W004', name: 'Legal & Human Rights', targetGroup: 'WOMEN', displayOrder: 14 },
+  { id: 'W005', name: 'Safety & Shelter', targetGroup: 'WOMEN', displayOrder: 15 },
+  { id: 'W006', name: 'Social Support & Community Building', targetGroup: 'WOMEN', displayOrder: 16 },
+  { id: 'W007', name: 'Environmental & Rural Development', targetGroup: 'WOMEN', displayOrder: 17 },
+  { id: 'W008', name: 'Financial Literacy', targetGroup: 'WOMEN', displayOrder: 18 },
+  { id: 'W009', name: 'Mental Health & Counseling', targetGroup: 'WOMEN', displayOrder: 19 },
 ];
 
-// Mock Service Resources (76 total, organized by category)
+// Mock Service Resources — sourced from SQL sakhi_new_service_resource.sql
 const mockResources: ServiceResource[] = [
-  // Category 1: Education & Learning (Children)
-  { id: 'res-1', categoryId: 'cat-1', name: 'Primary Education', description: 'Basic schooling for children' },
-  { id: 'res-2', categoryId: 'cat-1', name: 'After-school Tutoring', description: 'Academic support programs' },
-  { id: 'res-3', categoryId: 'cat-1', name: 'Digital Literacy', description: 'Computer and internet skills' },
-  { id: 'res-4', categoryId: 'cat-1', name: 'Library Services', description: 'Reading and learning resources' },
-  { id: 'res-5', categoryId: 'cat-1', name: 'Scholarship Programs', description: 'Financial aid for education' },
-  // Category 2: Healthcare & Nutrition (Children)
-  { id: 'res-6', categoryId: 'cat-2', name: 'Vaccination Programs', description: 'Immunization services' },
-  { id: 'res-7', categoryId: 'cat-2', name: 'Nutrition Programs', description: 'Food and nutrition support' },
-  { id: 'res-8', categoryId: 'cat-2', name: 'Health Checkups', description: 'Regular medical examinations' },
-  { id: 'res-9', categoryId: 'cat-2', name: 'Dental Care', description: 'Oral health services' },
-  { id: 'res-10', categoryId: 'cat-2', name: 'Vision Care', description: 'Eye health services' },
-  // Category 3: Child Protection
-  { id: 'res-11', categoryId: 'cat-3', name: 'Child Helpline', description: '24/7 support hotline' },
-  { id: 'res-12', categoryId: 'cat-3', name: 'Legal Aid for Children', description: 'Legal support services' },
-  { id: 'res-13', categoryId: 'cat-3', name: 'Counseling Services', description: 'Mental health support' },
-  // Category 8: Education & Literacy (Women)
-  { id: 'res-14', categoryId: 'cat-8', name: 'Adult Literacy Programs', description: 'Basic reading and writing' },
-  { id: 'res-15', categoryId: 'cat-8', name: 'Digital Skills Training', description: 'Computer literacy' },
-  { id: 'res-16', categoryId: 'cat-8', name: 'English Language Classes', description: 'English proficiency training' },
-  // Category 9: Healthcare Services (Women)
-  { id: 'res-17', categoryId: 'cat-9', name: 'Reproductive Health', description: 'Women health services' },
-  { id: 'res-18', categoryId: 'cat-9', name: 'Maternal Care', description: 'Pregnancy and childbirth support' },
-  { id: 'res-19', categoryId: 'cat-9', name: 'Cancer Screening', description: 'Early detection programs' },
-  // Category 10: Legal Aid & Support (Women)
-  { id: 'res-20', categoryId: 'cat-10', name: 'Legal Counseling', description: 'Legal advice and guidance' },
-  { id: 'res-21', categoryId: 'cat-10', name: 'Court Representation', description: 'Legal representation' },
-  { id: 'res-22', categoryId: 'cat-10', name: 'Documentation Help', description: 'Assistance with legal documents' },
-  // Add more resources as needed...
+  // C001: Health & Well-being (Children)
+  { id: 'CR0011', categoryId: 'C001', name: 'Mental Health & Emotional Support', description: 'Counseling, trauma therapy, play therapy' },
+  { id: 'CR0012', categoryId: 'C001', name: 'Disease Prevention & Treatment', description: 'Vaccination drives, hygiene awareness' },
+  { id: 'CR0013', categoryId: 'C001', name: 'Substance Abuse Prevention', description: 'Anti-drug programs, peer support groups' },
+  { id: 'CR0014', categoryId: 'C001', name: 'Maternal & Infant Health', description: 'Newborn care, breastfeeding support, immunizations' },
+  { id: 'CR0015', categoryId: 'C001', name: 'Nutrition & Malnutrition Prevention', description: 'Feeding programs, vitamin supplements' },
+  // C002: Education & Skill Development (Children)
+  { id: 'CR0021', categoryId: 'C002', name: 'Early Childhood Education', description: 'Preschool programs, daycare centers' },
+  { id: 'CR0022', categoryId: 'C002', name: 'Primary & Secondary Education', description: 'School enrollment drives, scholarships' },
+  { id: 'CR0023', categoryId: 'C002', name: 'Vocational Training for Youth', description: 'Carpentry, tailoring, agriculture, mechanics' },
+  { id: 'CR0024', categoryId: 'C002', name: 'STEM & Digital Literacy', description: 'Coding, robotics, internet safety' },
+  { id: 'CR0025', categoryId: 'C002', name: 'Workplace Readiness Programs', description: 'Internships, career coaching' },
+  { id: 'CR0026', categoryId: 'C002', name: 'Disability & Special Needs Support', description: 'Inclusive education, therapy, assistive devices' },
+  { id: 'CR0027', categoryId: 'C002', name: 'Library & Learning Resource Centers', description: 'Books, reading programs, homework help' },
+  { id: 'CR0028', categoryId: 'C002', name: "Girls' Education & Empowerment", description: 'STEM training, leadership workshops' },
+  { id: 'CR0029', categoryId: 'C002', name: 'Programs for Disabled Children', description: 'Inclusive sports, special education services' },
+  // C003: Child Protection & Rights (Children)
+  { id: 'CR0031', categoryId: 'C003', name: 'Child Abuse Prevention & Response', description: 'Helplines, legal aid, safe spaces' },
+  { id: 'CR0032', categoryId: 'C003', name: 'Anti-Trafficking & Exploitation Programs', description: 'Awareness, rescue operations' },
+  { id: 'CR0033', categoryId: 'C003', name: 'Juvenile Justice & Legal Aid', description: 'Rehabilitation, reintegration programs' },
+  { id: 'CR0034', categoryId: 'C003', name: 'Child-friendly Legal Support', description: 'Advocacy for birth registration, legal rights' },
+  // C004: Shelter & Basic Needs (Children)
+  { id: 'CR0041', categoryId: 'C004', name: 'Orphan & Foster Care Support', description: 'Adoption services, alternative care models' },
+  { id: 'CR0042', categoryId: 'C004', name: 'Street Outreach & Reintegration', description: 'Counseling, education, family reunification' },
+  { id: 'CR0043', categoryId: 'C004', name: 'Food & Clothing Distribution', description: 'School meal programs, warm clothing drives' },
+  // C005: Economic & Social Empowerment (Children)
+  { id: 'CR0051', categoryId: 'C005', name: 'Financial & Life Skills Training', description: 'Budgeting, leadership, communication skills' },
+  { id: 'CR0052', categoryId: 'C005', name: 'Street Children & Homelessness Assistance', description: 'Shelters, rehabilitation programs' },
+  { id: 'CR0053', categoryId: 'C005', name: 'Prevention of Child Labor', description: 'Advocacy, education support, skill training' },
+  { id: 'CR0054', categoryId: 'C005', name: 'Microfinance for Young Entrepreneurs', description: 'Financial aid, savings programs' },
+  { id: 'CR0055', categoryId: 'C005', name: 'Support for Working Children & Families', description: 'After-school programs, skill development' },
+  { id: 'CR0056', categoryId: 'C005', name: 'Rural & Indigenous Child Support', description: 'Language preservation, cultural education' },
+  { id: 'CR0057', categoryId: 'C005', name: 'Youth Entrepreneurship & Job Training', description: 'Mentorship, startup grants' },
+  // C006: Gender & Inclusion (Children)
+  { id: 'CR0061', categoryId: 'C006', name: 'Support for LGBTQ+ Youth', description: 'Safe spaces, mental health support' },
+  // C007: Safety & Emergency Response (Children)
+  { id: 'CR0071', categoryId: 'C007', name: 'Disaster Preparedness & Relief for Children', description: 'Safe zones, trauma care' },
+  { id: 'CR0072', categoryId: 'C007', name: 'Refugee & Displaced Children Support', description: 'Education, mental health services' },
+  { id: 'CR0073', categoryId: 'C007', name: 'Conflict-Affected Children Programs', description: 'Rehabilitation, reintegration support' },
+  { id: 'CR0074', categoryId: 'C007', name: 'Emergency Shelters for Abandoned or At-Risk Children', description: 'Temporary homes, foster homes' },
+  // C008: Environment & Sustainability (Children)
+  { id: 'CR0081', categoryId: 'C008', name: 'Safe Spaces for Play & Recreation', description: 'Playgrounds, sports clubs, art centers' },
+  { id: 'CR0082', categoryId: 'C008', name: 'Eco-Schools & Green Learning Spaces', description: 'Gardening, recycling programs' },
+  { id: 'CR0083', categoryId: 'C008', name: 'Climate Change Awareness for Kids', description: 'Interactive workshops, action projects' },
+  { id: 'CR0084', categoryId: 'C008', name: 'Clean Water & Sanitation Programs', description: 'Hygiene kits, access to safe drinking water' },
+  // C009: Recreation & Sports (Children) — app-specific
+  { id: 'CR0091', categoryId: 'C009', name: 'Sports & Athletics Programs', description: 'Team sports, athletics, fitness activities' },
+  { id: 'CR0092', categoryId: 'C009', name: 'Arts & Cultural Activities', description: 'Music, dance, visual arts programs' },
+  { id: 'CR0093', categoryId: 'C009', name: 'Community Play Spaces', description: 'Safe play areas and recreational facilities' },
+  // C010: Mental Health Support (Children) — app-specific
+  { id: 'CR0101', categoryId: 'C010', name: 'Child & Adolescent Counseling', description: 'Individual and group therapy sessions' },
+  { id: 'CR0102', categoryId: 'C010', name: 'School Mental Health Programs', description: 'In-school psychological support' },
+  { id: 'CR0103', categoryId: 'C010', name: 'Trauma Recovery Services', description: 'Specialized care for trauma and abuse survivors' },
+  // W001: Health & Well-being (Women)
+  { id: 'WR0011', categoryId: 'W001', name: 'Maternal Health', description: 'Prenatal & postnatal care, breastfeeding support' },
+  { id: 'WR0012', categoryId: 'W001', name: 'Mental Health', description: 'Counseling, trauma support, depression & anxiety resources' },
+  { id: 'WR0013', categoryId: 'W001', name: 'Nutrition & Wellness', description: 'Healthy eating, fitness programs, disease prevention' },
+  { id: 'WR0014', categoryId: 'W001', name: 'Reproductive Health', description: 'Family planning, menstrual health, contraception' },
+  { id: 'WR0015', categoryId: 'W001', name: 'Substance Abuse Support', description: 'Addiction recovery programs, rehabilitation centers' },
+  // W002: Education & Skills Development (Women)
+  { id: 'WR0021', categoryId: 'W002', name: 'Literacy Programs', description: 'Basic reading & writing skills' },
+  { id: 'WR0022', categoryId: 'W002', name: 'STEM Education', description: 'Scholarships, coding & tech training' },
+  { id: 'WR0023', categoryId: 'W002', name: 'Vocational Training', description: 'Tailoring, beauty services, agriculture, handicrafts' },
+  { id: 'WR0024', categoryId: 'W002', name: 'Digital Literacy', description: 'Computer skills, online safety, social media training' },
+  // W003: Economic Empowerment (Women)
+  { id: 'WR0031', categoryId: 'W003', name: 'Entrepreneurship Support', description: 'Business training, startup grants, mentorship' },
+  { id: 'WR0032', categoryId: 'W003', name: 'Microfinance & Loans', description: 'Small business funding, cooperative banking' },
+  { id: 'WR0033', categoryId: 'W003', name: 'Financial Literacy', description: 'Budgeting, banking, investment skills' },
+  { id: 'WR0034', categoryId: 'W003', name: 'Home-based & Remote Work Opportunities', description: 'Freelancing, online work training' },
+  { id: 'WR0035', categoryId: 'W003', name: 'Job Placement & Career Guidance', description: 'Resume building, interview prep, job matching' },
+  { id: 'WR0036', categoryId: 'W003', name: 'Leadership & Empowerment', description: 'Public speaking, confidence-building workshops' },
+  // W004: Legal & Human Rights (Women)
+  { id: 'WR0041', categoryId: 'W004', name: "Fair Wages & Workers' Rights", description: 'Awareness, legal assistance, advocacy' },
+  { id: 'WR0042', categoryId: 'W004', name: 'Legal Aid & Representation', description: 'Domestic abuse, divorce, child custody' },
+  { id: 'WR0043', categoryId: 'W004', name: 'Land & Property Rights', description: 'Inheritance rights, land ownership support' },
+  { id: 'WR0044', categoryId: 'W004', name: 'Sexual Harassment & Workplace Safety', description: 'Policy advocacy, case reporting' },
+  { id: 'WR0045', categoryId: 'W004', name: 'Child & Forced Marriage Prevention', description: 'Legal action, awareness campaigns' },
+  { id: 'WR0046', categoryId: 'W004', name: 'Citizenship & Documentation Support', description: 'ID cards, birth certificates, legal status' },
+  { id: 'WR0047', categoryId: 'W004', name: "LGBTQ+ Women's Resources", description: 'Safe spaces, mental health support, legal aid' },
+  { id: 'WR0048', categoryId: 'W004', name: 'Refugee & Migrant Women Support', description: 'Language classes, resettlement help' },
+  // W005: Safety & Shelter (Women)
+  { id: 'WR0051', categoryId: 'W005', name: 'Sexual & Domestic Violence Support', description: 'Crisis helplines, safe spaces, legal aid' },
+  { id: 'WR0052', categoryId: 'W005', name: 'Domestic Violence Shelters', description: 'Safe houses, emergency housing' },
+  { id: 'WR0053', categoryId: 'W005', name: 'Transitional Housing', description: 'Long-term support for homeless or abused women' },
+  { id: 'WR0054', categoryId: 'W005', name: 'Self-defense Training', description: 'Martial arts, situational awareness' },
+  { id: 'WR0055', categoryId: 'W005', name: 'Crisis Helplines', description: '24/7 support for violence victims' },
+  { id: 'WR0056', categoryId: 'W005', name: 'Community Watch Programs', description: 'Women-led safety initiatives' },
+  // W006: Social Support & Community Building (Women)
+  { id: 'WR0061', categoryId: 'W006', name: "Women's Support Groups", description: 'Peer-to-peer counseling, discussion forums' },
+  { id: 'WR0062', categoryId: 'W006', name: "Single Mothers' Support", description: 'Daycare, legal aid, financial aid' },
+  { id: 'WR0063', categoryId: 'W006', name: 'Elderly Women Support', description: 'Healthcare, social engagement programs' },
+  // W007: Environmental & Rural Development (Women)
+  { id: 'WR0071', categoryId: 'W007', name: 'Sustainable Farming Programs', description: 'Organic agriculture, eco-friendly practices' },
+  { id: 'WR0072', categoryId: 'W007', name: 'Clean Water & Sanitation', description: 'Hygiene awareness, access to safe drinking water' },
+  { id: 'WR0073', categoryId: 'W007', name: "Climate Change & Women's Rights", description: 'Eco-activism, climate resilience training' },
+  { id: 'WR0074', categoryId: 'W007', name: 'Renewable Energy Access', description: 'Solar projects, energy-efficient cooking methods' },
+  // W008: Financial Literacy (Women) — app-specific
+  { id: 'WR0081', categoryId: 'W008', name: 'Personal Finance Management', description: 'Savings, budgeting and debt management' },
+  { id: 'WR0082', categoryId: 'W008', name: 'Banking & Credit Access', description: 'Bank account opening, credit score guidance' },
+  { id: 'WR0083', categoryId: 'W008', name: 'Investment Awareness', description: 'SIPs, government schemes, insurance basics' },
+  // W009: Mental Health & Counseling (Women) — app-specific
+  { id: 'WR0091', categoryId: 'W009', name: 'Individual Counseling', description: 'One-on-one therapy sessions' },
+  { id: 'WR0092', categoryId: 'W009', name: 'Group Therapy & Support Circles', description: 'Peer support in safe group settings' },
+  { id: 'WR0093', categoryId: 'W009', name: 'Trauma-informed Care', description: 'Specialized therapy for abuse and trauma survivors' },
 ];
 
 // Mock Languages (30 Indian languages)
@@ -154,24 +235,26 @@ const mockCities: City[] = [
   // Add more cities...
 ];
 
-// Mock Faith options
+// Mock Faith options — IDs aligned with SQL sakhi_faith.sql (4-char codes)
 const mockFaiths: Faith[] = [
-  { id: 'faith-1', name: 'Hinduism' },
-  { id: 'faith-2', name: 'Islam' },
-  { id: 'faith-3', name: 'Christianity' },
-  { id: 'faith-4', name: 'Sikhism' },
-  { id: 'faith-5', name: 'Buddhism' },
-  { id: 'faith-6', name: 'Jainism' },
-  { id: 'faith-7', name: 'Other' },
-  { id: 'faith-8', name: 'No Preference' },
+  { id: 'hind', name: 'Hinduism' },
+  { id: 'isla', name: 'Islam' },
+  { id: 'chri', name: 'Christianity' },
+  { id: 'sikh', name: 'Sikhism' },
+  { id: 'budd', name: 'Buddhism' },
+  { id: 'jain', name: 'Jainism' },
+  { id: 'othr', name: 'Other' },
+  { id: 'nopf', name: 'No Preference' },
 ];
 
-// Mock Social Categories
+// Mock Social Categories — IDs aligned with SQL sakhi_social_category.sql
 const mockSocialCategories: SocialCategory[] = [
-  { id: 'social-1', name: 'Scheduled Caste (SC)' },
-  { id: 'social-2', name: 'Scheduled Tribe (ST)' },
-  { id: 'social-3', name: 'Other Backward Class (OBC)' },
-  { id: 'social-4', name: 'General' },
+  { id: 'SC', name: 'Scheduled Caste (SC)' },
+  { id: 'ST', name: 'Scheduled Tribe (ST)' },
+  { id: 'OBC', name: 'Other Backward Class (OBC)' },
+  { id: 'BC', name: 'Backward Class (BC)' },
+  { id: 'EWS', name: 'Economically Weaker Section (EWS)' },
+  { id: 'GC', name: 'General Class (GC)' },
 ];
 
 // ============================================================================
