@@ -27,6 +27,7 @@
     "db:migrate-organizations": "tsx scripts/migrate-organizations.ts"
   },
   "dependencies": {
+    "@google-cloud/translate": "^9.3.0",
     "@hookform/resolvers": "^5.2.2",
     "@neondatabase/serverless": "^1.0.2",
     "@next-auth/prisma-adapter": "^1.0.7",

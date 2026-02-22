@@ -1,5 +1,4 @@
-/* Import Google Fonts - NaariSamata Typography */
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Open+Sans:wght@400;500;600;700&family=Nunito:wght@400;500;600;700&family=Roboto:wght@400;500&display=swap');
+/* Fonts are loaded via next/font/google in src/app/layout.tsx — no @import needed */
 
 @tailwind base;
 @tailwind components;

@@ -59,14 +59,29 @@ const config: Config = {
         },
       },
       fontFamily: {
+        // ── Latin fonts (loaded globally via next/font/google CSS variables) ──
         // Elegant serif for headings and branded elements
-        heading: ['Cormorant Garamond', 'Georgia', 'serif'],
+        heading: ['var(--font-heading)', 'Georgia', 'serif'],
         // Clean sans-serif for body text, forms
-        body: ['Open Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        body: ['var(--font-body)', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
         // Modern sans-serif for UI elements
-        ui: ['Nunito', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        ui: ['var(--font-ui)', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
         // Technical sans-serif for supporting elements
-        technical: ['Roboto', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        technical: ['var(--font-technical)', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+
+        // ── Indian script fonts (loaded on demand in translation review UI) ──
+        devanagari: ['Noto Sans Devanagari', 'sans-serif'],
+        bengali:    ['Noto Sans Bengali',    'sans-serif'],
+        tamil:      ['Noto Sans Tamil',      'sans-serif'],
+        telugu:     ['Noto Sans Telugu',     'sans-serif'],
+        kannada:    ['Noto Sans Kannada',    'sans-serif'],
+        malayalam:  ['Noto Sans Malayalam',  'sans-serif'],
+        gujarati:   ['Noto Sans Gujarati',   'sans-serif'],
+        gurmukhi:   ['Noto Sans Gurmukhi',   'sans-serif'],
+        oriya:      ['Noto Sans Oriya',      'sans-serif'],
+        nastaliq:   ['Noto Nastaliq Urdu',   'serif'],
+        olchiki:    ['Noto Sans Ol Chiki',   'sans-serif'],
+        meitei:     ['Noto Sans Meitei Mayek','sans-serif'],
       },
     },
   },
