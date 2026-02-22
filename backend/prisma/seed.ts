@@ -17,42 +17,60 @@ const prisma = new PrismaClient({ adapter });
 async function main() {
   console.log('🌱 Seeding database...');
 
-  // 1. Seed Languages (30 Indian languages)
+  // 1. Seed Languages (30 Indian languages) with Phase 2 font/script metadata
   const languages = [
-    { name: 'Hindi', code: 'hi' },
-    { name: 'English', code: 'en' },
-    { name: 'Bengali', code: 'bn' },
-    { name: 'Telugu', code: 'te' },
-    { name: 'Marathi', code: 'mr' },
-    { name: 'Tamil', code: 'ta' },
-    { name: 'Gujarati', code: 'gu' },
-    { name: 'Urdu', code: 'ur' },
-    { name: 'Kannada', code: 'kn' },
-    { name: 'Odia', code: 'or' },
-    { name: 'Malayalam', code: 'ml' },
-    { name: 'Punjabi', code: 'pa' },
-    { name: 'Assamese', code: 'as' },
-    { name: 'Maithili', code: 'mai' },
-    { name: 'Sanskrit', code: 'sa' },
-    { name: 'Konkani', code: 'kok' },
-    { name: 'Nepali', code: 'ne' },
-    { name: 'Sindhi', code: 'sd' },
-    { name: 'Dogri', code: 'doi' },
-    { name: 'Kashmiri', code: 'ks' },
-    { name: 'Manipuri', code: 'mni' },
-    { name: 'Bodo', code: 'brx' },
-    { name: 'Santali', code: 'sat' },
-    { name: 'Meitei', code: 'mei' },
-    { name: 'Tulu', code: 'tcy' },
-    { name: 'Bhojpuri', code: 'bho' },
-    { name: 'Magahi', code: 'mag' },
-    { name: 'Haryanvi', code: 'bgc' },
-    { name: 'Rajasthani', code: 'raj' },
-    { name: 'Chhattisgarhi', code: 'hne' },
+    // Devanagari script (Hindi, Marathi, Sanskrit, Nepali, Maithili, Dogri, Konkani + regional variants)
+    { name: 'Hindi',         code: 'hi',  scriptFamily: 'Devanagari', isRTL: false, fontFamily: 'Noto Sans Devanagari', googleFontName: 'Noto+Sans+Devanagari' },
+    { name: 'Marathi',       code: 'mr',  scriptFamily: 'Devanagari', isRTL: false, fontFamily: 'Noto Sans Devanagari', googleFontName: 'Noto+Sans+Devanagari' },
+    { name: 'Sanskrit',      code: 'sa',  scriptFamily: 'Devanagari', isRTL: false, fontFamily: 'Noto Sans Devanagari', googleFontName: 'Noto+Sans+Devanagari' },
+    { name: 'Nepali',        code: 'ne',  scriptFamily: 'Devanagari', isRTL: false, fontFamily: 'Noto Sans Devanagari', googleFontName: 'Noto+Sans+Devanagari' },
+    { name: 'Maithili',      code: 'mai', scriptFamily: 'Devanagari', isRTL: false, fontFamily: 'Noto Sans Devanagari', googleFontName: 'Noto+Sans+Devanagari' },
+    { name: 'Dogri',         code: 'doi', scriptFamily: 'Devanagari', isRTL: false, fontFamily: 'Noto Sans Devanagari', googleFontName: 'Noto+Sans+Devanagari' },
+    { name: 'Konkani',       code: 'kok', scriptFamily: 'Devanagari', isRTL: false, fontFamily: 'Noto Sans Devanagari', googleFontName: 'Noto+Sans+Devanagari' },
+    { name: 'Bhojpuri',      code: 'bho', scriptFamily: 'Devanagari', isRTL: false, fontFamily: 'Noto Sans Devanagari', googleFontName: 'Noto+Sans+Devanagari' },
+    { name: 'Magahi',        code: 'mag', scriptFamily: 'Devanagari', isRTL: false, fontFamily: 'Noto Sans Devanagari', googleFontName: 'Noto+Sans+Devanagari' },
+    { name: 'Haryanvi',      code: 'bgc', scriptFamily: 'Devanagari', isRTL: false, fontFamily: 'Noto Sans Devanagari', googleFontName: 'Noto+Sans+Devanagari' },
+    { name: 'Rajasthani',    code: 'raj', scriptFamily: 'Devanagari', isRTL: false, fontFamily: 'Noto Sans Devanagari', googleFontName: 'Noto+Sans+Devanagari' },
+    { name: 'Chhattisgarhi', code: 'hne', scriptFamily: 'Devanagari', isRTL: false, fontFamily: 'Noto Sans Devanagari', googleFontName: 'Noto+Sans+Devanagari' },
+    // Bengali script
+    { name: 'Bengali',   code: 'bn', scriptFamily: 'Bengali', isRTL: false, fontFamily: 'Noto Sans Bengali', googleFontName: 'Noto+Sans+Bengali' },
+    { name: 'Assamese',  code: 'as', scriptFamily: 'Bengali', isRTL: false, fontFamily: 'Noto Sans Bengali', googleFontName: 'Noto+Sans+Bengali' },
+    // Dravidian scripts
+    { name: 'Tamil',     code: 'ta',  scriptFamily: 'Tamil',     isRTL: false, fontFamily: 'Noto Sans Tamil',     googleFontName: 'Noto+Sans+Tamil'     },
+    { name: 'Telugu',    code: 'te',  scriptFamily: 'Telugu',    isRTL: false, fontFamily: 'Noto Sans Telugu',    googleFontName: 'Noto+Sans+Telugu'    },
+    { name: 'Kannada',   code: 'kn',  scriptFamily: 'Kannada',   isRTL: false, fontFamily: 'Noto Sans Kannada',   googleFontName: 'Noto+Sans+Kannada'   },
+    { name: 'Malayalam', code: 'ml',  scriptFamily: 'Malayalam',  isRTL: false, fontFamily: 'Noto Sans Malayalam', googleFontName: 'Noto+Sans+Malayalam' },
+    { name: 'Tulu',      code: 'tcy', scriptFamily: 'Kannada',   isRTL: false, fontFamily: 'Noto Sans Kannada',   googleFontName: 'Noto+Sans+Kannada'   },
+    // Other Indic scripts
+    { name: 'Gujarati',  code: 'gu',  scriptFamily: 'Gujarati',  isRTL: false, fontFamily: 'Noto Sans Gujarati',  googleFontName: 'Noto+Sans+Gujarati'  },
+    { name: 'Punjabi',   code: 'pa',  scriptFamily: 'Gurmukhi',  isRTL: false, fontFamily: 'Noto Sans Gurmukhi',  googleFontName: 'Noto+Sans+Gurmukhi'  },
+    { name: 'Odia',      code: 'or',  scriptFamily: 'Odia',      isRTL: false, fontFamily: 'Noto Sans Oriya',     googleFontName: 'Noto+Sans+Oriya'     },
+    { name: 'Bodo',      code: 'brx', scriptFamily: 'Devanagari', isRTL: false, fontFamily: 'Noto Sans Devanagari', googleFontName: 'Noto+Sans+Devanagari' },
+    { name: 'Santali',   code: 'sat', scriptFamily: 'Ol Chiki',  isRTL: false, fontFamily: 'Noto Sans Ol Chiki',  googleFontName: 'Noto+Sans+Ol+Chiki'  },
+    { name: 'Manipuri',  code: 'mni', scriptFamily: 'Meitei Mayek', isRTL: false, fontFamily: 'Noto Sans Meitei Mayek', googleFontName: 'Noto+Sans+Meitei+Mayek' },
+    { name: 'Meitei',    code: 'mei', scriptFamily: 'Meitei Mayek', isRTL: false, fontFamily: 'Noto Sans Meitei Mayek', googleFontName: 'Noto+Sans+Meitei+Mayek' },
+    // RTL scripts (Arabic-based)
+    { name: 'Urdu',      code: 'ur', scriptFamily: 'Arabic', isRTL: true, fontFamily: 'Noto Nastaliq Urdu', googleFontName: 'Noto+Nastaliq+Urdu' },
+    { name: 'Sindhi',    code: 'sd', scriptFamily: 'Arabic', isRTL: true, fontFamily: 'Noto Nastaliq Urdu', googleFontName: 'Noto+Nastaliq+Urdu' },
+    { name: 'Kashmiri',  code: 'ks', scriptFamily: 'Arabic', isRTL: true, fontFamily: 'Noto Nastaliq Urdu', googleFontName: 'Noto+Nastaliq+Urdu' },
+    // Latin script
+    { name: 'English',   code: 'en', scriptFamily: 'Latin', isRTL: false, fontFamily: 'Open Sans', googleFontName: 'Open+Sans' },
   ];
 
-  await prisma.language.createMany({ data: languages, skipDuplicates: true });
-  console.log('✅ Seeded 30 languages');
+  // Use upsert to handle existing rows missing the new font columns
+  for (const lang of languages) {
+    await prisma.language.upsert({
+      where: { code: lang.code },
+      update: {
+        scriptFamily:   lang.scriptFamily,
+        isRTL:          lang.isRTL,
+        fontFamily:     lang.fontFamily,
+        googleFontName: lang.googleFontName,
+      },
+      create: lang,
+    });
+  }
+  console.log('✅ Seeded 30 languages with font/script metadata');
 
   // 2. Seed Indian States
   const states = [

@@ -159,24 +159,23 @@ const mockResources: ServiceResource[] = [
   { id: 'WR0093', categoryId: 'W009', name: 'Trauma-informed Care', description: 'Specialized therapy for abuse and trauma survivors' },
 ];
 
-// Mock Languages (30 Indian languages)
+// Mock Languages (30 Indian languages) — includes Phase 2 font metadata
 const mockLanguages: Language[] = [
-  { id: 'lang-1', name: 'Hindi', code: 'hi', isActive: true },
-  { id: 'lang-2', name: 'English', code: 'en', isActive: true },
-  { id: 'lang-3', name: 'Bengali', code: 'bn', isActive: true },
-  { id: 'lang-4', name: 'Telugu', code: 'te', isActive: true },
-  { id: 'lang-5', name: 'Marathi', code: 'mr', isActive: true },
-  { id: 'lang-6', name: 'Tamil', code: 'ta', isActive: true },
-  { id: 'lang-7', name: 'Gujarati', code: 'gu', isActive: true },
-  { id: 'lang-8', name: 'Kannada', code: 'kn', isActive: true },
-  { id: 'lang-9', name: 'Malayalam', code: 'ml', isActive: true },
-  { id: 'lang-10', name: 'Odia', code: 'or', isActive: true },
-  { id: 'lang-11', name: 'Punjabi', code: 'pa', isActive: true },
-  { id: 'lang-12', name: 'Assamese', code: 'as', isActive: true },
-  { id: 'lang-13', name: 'Urdu', code: 'ur', isActive: true },
-  { id: 'lang-14', name: 'Sanskrit', code: 'sa', isActive: true },
-  { id: 'lang-15', name: 'Kashmiri', code: 'ks', isActive: true },
-  // Add more languages...
+  { id: 'lang-1',  name: 'Hindi',     code: 'hi', isActive: true, scriptFamily: 'Devanagari', isRTL: false, fontFamily: 'Noto Sans Devanagari', googleFontName: 'Noto+Sans+Devanagari' },
+  { id: 'lang-2',  name: 'English',   code: 'en', isActive: true, scriptFamily: 'Latin',      isRTL: false, fontFamily: 'Open Sans',             googleFontName: 'Open+Sans'             },
+  { id: 'lang-3',  name: 'Bengali',   code: 'bn', isActive: true, scriptFamily: 'Bengali',    isRTL: false, fontFamily: 'Noto Sans Bengali',      googleFontName: 'Noto+Sans+Bengali'     },
+  { id: 'lang-4',  name: 'Telugu',    code: 'te', isActive: true, scriptFamily: 'Telugu',     isRTL: false, fontFamily: 'Noto Sans Telugu',       googleFontName: 'Noto+Sans+Telugu'      },
+  { id: 'lang-5',  name: 'Marathi',   code: 'mr', isActive: true, scriptFamily: 'Devanagari', isRTL: false, fontFamily: 'Noto Sans Devanagari',   googleFontName: 'Noto+Sans+Devanagari'  },
+  { id: 'lang-6',  name: 'Tamil',     code: 'ta', isActive: true, scriptFamily: 'Tamil',      isRTL: false, fontFamily: 'Noto Sans Tamil',        googleFontName: 'Noto+Sans+Tamil'       },
+  { id: 'lang-7',  name: 'Gujarati',  code: 'gu', isActive: true, scriptFamily: 'Gujarati',   isRTL: false, fontFamily: 'Noto Sans Gujarati',     googleFontName: 'Noto+Sans+Gujarati'    },
+  { id: 'lang-8',  name: 'Kannada',   code: 'kn', isActive: true, scriptFamily: 'Kannada',    isRTL: false, fontFamily: 'Noto Sans Kannada',      googleFontName: 'Noto+Sans+Kannada'     },
+  { id: 'lang-9',  name: 'Malayalam', code: 'ml', isActive: true, scriptFamily: 'Malayalam',  isRTL: false, fontFamily: 'Noto Sans Malayalam',    googleFontName: 'Noto+Sans+Malayalam'   },
+  { id: 'lang-10', name: 'Odia',      code: 'or', isActive: true, scriptFamily: 'Odia',       isRTL: false, fontFamily: 'Noto Sans Oriya',        googleFontName: 'Noto+Sans+Oriya'       },
+  { id: 'lang-11', name: 'Punjabi',   code: 'pa', isActive: true, scriptFamily: 'Gurmukhi',   isRTL: false, fontFamily: 'Noto Sans Gurmukhi',     googleFontName: 'Noto+Sans+Gurmukhi'    },
+  { id: 'lang-12', name: 'Assamese',  code: 'as', isActive: true, scriptFamily: 'Bengali',    isRTL: false, fontFamily: 'Noto Sans Bengali',      googleFontName: 'Noto+Sans+Bengali'     },
+  { id: 'lang-13', name: 'Urdu',      code: 'ur', isActive: true, scriptFamily: 'Arabic',     isRTL: true,  fontFamily: 'Noto Nastaliq Urdu',     googleFontName: 'Noto+Nastaliq+Urdu'    },
+  { id: 'lang-14', name: 'Sanskrit',  code: 'sa', isActive: true, scriptFamily: 'Devanagari', isRTL: false, fontFamily: 'Noto Sans Devanagari',   googleFontName: 'Noto+Sans+Devanagari'  },
+  { id: 'lang-15', name: 'Kashmiri',  code: 'ks', isActive: true, scriptFamily: 'Arabic',     isRTL: true,  fontFamily: 'Noto Nastaliq Urdu',     googleFontName: 'Noto+Nastaliq+Urdu'    },
 ];
 
 // Mock States (28 states + 8 UTs)

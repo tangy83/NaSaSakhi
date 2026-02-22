@@ -1,6 +1,7 @@
 // Root Layout
 import type { Metadata } from 'next';
-import './globals.css';  // ← Add this line
+import './globals.css';
+import { SessionProvider } from '@/components/providers/SessionProvider';
 
 export const metadata: Metadata = {
   title: 'NaariSamata Sakhi - Organization Registration Portal',
@@ -14,7 +15,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <SessionProvider>{children}</SessionProvider>
+      </body>
     </html>
   );
 }

@@ -131,7 +131,7 @@ export interface ServiceResource {
 }
 
 /**
- * Language (30 Indian languages)
+ * Language (30 Indian languages) with Phase 2 font/script metadata
  * GET /api/reference/languages
  */
 export interface Language {
@@ -139,6 +139,11 @@ export interface Language {
   name: string;
   code: string; // ISO 639 language code (e.g., "hi", "en", "bn")
   isActive: boolean;
+  // Phase 2 font metadata
+  scriptFamily: string;      // e.g., "Devanagari", "Tamil", "Latin"
+  isRTL: boolean;            // true for Urdu, Sindhi, Kashmiri
+  fontFamily: string;        // CSS font-family name
+  googleFontName: string;    // Google Fonts identifier
 }
 
 /**
@@ -428,6 +433,128 @@ export const ORGANIZATION_STATUSES: OrganizationStatus[] = [
 // ============================================================================
 // Validation Constants (Reference)
 // ============================================================================
+
+// ============================================================================
+// Phase 2: Volunteer Admin & Translation Types
+// ============================================================================
+
+export type UserRole = 'ORGANIZATION' | 'ADMIN' | 'SUPER_ADMIN' | 'VOLUNTEER';
+
+export type TranslationStatus =
+  | 'PENDING_TRANSLATION'
+  | 'MACHINE_TRANSLATED'
+  | 'VOLUNTEER_REVIEWED'
+  | 'TRANSLATION_FAILED'
+  | 'CANCELLED';
+
+/** Volunteer dashboard summary stats */
+export interface VolunteerDashboardStats {
+  pending: number;
+  approvedByMe: number;
+  clarificationRequested: number;
+  totalApproved: number;
+}
+
+/** Organization summary shown in volunteer queue */
+export interface OrganizationQueueItem {
+  id: string;
+  name: string;
+  registrationType: RegistrationType;
+  cityName: string;
+  stateName: string;
+  status: OrganizationStatus;
+  submittedAt: string;
+}
+
+/** Review note left by a volunteer during org review */
+export interface ReviewNote {
+  id: string;
+  reviewerId: string;
+  reviewerName: string;
+  note: string;
+  statusBefore: OrganizationStatus;
+  statusAfter: OrganizationStatus;
+  createdAt: string;
+}
+
+/** Request body for updating an org's review status */
+export interface ReviewStatusRequest {
+  status: 'APPROVED' | 'REJECTED' | 'CLARIFICATION_REQUESTED';
+  note?: string;
+}
+
+/** Per-language translation coverage for an organization */
+export interface LanguageTranslationStatus {
+  languageId: string;
+  languageName: string;
+  languageCode: string;
+  fontFamily: string;
+  isRTL: boolean;
+  jobStatus: TranslationStatus;
+  reviewedFieldCount: number;
+  totalFieldCount: number;
+}
+
+/** A single translatable field with its current translation */
+export interface TranslationField {
+  fieldName: string;        // e.g., "name", "description"
+  fieldLabel: string;       // Human-readable label
+  sourceText: string;       // Original English text
+  translatedText: string;   // Machine or volunteer translation
+  status: TranslationStatus;
+  translatorNote?: string;  // Volunteer's cultural note
+}
+
+/** Request body for updating a single translated field */
+export interface TranslationUpdateRequest {
+  fieldName: string;
+  translatedText: string;
+  translatorNote?: string;
+}
+
+/** Language coverage dashboard row */
+export interface LanguageCoverageRow {
+  languageId: string;
+  languageName: string;
+  languageCode: string;
+  scriptFamily: string;
+  isActive: boolean;
+  totalOrganizations: number;         // Total approved orgs
+  machineTranslated: number;          // Orgs with MACHINE_TRANSLATED status
+  volunteerReviewed: number;          // Orgs with VOLUNTEER_REVIEWED status
+  failed: number;                     // Orgs with TRANSLATION_FAILED
+  coveragePercent: number;            // volunteerReviewed / totalOrganizations * 100
+}
+
+/** Language coverage dashboard summary */
+export interface LanguageCoverageSummary {
+  totalApprovedOrganizations: number;
+  languagesWithFullCoverage: number;
+  languagesWithPartialCoverage: number;
+  languages: LanguageCoverageRow[];
+}
+
+/** Request to add a new language (ADMIN only) */
+export interface AddLanguageRequest {
+  name: string;
+  code: string;
+  scriptFamily: string;
+  isRTL: boolean;
+  fontFamily: string;
+  googleFontName: string;
+}
+
+/** Audit log entry */
+export interface AuditLogEntry {
+  id: string;
+  actorName: string;
+  actorRole: UserRole;
+  action: string;
+  entityType: string;
+  entityId: string;
+  metadata?: Record<string, unknown>;
+  createdAt: string;
+}
 
 export const VALIDATION_RULES = {
   organizationName: {

@@ -25,21 +25,37 @@ async function getAuthOptions(): Promise<NextAuthOptions> {
         credentials: {
           email: { label: 'Email', type: 'email' },
           password: { label: 'Password', type: 'password' },
+          // Volunteer-specific login — volunteers use a Volunteer ID instead of email
+          volunteerId: { label: 'Volunteer ID', type: 'text' },
         },
         async authorize(credentials) {
-          if (!credentials?.email || !credentials?.password) {
-            throw new Error('Email and password are required');
+          if (!credentials?.password) {
+            throw new Error('Password is required');
           }
 
           const prisma = await getPrisma();
-          
-          // Find user by email
-          const user = await prisma.user.findUnique({
-            where: { email: credentials.email },
-          });
+          let user;
 
-          if (!user) {
-            throw new Error('Invalid email or password');
+          if (credentials.volunteerId) {
+            // Volunteer login path: look up by volunteerId field
+            user = await prisma.user.findUnique({
+              where: { volunteerId: credentials.volunteerId },
+            });
+
+            if (!user) {
+              throw new Error('Invalid Volunteer ID or password');
+            }
+          } else if (credentials.email) {
+            // Standard email login path
+            user = await prisma.user.findUnique({
+              where: { email: credentials.email },
+            });
+
+            if (!user) {
+              throw new Error('Invalid email or password');
+            }
+          } else {
+            throw new Error('Email or Volunteer ID is required');
           }
 
           // Check if user has a password (credentials-based login)
@@ -53,8 +69,12 @@ async function getAuthOptions(): Promise<NextAuthOptions> {
             user.password
           );
 
+          const errorMessage = credentials.volunteerId
+            ? 'Invalid Volunteer ID or password'
+            : 'Invalid email or password';
+
           if (!isPasswordValid) {
-            throw new Error('Invalid email or password');
+            throw new Error(errorMessage);
           }
 
           // Return user object (will be encoded in JWT)
@@ -63,6 +83,7 @@ async function getAuthOptions(): Promise<NextAuthOptions> {
             email: user.email,
             name: user.name,
             role: user.role,
+            volunteerId: user.volunteerId ?? null,
           };
         },
       }),
@@ -81,18 +102,20 @@ async function getAuthOptions(): Promise<NextAuthOptions> {
 
     callbacks: {
       async jwt({ token, user }) {
-        // Initial sign in
+        // Initial sign in — encode all custom fields into the JWT
         if (user) {
           token.id = user.id;
           token.role = (user as any).role;
+          token.volunteerId = (user as any).volunteerId ?? null;
         }
         return token;
       },
       async session({ session, token }) {
-        // Add user ID and role to session
+        // Expose custom fields to the client-side session
         if (session.user) {
           (session.user as any).id = token.id;
           (session.user as any).role = token.role;
+          (session.user as any).volunteerId = token.volunteerId ?? null;
         }
         return session;
       },

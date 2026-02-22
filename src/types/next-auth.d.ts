@@ -1,4 +1,4 @@
-// Type definitions for NextAuth to extend default types
+// Type definitions for NextAuth to extend default Session/User types
 
 import 'next-auth';
 import 'next-auth/jwt';

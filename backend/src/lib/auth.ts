@@ -26,20 +26,38 @@ async function getAuthOptions(): Promise<NextAuthOptions> {
         credentials: {
           email: { label: 'Email', type: 'email' },
           password: { label: 'Password', type: 'password' },
+          volunteerId: { label: 'Volunteer ID', type: 'text' },
         },
         async authorize(credentials) {
-          if (!credentials?.email || !credentials?.password) {
-            throw new Error('Email and password are required');
+          if (!credentials?.password) {
+            throw new Error('Password is required');
           }
 
           const prisma = await getPrisma();
-          
-          const user = await prisma.user.findUnique({
-            where: { email: credentials.email },
-          });
+          let user;
 
-          if (!user || !user.password) {
-            throw new Error('Invalid email or password');
+          if (credentials.volunteerId) {
+            user = await prisma.user.findUnique({
+              where: { volunteerId: credentials.volunteerId },
+            });
+
+            if (!user) {
+              throw new Error('Invalid Volunteer ID or password');
+            }
+          } else if (credentials.email) {
+            user = await prisma.user.findUnique({
+              where: { email: credentials.email },
+            });
+
+            if (!user) {
+              throw new Error('Invalid email or password');
+            }
+          } else {
+            throw new Error('Email or Volunteer ID is required');
+          }
+
+          if (!user.password) {
+            throw new Error('Account not set up for password login');
           }
 
           const isPasswordValid = await bcrypt.compare(
@@ -47,8 +65,12 @@ async function getAuthOptions(): Promise<NextAuthOptions> {
             user.password
           );
 
+          const errorMessage = credentials.volunteerId
+            ? 'Invalid Volunteer ID or password'
+            : 'Invalid email or password';
+
           if (!isPasswordValid) {
-            throw new Error('Invalid email or password');
+            throw new Error(errorMessage);
           }
 
           return {
@@ -56,6 +78,7 @@ async function getAuthOptions(): Promise<NextAuthOptions> {
             email: user.email,
             name: user.name,
             role: user.role,
+            volunteerId: user.volunteerId ?? null,
           };
         },
       }),
@@ -71,6 +94,7 @@ async function getAuthOptions(): Promise<NextAuthOptions> {
         if (user) {
           token.id = user.id;
           token.role = (user as any).role;
+          token.volunteerId = (user as any).volunteerId ?? null;
         }
         return token;
       },
@@ -78,6 +102,7 @@ async function getAuthOptions(): Promise<NextAuthOptions> {
         if (session.user) {
           (session.user as any).id = token.id;
           (session.user as any).role = token.role;
+          (session.user as any).volunteerId = token.volunteerId ?? null;
         }
         return session;
       },
@@ -115,7 +140,7 @@ export async function isAuthenticated() {
 /**
  * Check if user has specific role
  */
-export async function hasRole(role: 'ORGANIZATION' | 'ADMIN' | 'SUPER_ADMIN') {
+export async function hasRole(role: 'ORGANIZATION' | 'ADMIN' | 'SUPER_ADMIN' | 'VOLUNTEER') {
   const user = await getCurrentUser();
   return user?.role === role;
 }
@@ -126,4 +151,24 @@ export async function hasRole(role: 'ORGANIZATION' | 'ADMIN' | 'SUPER_ADMIN') {
 export async function isAdmin() {
   const user = await getCurrentUser();
   return user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN';
+}
+
+/**
+ * Check if user is a volunteer
+ */
+export async function isVolunteer() {
+  const user = await getCurrentUser();
+  return user?.role === 'VOLUNTEER';
+}
+
+/**
+ * Check if user is admin, super admin, or volunteer
+ */
+export async function isAdminOrVolunteer() {
+  const user = await getCurrentUser();
+  return (
+    user?.role === 'ADMIN' ||
+    user?.role === 'SUPER_ADMIN' ||
+    user?.role === 'VOLUNTEER'
+  );
 }

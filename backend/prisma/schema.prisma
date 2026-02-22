@@ -1,6 +1,5 @@
 // NASA Sakhi - Complete Prisma Schema
-// This is the complete schema combining Stages 2, 3, and 4
-// Replace your current schema.prisma with this content
+// Phase 2: Volunteer Admin & Multi-Language Platform
 
 generator client {
   provider = "prisma-client-js"
@@ -25,10 +24,13 @@ model Organization {
   websiteUrl         String?
 
   // Relationships
-  branches  OrganizationBranch[]
-  contacts  ContactInformation[]
-  languages OrganizationLanguage[]
-  documents Document[]
+  branches                 OrganizationBranch[]
+  contacts                 ContactInformation[]
+  languages                OrganizationLanguage[]
+  documents                Document[]
+  reviewNotes              ReviewNote[]
+  translationJobs          TranslationJob[]
+  organizationTranslations OrganizationTranslation[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -64,12 +66,13 @@ model OrganizationBranch {
   longitude      Decimal? @db.Decimal(11, 8)
 
   // Relationships
-  organization Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  city         City             @relation(fields: [cityId], references: [id])
-  state        State            @relation(fields: [stateId], references: [id])
-  timings      BranchTimings[]
-  categories   BranchCategory[]
-  resources    BranchResource[]
+  organization       Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  city               City                @relation(fields: [cityId], references: [id])
+  state              State               @relation(fields: [stateId], references: [id])
+  timings            BranchTimings[]
+  categories         BranchCategory[]
+  resources          BranchResource[]
+  branchTranslations BranchTranslation[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -187,13 +190,21 @@ model City {
 }
 
 model Language {
-  id       String  @id @default(uuid())
-  name     String  @unique
-  code     String  @unique @db.VarChar(3)
-  isActive Boolean @default(true)
+  id             String  @id @default(uuid())
+  name           String  @unique
+  code           String  @unique @db.VarChar(10)
+  isActive       Boolean @default(true)
+  // Phase 2: font & script metadata
+  scriptFamily   String  @default("Latin") // e.g., "Devanagari", "Tamil", "Arabic"
+  isRTL          Boolean @default(false)   // true for Urdu, Sindhi, Kashmiri
+  fontFamily     String  @default("Open Sans") // CSS font-family name
+  googleFontName String  @default("Open+Sans") // Google Fonts identifier
 
   // Relationships
-  organizations OrganizationLanguage[]
+  organizations            OrganizationLanguage[]
+  organizationTranslations OrganizationTranslation[]
+  branchTranslations       BranchTranslation[]
+  translationJobs          TranslationJob[]
 
   @@map("languages")
 }
@@ -255,12 +266,15 @@ model User {
   email         String    @unique
   emailVerified DateTime?
   name          String?
-  password      String? // Hashed
+  password      String? // Hashed with bcrypt
   role          UserRole  @default(ORGANIZATION)
+  volunteerId   String?   @unique // Used for volunteer login (in place of email)
 
   // Relationships
-  accounts Account[]
-  sessions Session[]
+  accounts   Account[]
+  sessions   Session[]
+  reviewNotes ReviewNote[]
+  auditLogs   AuditLog[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -272,6 +286,7 @@ enum UserRole {
   ORGANIZATION
   ADMIN
   SUPER_ADMIN
+  VOLUNTEER
 }
 
 model Account {
@@ -353,7 +368,116 @@ model RegistrationDraft {
 }
 
 // ============================================================================
-// Keep HealthCheck model for testing (from current schema)
+// PHASE 2: Volunteer Admin & Translation Models
+// ============================================================================
+
+enum TranslationStatus {
+  PENDING_TRANSLATION
+  MACHINE_TRANSLATED
+  VOLUNTEER_REVIEWED
+  TRANSLATION_FAILED
+  CANCELLED
+}
+
+// Queues and tracks a translation job per org per language
+model TranslationJob {
+  id             String            @id @default(uuid())
+  organizationId String
+  languageId     String
+  status         TranslationStatus @default(PENDING_TRANSLATION)
+  retryCount     Int               @default(0)
+  errorMessage   String?
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  language     Language     @relation(fields: [languageId], references: [id], onDelete: Restrict)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([organizationId, languageId])
+  @@index([status])
+  @@map("translation_jobs")
+}
+
+// Stores translated content per organization per language per field
+model OrganizationTranslation {
+  id             String            @id @default(uuid())
+  organizationId String
+  languageId     String
+  fieldName      String // e.g., "name", "description", "contactNotes"
+  translatedText String            @db.Text
+  status         TranslationStatus @default(PENDING_TRANSLATION)
+  translatedBy   String? // User.id of volunteer who reviewed it
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  language     Language     @relation(fields: [languageId], references: [id], onDelete: Restrict)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([organizationId, languageId, fieldName])
+  @@index([organizationId, languageId])
+  @@map("organization_translations")
+}
+
+// Stores translated content per branch per language per field
+model BranchTranslation {
+  id             String            @id @default(uuid())
+  branchId       String
+  languageId     String
+  fieldName      String // e.g., "description", "addressNotes"
+  translatedText String            @db.Text
+  status         TranslationStatus @default(PENDING_TRANSLATION)
+  translatedBy   String? // User.id of volunteer who reviewed it
+
+  branch   OrganizationBranch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  language Language            @relation(fields: [languageId], references: [id], onDelete: Restrict)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([branchId, languageId, fieldName])
+  @@map("branch_translations")
+}
+
+// Volunteer review notes attached to an organization's review action
+model ReviewNote {
+  id             String             @id @default(uuid())
+  organizationId String
+  reviewerId     String // User.id of the volunteer
+  note           String             @db.Text
+  statusBefore   OrganizationStatus
+  statusAfter    OrganizationStatus
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  reviewer     User         @relation(fields: [reviewerId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@map("review_notes")
+}
+
+// Immutable audit trail for all significant state changes
+model AuditLog {
+  id         String   @id @default(uuid())
+  actorId    String // User.id who performed the action
+  actorRole  UserRole
+  action     String // e.g., "ORG_APPROVED", "LANGUAGE_DEACTIVATED", "TRANSLATION_REVIEWED"
+  entityType String // e.g., "Organization", "Language", "TranslationJob"
+  entityId   String
+  metadata   Json? // Additional structured context
+
+  actor User @relation(fields: [actorId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([actorId])
+  @@map("audit_logs")
+}
+
+// ============================================================================
+// Health Check (testing utility)
 // ============================================================================
 
 model HealthCheck {
