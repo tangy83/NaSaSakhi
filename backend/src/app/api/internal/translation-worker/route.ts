@@ -1,3 +1,8 @@
+// PARKED: Translation feature is deferred. Cron trigger removed from vercel.json.
+// Re-enable by: (1) restoring "crons" in vercel.json, (2) adding BHASHINI_USER_ID,
+// BHASHINI_API_KEY, and INTERNAL_API_KEY env vars, (3) restoring translationJob.createMany()
+// in volunteer/organizations/[id]/status/route.ts.
+//
 // POST /api/internal/translation-worker
 // Processes PENDING_TRANSLATION jobs in batches — called by a cron scheduler.
 // Secured by INTERNAL_API_KEY header to prevent public access.

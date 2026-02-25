@@ -38,10 +38,9 @@ const technical = Roboto({
   display: 'swap',
 });
 
-// Note: Indian-script fonts (Noto Sans Devanagari, Tamil, etc.) are loaded on
-// demand inside the translation review interface using dynamic CSS injection
-// via src/lib/fonts.ts. They are NOT loaded globally to avoid extra network
-// requests for users who never visit the translation UI.
+// Note: Indian-script fonts (Noto Sans Devanagari, Tamil, etc.) are not loaded
+// globally. The translation feature is currently parked — see PARKED comments
+// in volunteer/languages/page.tsx and volunteer/organizations/[id]/translate/page.tsx.
 
 export const metadata: Metadata = {
   title: 'NaariSamata Sakhi - Organization Registration Portal',

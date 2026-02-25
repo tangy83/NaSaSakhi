@@ -124,7 +124,7 @@ export default function OrgReviewPage({
 
       setSuccessMsg(
         actionStatus === 'APPROVED'
-          ? 'Organization approved. Translation jobs have been queued.'
+          ? 'Organization approved.'
           : actionStatus === 'REJECTED'
           ? 'Organization rejected.'
           : 'Clarification requested. Organization will be notified.'
@@ -178,18 +178,6 @@ export default function OrgReviewPage({
         </div>
         <div className="flex flex-col items-end gap-2">
           <StatusBadge status={org.status} />
-          {org.status === 'APPROVED' && (
-            <button
-              onClick={() => router.push(`/volunteer/organizations/${id}/translate`)}
-              className="
-                font-body text-sm font-medium text-info-600 hover:text-info-800
-                border border-info-500 hover:border-info-700
-                px-4 py-1.5 rounded-lg transition-colors
-              "
-            >
-              Review Translations
-            </button>
-          )}
         </div>
       </div>
 

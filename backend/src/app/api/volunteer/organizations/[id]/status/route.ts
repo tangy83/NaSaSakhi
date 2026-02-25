@@ -1,5 +1,5 @@
 // PATCH /api/volunteer/organizations/[id]/status
-// Updates organization review status; on APPROVED creates translation jobs
+// Updates organization review status (approve / reject / request clarification)
 
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -60,7 +60,7 @@ export async function PATCH(
 
   const reviewerId = (user as any).id as string;
 
-  // All changes are atomic: status update + review note + audit log + (if APPROVED) translation jobs
+  // All changes are atomic: status update + review note + audit log
   const result = await prisma.$transaction(async (tx) => {
     // 1. Update organization status
     const updated = await tx.organization.update({
@@ -91,24 +91,7 @@ export async function PATCH(
       },
     });
 
-    // 4. If APPROVED, queue translation jobs for all active languages
-    if (status === 'APPROVED') {
-      const activeLanguages = await tx.language.findMany({
-        where: { isActive: true },
-        select: { id: true },
-      });
-
-      if (activeLanguages.length > 0) {
-        await tx.translationJob.createMany({
-          data: activeLanguages.map((lang) => ({
-            organizationId: id,
-            languageId: lang.id,
-            status: 'PENDING_TRANSLATION',
-          })),
-          skipDuplicates: true,
-        });
-      }
-    }
+    // 4. Translation job creation deferred — restore translationJob.createMany() here when re-enabling.
 
     return updated;
   });

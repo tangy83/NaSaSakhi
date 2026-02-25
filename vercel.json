@@ -5,11 +5,5 @@
   },
   "git": {
     "deploymentEnabled": true
-  },
-  "crons": [
-    {
-      "path": "/api/internal/translation-worker",
-      "schedule": "0 * * * *"
-    }
-  ]
+  }
 }

@@ -44,6 +44,8 @@ async function fetchJSON<T>(url: string): Promise<T> {
 export default function VolunteerDashboardPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
+  const userRole = (session?.user as any)?.role;
+  const isAdmin = userRole === 'ADMIN' || userRole === 'SUPER_ADMIN';
 
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [orgs, setOrgs] = useState<OrgQueueItem[]>([]);
@@ -95,11 +97,21 @@ export default function VolunteerDashboardPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       {/* Page title */}
-      <div>
-        <h1 className="font-heading text-3xl text-gray-800 font-medium">Dashboard</h1>
-        <p className="font-body text-gray-500 mt-1">
-          Manage organization registrations and translation reviews
-        </p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="font-heading text-3xl text-gray-800 font-medium">Dashboard</h1>
+          <p className="font-body text-gray-500 mt-1">
+            Manage organization registrations and reviews
+          </p>
+        </div>
+        {isAdmin && (
+          <button
+            onClick={() => router.push('/volunteer/admin/create-user')}
+            className="font-body text-sm font-medium text-primary-600 hover:text-primary-700 border border-primary-200 hover:border-primary-400 px-3 py-1.5 rounded-lg transition-colors"
+          >
+            + Create User
+          </button>
+        )}
       </div>
 
       {/* Stats cards */}

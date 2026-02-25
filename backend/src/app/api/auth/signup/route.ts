@@ -1,6 +1,7 @@
 // User Signup Endpoint
 // POST /api/auth/signup
-// Creates a new user account with hashed password
+// Creates a new user account with hashed password.
+// Restricted to ADMIN and SUPER_ADMIN users only.
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -11,14 +12,25 @@ export const dynamic = 'force-dynamic';
 
 // Validation schema
 const signupSchema = z.object({
-  email: z.string().email('Invalid email format'),
+  email: z.string().email('Invalid email format').optional(),
   password: z.string().min(8, 'Password must be at least 8 characters'),
   name: z.string().min(2, 'Name must be at least 2 characters').max(100).optional(),
-  role: z.enum(['ORGANIZATION', 'ADMIN', 'SUPER_ADMIN']).optional().default('ORGANIZATION'),
+  role: z.enum(['ORGANIZATION', 'VOLUNTEER', 'ADMIN', 'SUPER_ADMIN']).optional().default('ORGANIZATION'),
+  volunteerId: z.string().min(3, 'Volunteer ID must be at least 3 characters').optional(),
 });
 
 export async function POST(request: NextRequest) {
   try {
+    // Only ADMIN or SUPER_ADMIN can create accounts via this endpoint
+    const { isAdmin } = await import('@/lib/auth');
+    const adminCheck = await isAdmin();
+    if (!adminCheck) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized. Only admins can create accounts.' },
+        { status: 401 }
+      );
+    }
+
     // Dynamic import to avoid loading Prisma during build phase
     const { default: prisma } = await import('@/lib/prisma');
 
@@ -41,21 +53,36 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { email, password, name, role } = validationResult.data;
+    const { email, password, name, role, volunteerId } = validationResult.data;
 
-    // Check if user already exists
-    const existingUser = await prisma.user.findUnique({
-      where: { email },
-    });
-
-    if (existingUser) {
+    // Volunteers log in by volunteerId, not email — require volunteerId for VOLUNTEER role
+    if (role === 'VOLUNTEER' && !volunteerId) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'User with this email already exists',
-        },
-        { status: 409 }
+        { success: false, error: 'volunteerId is required when creating a VOLUNTEER account' },
+        { status: 400 }
       );
+    }
+
+    // Check for duplicate email (if provided)
+    if (email) {
+      const existingUser = await prisma.user.findUnique({ where: { email } });
+      if (existingUser) {
+        return NextResponse.json(
+          { success: false, error: 'User with this email already exists' },
+          { status: 409 }
+        );
+      }
+    }
+
+    // Check for duplicate volunteerId (if provided)
+    if (volunteerId) {
+      const existingVolunteer = await prisma.user.findUnique({ where: { volunteerId } });
+      if (existingVolunteer) {
+        return NextResponse.json(
+          { success: false, error: 'A user with this Volunteer ID already exists' },
+          { status: 409 }
+        );
+      }
     }
 
     // Hash password
@@ -65,16 +92,18 @@ export async function POST(request: NextRequest) {
     // Create user
     const user = await prisma.user.create({
       data: {
-        email,
+        email: email || null,
         password: hashedPassword,
         name: name || null,
         role,
+        volunteerId: volunteerId || null,
       },
       select: {
         id: true,
         email: true,
         name: true,
         role: true,
+        volunteerId: true,
         createdAt: true,
       },
     });
@@ -88,6 +117,7 @@ export async function POST(request: NextRequest) {
             email: user.email,
             name: user.name,
             role: user.role,
+            volunteerId: user.volunteerId,
           },
           message: 'User created successfully',
         },
