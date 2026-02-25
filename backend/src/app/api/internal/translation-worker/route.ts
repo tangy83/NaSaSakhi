@@ -1,6 +1,10 @@
 // POST /api/internal/translation-worker
 // Processes PENDING_TRANSLATION jobs in batches — called by a cron scheduler.
 // Secured by INTERNAL_API_KEY header to prevent public access.
+//
+// Translation provider: Bhashini (bhashini.gov.in)
+// Free government-backed API specifically for Indian languages.
+// Docs: https://bhashini.gitbook.io/bhashini-apis
 
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -12,41 +16,154 @@ async function getPrisma() {
   return m.default;
 }
 
-// Fields from Organization that should be translated
-const ORG_TRANSLATABLE_FIELDS: Array<{ field: string; label: string }> = [
-  { field: 'name', label: 'Organization Name' },
+// ─── Fields to translate ──────────────────────────────────────────────────────
+const ORG_TRANSLATABLE_FIELDS: Array<{ field: string }> = [
+  { field: 'name' },
 ];
 
-// Translate a single text string to a target language using Google Cloud Translation
-async function translateText(
-  text: string,
+// ─── Bhashini pipeline config cache ──────────────────────────────────────────
+// Caches serviceId + endpoint + auth per language pair for 23 hours
+// to avoid a config call on every translation request.
+interface PipelineConfig {
+  serviceId: string;
+  callbackUrl: string;
+  authHeader: string;   // full value for Authorization header
+  expiresAt: number;
+}
+
+const pipelineConfigCache = new Map<string, PipelineConfig>();
+
+const BHASHINI_PIPELINE_CONFIG_URL =
+  'https://meity-auth.ulcacontrib.org/ulca/apis/v0/model/getModelsPipeline';
+const BHASHINI_PIPELINE_ID = '64392f96daac500b55c543cd'; // MeitY
+
+// Step 1: fetch (or return cached) pipeline config for a given target language
+async function getBhashiniPipelineConfig(
   targetLanguageCode: string
-): Promise<string> {
-  const apiKey = process.env.GOOGLE_TRANSLATE_API_KEY;
-  if (!apiKey) {
-    throw new Error('GOOGLE_TRANSLATE_API_KEY not configured');
+): Promise<PipelineConfig> {
+  const cacheKey = `en-${targetLanguageCode}`;
+  const cached = pipelineConfigCache.get(cacheKey);
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached;
   }
 
-  const url = `https://translation.googleapis.com/language/translate/v2?key=${apiKey}`;
-  const res = await fetch(url, {
+  const userId = process.env.BHASHINI_USER_ID;
+  const apiKey = process.env.BHASHINI_API_KEY;
+
+  if (!userId || !apiKey) {
+    throw new Error('BHASHINI_USER_ID and BHASHINI_API_KEY must be configured');
+  }
+
+  const res = await fetch(BHASHINI_PIPELINE_CONFIG_URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      userID: userId,
+      ulcaApiKey: apiKey,
+    },
     body: JSON.stringify({
-      q: text,
-      target: targetLanguageCode,
-      source: 'en',
-      format: 'text',
+      pipelineTasks: [
+        {
+          taskType: 'translation',
+          config: {
+            language: {
+              sourceLanguage: 'en',
+              targetLanguage: targetLanguageCode,
+            },
+          },
+        },
+      ],
+      pipelineRequestConfig: {
+        pipelineId: BHASHINI_PIPELINE_ID,
+      },
     }),
   });
 
   if (!res.ok) {
     const body = await res.text();
-    throw new Error(`Google Translate API error ${res.status}: ${body}`);
+    throw new Error(`Bhashini pipeline config error ${res.status}: ${body}`);
   }
 
   const data = await res.json();
-  return data.data.translations[0].translatedText as string;
+
+  const serviceId: string | undefined =
+    data.pipelineResponseConfig?.[0]?.config?.serviceId;
+  const endpoint = data.pipelineInferenceAPIEndPoint;
+  const callbackUrl: string | undefined = endpoint?.callbackUrl;
+  // Bhashini returns the full auth value (e.g. "Bearer <token>") in the response
+  const authHeader: string | undefined = endpoint?.inferenceApiKey?.value;
+
+  if (!serviceId || !callbackUrl || !authHeader) {
+    throw new Error(
+      `Bhashini pipeline config missing fields for lang=${targetLanguageCode}: ` +
+        JSON.stringify({ serviceId, callbackUrl, hasAuth: !!authHeader })
+    );
+  }
+
+  const config: PipelineConfig = {
+    serviceId,
+    callbackUrl,
+    authHeader,
+    expiresAt: Date.now() + 23 * 60 * 60 * 1000, // 23 hours
+  };
+
+  pipelineConfigCache.set(cacheKey, config);
+  return config;
 }
+
+// Step 2: translate a single string using the cached pipeline config
+async function translateWithBhashini(
+  text: string,
+  targetLanguageCode: string
+): Promise<string> {
+  const { serviceId, callbackUrl, authHeader } =
+    await getBhashiniPipelineConfig(targetLanguageCode);
+
+  const res = await fetch(callbackUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: authHeader,
+    },
+    body: JSON.stringify({
+      pipelineTasks: [
+        {
+          taskType: 'translation',
+          config: {
+            language: {
+              sourceLanguage: 'en',
+              targetLanguage: targetLanguageCode,
+            },
+            serviceId,
+          },
+        },
+      ],
+      inputData: {
+        input: [{ source: text }],
+        audio: [{ audioContent: null }],
+      },
+    }),
+  });
+
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`Bhashini translate error ${res.status}: ${body}`);
+  }
+
+  const data = await res.json();
+  const translated: string | undefined =
+    data.pipelineResponse?.[0]?.output?.[0]?.target;
+
+  if (!translated) {
+    throw new Error(
+      `Bhashini returned unexpected response shape: ${JSON.stringify(data)}`
+    );
+  }
+
+  return translated;
+}
+
+// ─── Route handler ────────────────────────────────────────────────────────────
 
 export async function POST(req: NextRequest) {
   // Auth check — must supply the internal API key
@@ -78,26 +195,42 @@ export async function POST(req: NextRequest) {
   });
 
   if (jobs.length === 0) {
-    return NextResponse.json({ success: true, data: { processed: 0, message: 'No pending jobs' } });
+    return NextResponse.json({
+      success: true,
+      data: { processed: 0, message: 'No pending jobs' },
+    });
   }
 
   let processed = 0;
   let failed = 0;
+  let skipped = 0;
 
   for (const job of jobs) {
+    // Skip English → English (source language is already English)
+    if (job.language.code === 'en') {
+      await prisma.translationJob.update({
+        where: { id: job.id },
+        data: { status: 'MACHINE_TRANSLATED', errorMessage: null },
+      });
+      skipped++;
+      continue;
+    }
+
     try {
       const translations: Array<{ fieldName: string; translatedText: string }> = [];
 
-      // Translate each configured field
       for (const { field } of ORG_TRANSLATABLE_FIELDS) {
         const sourceText = (job.organization as any)[field];
         if (!sourceText || typeof sourceText !== 'string') continue;
 
-        const translatedText = await translateText(sourceText, job.language.code);
+        const translatedText = await translateWithBhashini(
+          sourceText,
+          job.language.code
+        );
         translations.push({ fieldName: field, translatedText });
       }
 
-      // Persist translations and mark job as MACHINE_TRANSLATED in a transaction
+      // Persist translations and mark job MACHINE_TRANSLATED atomically
       await prisma.$transaction(async (tx) => {
         for (const { fieldName, translatedText } of translations) {
           await tx.organizationTranslation.upsert({
@@ -130,7 +263,7 @@ export async function POST(req: NextRequest) {
 
       processed++;
     } catch (err: any) {
-      // Increment retryCount; mark TRANSLATION_FAILED after 3 retries
+      // Retry up to 3 times; mark TRANSLATION_FAILED after that
       const newRetryCount = job.retryCount + 1;
       await prisma.translationJob.update({
         where: { id: job.id },
@@ -146,6 +279,6 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json({
     success: true,
-    data: { processed, failed, total: jobs.length },
+    data: { processed, failed, skipped, total: jobs.length },
   });
 }
