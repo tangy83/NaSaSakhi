@@ -17,6 +17,11 @@ export async function isVolunteer() {
   return user?.role === 'VOLUNTEER';
 }
 
+export async function isAdmin() {
+  const user = await getCurrentUser();
+  return user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN';
+}
+
 export async function isAdminOrVolunteer() {
   const user = await getCurrentUser();
   return (
