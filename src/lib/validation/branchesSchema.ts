@@ -48,7 +48,7 @@ const branchTimingSchema = z.object({
 export const branchSchema = z.object({
   addressLine1: z
     .string()
-    .min(10, 'Address must be at least 10 characters')
+    .min(1, 'Address Line 1 is required')
     .max(200, 'Address cannot exceed 200 characters'),
 
   addressLine2: z
