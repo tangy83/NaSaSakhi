@@ -67,7 +67,7 @@ export const authOptions: NextAuthOptions = {
 
         return {
           id: user.id,
-          email: user.email,
+          email: user.email ?? '', // volunteers have no email; NextAuth requires string
           name: user.name,
           role: user.role,
           volunteerId: user.volunteerId ?? null,
