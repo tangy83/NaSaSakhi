@@ -197,7 +197,7 @@ model Language {
   isActive       Boolean @default(true)
   // Phase 2: font & script metadata
   scriptFamily   String  @default("Latin") // e.g., "Devanagari", "Tamil", "Arabic"
-  isRTL          Boolean @default(false)   // true for Urdu, Sindhi, Kashmiri
+  isRTL          Boolean @default(false) // true for Urdu, Sindhi, Kashmiri
   fontFamily     String  @default("Open Sans") // CSS font-family name
   googleFontName String  @default("Open+Sans") // Google Fonts identifier
 
@@ -272,8 +272,8 @@ model User {
   volunteerId   String?   @unique // Used for volunteer login (in place of email)
 
   // Relationships
-  accounts   Account[]
-  sessions   Session[]
+  accounts    Account[]
+  sessions    Session[]
   reviewNotes ReviewNote[]
   auditLogs   AuditLog[]
 
@@ -432,7 +432,7 @@ model BranchTranslation {
   translatedBy   String? // User.id of volunteer who reviewed it
 
   branch   OrganizationBranch @relation(fields: [branchId], references: [id], onDelete: Cascade)
-  language Language            @relation(fields: [languageId], references: [id], onDelete: Restrict)
+  language Language           @relation(fields: [languageId], references: [id], onDelete: Restrict)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
