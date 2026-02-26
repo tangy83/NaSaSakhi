@@ -23,6 +23,7 @@ const registrationSchema = z.object({
   registrationType: z.enum(['NGO', 'TRUST', 'GOVERNMENT', 'PRIVATE', 'OTHER']),
   registrationNumber: z.string().min(1).max(50),
   yearEstablished: z.number().int().min(1800).max(new Date().getFullYear()),
+  description: z.string().max(500).optional(),
   faithId: z.string().optional(),
   websiteUrl: z.string().url().optional().or(z.literal('')),
 
@@ -46,7 +47,7 @@ const registrationSchema = z.object({
   resourceIds: z.array(z.string()).min(1),
 
   branches: z.array(z.object({
-    addressLine1: z.string().min(10).max(200),
+    addressLine1: z.string().min(1).max(200),
     addressLine2: z.string().max(200).optional(),
     cityId: z.string(),
     stateId: z.string(),
@@ -159,6 +160,7 @@ export async function POST(request: NextRequest) {
           registrationType: data.registrationType,
           registrationNumber: data.registrationNumber,
           yearEstablished: data.yearEstablished,
+          description: data.description || null,
           faithId: data.faithId || null,
           websiteUrl: data.websiteUrl || null,
           status: 'PENDING',

@@ -29,6 +29,7 @@ interface OrgDetail {
   registrationType: string;
   registrationNumber: string;
   yearEstablished: number;
+  description?: string;
   websiteUrl?: string;
   status: string;
   contacts: Array<{
@@ -190,6 +191,13 @@ export default function OrgReviewPage({
 
       {/* Details sections */}
       <div className="space-y-4">
+        {/* Description */}
+        {org.description && (
+          <Section title="Description">
+            <p className="font-body text-sm text-gray-700 leading-relaxed">{org.description}</p>
+          </Section>
+        )}
+
         {/* Contact Information */}
         <Section title="Contact Information">
           {org.contacts.map((c, i) => (

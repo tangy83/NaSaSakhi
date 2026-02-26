@@ -19,6 +19,7 @@ model Organization {
   registrationType   RegistrationType
   registrationNumber String
   yearEstablished    Int
+  description        String?
   faithId            String?
   status             OrganizationStatus @default(PENDING)
   websiteUrl         String?

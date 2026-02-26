@@ -21,6 +21,11 @@ export const organizationSchema = z.object({
     .min(1800, 'Year must be 1800 or later')
     .max(new Date().getFullYear(), 'Year cannot be in the future'),
 
+  description: z
+    .string()
+    .max(500, 'Description cannot exceed 500 characters')
+    .optional(),
+
   faithId: z.string().optional(),
 
   socialCategoryIds: z.array(z.string()).optional(),

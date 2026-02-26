@@ -108,6 +108,29 @@ export function OrganizationSection({ register, errors, setValue, watch }: Organ
         {...register('registrationNumber')}
       />
 
+      {/* Description (Optional) */}
+      <div className="space-y-1">
+        <label className="block text-sm font-medium text-gray-700">
+          Description
+          <span className="ml-1 text-xs font-normal text-gray-500">(Optional)</span>
+        </label>
+        <textarea
+          placeholder="Briefly describe your organization's mission and activities"
+          maxLength={500}
+          rows={3}
+          className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base font-body text-gray-700
+                     focus:outline-none focus:ring-4 focus:ring-primary-100 focus:border-primary-500
+                     resize-none"
+          {...register('description')}
+        />
+        <p className="text-xs text-gray-500">Max 500 characters</p>
+        {errors.description && (
+          <p className="text-sm text-error-500 flex items-center gap-1">
+            <span>⚠️</span> {errors.description.message as string}
+          </p>
+        )}
+      </div>
+
       <TextInput
         label="Year Established"
         type="number"
