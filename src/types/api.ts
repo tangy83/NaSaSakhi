@@ -40,6 +40,7 @@ export interface RegistrationFormData {
   registrationType: RegistrationType;
   registrationNumber: string;
   yearEstablished: number;
+  description?: string;
   faithId?: string;
   socialCategoryIds?: string[];
 
