@@ -1,7 +1,8 @@
-# NASA Sakhi Backend API Endpoints
+# NASA Sakhi API Endpoints
 
-**Base URL:** `http://localhost:3000/api` (Development)  
+**Base URL:** `http://localhost:3000/api` (Development)
 **Production URL:** Update with your production URL
+**Last Updated:** February 26, 2026
 
 ---
 
@@ -11,6 +12,8 @@
 2. [Reference Data](#reference-data)
 3. [Registration](#registration)
 4. [File Upload](#file-upload)
+5. [Volunteer (auth: VOLUNTEER+)](#volunteer-auth-volunteer)
+6. [Admin Data Management (auth: ADMIN+)](#admin-data-management-auth-admin)
 
 ---
 
@@ -444,6 +447,52 @@ const response = await fetch('http://localhost:3000/api/upload/logo', {
 
 ---
 
+## 👤 Volunteer (auth: VOLUNTEER+)
+
+All routes require session with role `VOLUNTEER`, `ADMIN`, or `SUPER_ADMIN`.
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/volunteer/organizations` | GET | List all submitted organizations |
+| `/volunteer/organizations/[id]` | GET | Get full organization detail |
+| `/volunteer/organizations/[id]/approve` | POST | Approve a pending organization |
+| `/volunteer/organizations/[id]/reject` | POST | Reject a pending organization (body: `{ reason? }`) |
+
+---
+
+## 🛠️ Admin Data Management (auth: ADMIN+)
+
+All routes require session with role `ADMIN` or `SUPER_ADMIN`.
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/admin/service-categories` | GET | List categories with resource counts |
+| `/admin/service-categories` | POST | Create category (`{ name, targetGroup, displayOrder? }`) |
+| `/admin/service-categories/[id]` | PATCH | Update category |
+| `/admin/service-categories/[id]` | DELETE | Delete (blocked if has resources) |
+| `/admin/service-resources` | GET | List resources with category info |
+| `/admin/service-resources` | POST | Create resource (`{ name, categoryId, description? }`) |
+| `/admin/service-resources/[id]` | PATCH | Update resource |
+| `/admin/service-resources/[id]` | DELETE | Delete resource |
+| `/admin/faiths` | GET | List all faiths |
+| `/admin/faiths` | POST | Create faith (`{ name }`) |
+| `/admin/faiths/[id]` | PATCH | Update faith name |
+| `/admin/faiths/[id]` | DELETE | Delete faith |
+| `/admin/social-categories` | GET | List social categories |
+| `/admin/social-categories` | POST | Create social category (`{ name }`) |
+| `/admin/social-categories/[id]` | PATCH | Update name |
+| `/admin/social-categories/[id]` | DELETE | Delete |
+| `/admin/regions` | GET | List states with their cities |
+| `/admin/regions` | POST | Add city to state (`{ name, stateId }`) |
+| `/admin/regions/[id]` | PATCH | Update city name |
+| `/admin/regions/[id]` | DELETE | Delete city |
+| `/admin/languages` | GET | List languages with translation coverage % |
+| `/admin/languages` | POST | Create language (`{ name, code, scriptFamily?, isRTL?, fontFamily? }`) |
+| `/admin/languages/[id]` | PATCH | Update language metadata |
+| `/admin/languages/[id]` | DELETE | Delete (blocked if translation jobs exist) |
+
+---
+
 ## 🔧 Common Response Format
 
 All endpoints follow a consistent response format:
@@ -524,5 +573,39 @@ All endpoints follow a consistent response format:
 
 ---
 
-**Last Updated:** February 9, 2026  
-**Version:** 1.0.0
+## 🚀 Quick Reference
+
+| Endpoint | Method | Auth | Purpose |
+|----------|--------|------|---------|
+| `/api/health` | GET | – | Health check |
+| `/api/reference/categories` | GET | – | Get categories |
+| `/api/reference/resources` | GET | – | Get resources |
+| `/api/reference/states` | GET | – | Get states |
+| `/api/reference/cities` | GET | – | Get cities |
+| `/api/reference/languages` | GET | – | Get languages |
+| `/api/registration/draft` | POST | – | Save draft |
+| `/api/registration/draft/<token>` | GET | – | Load draft |
+| `/api/registration/draft/<token>` | DELETE | – | Delete draft |
+| `/api/registration/submit` | POST | – | Submit registration |
+| `/api/upload/document` | POST | – | Upload document |
+| `/api/upload/logo` | POST | – | Upload logo |
+| `/api/volunteer/organizations` | GET | VOLUNTEER+ | List orgs for review |
+| `/api/volunteer/organizations/[id]/approve` | POST | VOLUNTEER+ | Approve org |
+| `/api/volunteer/organizations/[id]/reject` | POST | VOLUNTEER+ | Reject org |
+| `/api/admin/service-categories` | GET/POST | ADMIN+ | Manage categories |
+| `/api/admin/service-categories/[id]` | PATCH/DELETE | ADMIN+ | Update/delete category |
+| `/api/admin/service-resources` | GET/POST | ADMIN+ | Manage resources |
+| `/api/admin/service-resources/[id]` | PATCH/DELETE | ADMIN+ | Update/delete resource |
+| `/api/admin/faiths` | GET/POST | ADMIN+ | Manage faiths |
+| `/api/admin/faiths/[id]` | PATCH/DELETE | ADMIN+ | Update/delete faith |
+| `/api/admin/social-categories` | GET/POST | ADMIN+ | Manage social categories |
+| `/api/admin/social-categories/[id]` | PATCH/DELETE | ADMIN+ | Update/delete social category |
+| `/api/admin/regions` | GET/POST | ADMIN+ | Manage states/cities |
+| `/api/admin/regions/[id]` | PATCH/DELETE | ADMIN+ | Update/delete city |
+| `/api/admin/languages` | GET/POST | ADMIN+ | Manage languages |
+| `/api/admin/languages/[id]` | PATCH/DELETE | ADMIN+ | Update/delete language |
+
+---
+
+**Last Updated:** February 26, 2026
+**Version:** 2.0.0

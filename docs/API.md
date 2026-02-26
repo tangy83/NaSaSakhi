@@ -1,8 +1,8 @@
-# NASA Sakhi Backend API Documentation
+# NASA Sakhi API Documentation
 
-**Version:** 1.0.0  
-**Base URL:** `http://localhost:3000/api` (Development)  
-**Last Updated:** February 11, 2026
+**Version:** 2.0.0
+**Base URL:** `http://localhost:3000/api` (Development)
+**Last Updated:** February 26, 2026
 
 ---
 
@@ -13,10 +13,12 @@
 3. [Reference Data APIs](#reference-data-apis)
 4. [Registration APIs](#registration-apis)
 5. [File Upload APIs](#file-upload-apis)
-6. [Health & Testing](#health--testing)
-7. [Error Handling](#error-handling)
-8. [Rate Limiting](#rate-limiting)
-9. [Postman Collection](#postman-collection)
+6. [Volunteer APIs](#volunteer-apis)
+7. [Admin Data Management APIs](#admin-data-management-apis)
+8. [Public Org APIs (Mobile App)](#public-org-apis-mobile-app)
+9. [Health & Testing](#health--testing)
+10. [Error Handling](#error-handling)
+11. [Rate Limiting](#rate-limiting)
 
 ---
 
@@ -27,6 +29,21 @@ The NASA Sakhi API provides endpoints for:
 - Reference data (categories, resources, states, cities, languages)
 - Organization registration and draft management
 - File uploads (documents and logos)
+- Volunteer organization review and approval workflow
+- Admin CRUD operations for all reference data entities
+- Public organization search for mobile app integration
+
+### API Groups
+
+| Group | Base Path | Auth | Description |
+|-------|-----------|------|-------------|
+| Reference | `/api/reference/...` | None | Read-only reference data |
+| Registration | `/api/registration/...` | None | Draft + form submission |
+| Upload | `/api/upload/...` | None | Document and logo uploads |
+| Volunteer | `/api/volunteer/...` | VOLUNTEER+ | Org review queue + approval |
+| Admin | `/api/admin/...` | ADMIN+ | CRUD for all reference entities |
+| Public Orgs | `/api/orgs/...` | None | Mobile app org search |
+| Auth | `/api/auth/...` | — | NextAuth.js session management |
 
 ### Base URL
 
@@ -531,6 +548,354 @@ Upload organization logo.
 
 ---
 
+## Volunteer APIs
+
+All volunteer endpoints require an active session with role `VOLUNTEER`, `ADMIN`, or `SUPER_ADMIN`. Unauthenticated requests return `401 Unauthorized`.
+
+### List Organizations
+**GET** `/api/volunteer/organizations`
+
+Returns all submitted organizations for review, ordered by submission date.
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "uuid",
+      "organizationName": "Example NGO",
+      "registrationType": "NGO",
+      "status": "PENDING",
+      "createdAt": "2026-02-20T10:00:00.000Z",
+      "primaryContactName": "John Doe",
+      "primaryContactEmail": "john@example.com",
+      "cityName": "Bangalore",
+      "stateName": "Karnataka"
+    }
+  ]
+}
+```
+
+---
+
+### Get Organization Detail
+**GET** `/api/volunteer/organizations/[id]`
+
+Returns full organization detail including branches, categories, resources, contacts, and documents.
+
+**Response:** Full `Organization` object with all nested relations.
+
+---
+
+### Approve Organization
+**POST** `/api/volunteer/organizations/[id]/approve`
+
+Approves a PENDING organization. Sets `status = APPROVED` and records the reviewing volunteer.
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": { "id": "uuid", "status": "APPROVED" }
+}
+```
+
+**Error Responses:**
+- `404`: Organization not found
+- `409`: Organization is not in PENDING status
+
+---
+
+### Reject Organization
+**POST** `/api/volunteer/organizations/[id]/reject`
+
+Rejects a PENDING organization with an optional reason.
+
+**Request Body:**
+```json
+{
+  "reason": "Incomplete documentation"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": { "id": "uuid", "status": "REJECTED" }
+}
+```
+
+---
+
+## Admin Data Management APIs
+
+All admin endpoints require role `ADMIN` or `SUPER_ADMIN`. Requests from `VOLUNTEER` or lower return `401 Unauthorized`.
+
+### Service Categories
+
+#### List Service Categories
+**GET** `/api/admin/service-categories`
+
+Returns all service categories with resource counts.
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "uuid",
+      "name": "Education",
+      "targetGroup": "CHILDREN",
+      "displayOrder": 1,
+      "resourceCount": 8
+    }
+  ]
+}
+```
+
+#### Create Service Category
+**POST** `/api/admin/service-categories`
+
+**Request Body:**
+```json
+{
+  "name": "Legal Aid",
+  "targetGroup": "WOMEN",
+  "displayOrder": 5
+}
+```
+
+**Response (201):** `{ "success": true, "data": { ...category } }`
+
+#### Update Service Category
+**PATCH** `/api/admin/service-categories/[id]`
+
+**Request Body:** Any subset of `{ name, targetGroup, displayOrder }`
+
+#### Delete Service Category
+**DELETE** `/api/admin/service-categories/[id]`
+
+Blocked with `409 Conflict` if the category has any service resources.
+
+---
+
+### Service Resources
+
+#### List Service Resources
+**GET** `/api/admin/service-resources`
+
+Returns all resources with their parent category.
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "uuid",
+      "name": "Legal Counselling",
+      "description": "Free legal advice",
+      "category": { "id": "uuid", "name": "Legal Aid", "targetGroup": "WOMEN" }
+    }
+  ]
+}
+```
+
+#### Create Service Resource
+**POST** `/api/admin/service-resources`
+
+**Request Body:** `{ name, categoryId, description? }`
+
+#### Update Service Resource
+**PATCH** `/api/admin/service-resources/[id]`
+
+**Request Body:** Any subset of `{ name, categoryId, description }`
+
+#### Delete Service Resource
+**DELETE** `/api/admin/service-resources/[id]`
+
+---
+
+### Faiths
+
+#### List Faiths
+**GET** `/api/admin/faiths`
+
+#### Create Faith
+**POST** `/api/admin/faiths`
+
+**Request Body:** `{ name }`
+
+#### Update Faith
+**PATCH** `/api/admin/faiths/[id]`
+
+**Request Body:** `{ name }`
+
+#### Delete Faith
+**DELETE** `/api/admin/faiths/[id]`
+
+---
+
+### Social Categories
+
+#### List Social Categories
+**GET** `/api/admin/social-categories`
+
+#### Create Social Category
+**POST** `/api/admin/social-categories`
+
+**Request Body:** `{ name }`
+
+#### Update Social Category
+**PATCH** `/api/admin/social-categories/[id]`
+
+**Request Body:** `{ name }`
+
+#### Delete Social Category
+**DELETE** `/api/admin/social-categories/[id]`
+
+---
+
+### Regional Data (States & Cities)
+
+#### List States with Cities
+**GET** `/api/admin/regions`
+
+Returns all states, each with an array of its cities.
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "uuid",
+      "name": "Karnataka",
+      "code": "KA",
+      "cities": [
+        { "id": "uuid", "name": "Bangalore" },
+        { "id": "uuid", "name": "Mysore" }
+      ]
+    }
+  ]
+}
+```
+
+#### Add City to State
+**POST** `/api/admin/regions`
+
+**Request Body:** `{ name, stateId }`
+
+#### Update City
+**PATCH** `/api/admin/regions/[id]`
+
+**Request Body:** `{ name }`
+
+#### Delete City
+**DELETE** `/api/admin/regions/[id]`
+
+---
+
+### Languages
+
+#### List Languages
+**GET** `/api/admin/languages`
+
+Returns all languages with translation coverage percentage.
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "uuid",
+      "name": "Hindi",
+      "code": "hi",
+      "scriptFamily": "Devanagari",
+      "isRTL": false,
+      "fontFamily": "Noto Sans Devanagari",
+      "isActive": true,
+      "translationCoverage": 85
+    }
+  ]
+}
+```
+
+#### Create Language
+**POST** `/api/admin/languages`
+
+**Request Body:**
+```json
+{
+  "name": "Tamil",
+  "code": "ta",
+  "scriptFamily": "Tamil",
+  "isRTL": false,
+  "fontFamily": "Noto Sans Tamil"
+}
+```
+
+#### Update Language
+**PATCH** `/api/admin/languages/[id]`
+
+**Request Body:** Any subset of `{ name, scriptFamily, isRTL, fontFamily }`
+
+Note: Language `code` is read-only after creation.
+
+#### Delete Language
+**DELETE** `/api/admin/languages/[id]`
+
+Blocked with `409 Conflict` if translation jobs reference this language.
+
+---
+
+## Public Org APIs (Mobile App)
+
+These endpoints are unauthenticated and designed for mobile app integration.
+
+### Search Organizations
+**GET** `/api/orgs`
+
+Search and filter approved organizations.
+
+**Query Parameters:**
+- `q` (optional): Full-text search by name or description
+- `categoryId` (optional): Filter by service category
+- `resourceId` (optional): Filter by service resource
+- `stateId` (optional): Filter by state
+- `cityId` (optional): Filter by city
+- `languageId` (optional): Filter by supported language
+- `page` (optional, default 1): Page number
+- `limit` (optional, default 20): Results per page
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "organizations": [ { ... } ],
+    "total": 121,
+    "page": 1,
+    "totalPages": 7
+  }
+}
+```
+
+---
+
+### Get Organization Detail
+**GET** `/api/orgs/[id]`
+
+Returns full approved organization detail for the mobile app.
+
+**Response:** Full organization object (APPROVED status only). Returns `404` for non-existent or non-approved organizations.
+
+---
+
 ## Health & Testing
 
 ### Health Check
@@ -733,5 +1098,5 @@ For issues or questions:
 
 ---
 
-**Last Updated:** February 11, 2026  
-**API Version:** 1.0.0
+**Last Updated:** February 26, 2026
+**API Version:** 2.0.0
