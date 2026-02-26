@@ -2,8 +2,9 @@
 
 **Project:** NaariSamata (NASA Sakhi) Organization Registration Portal
 **Phase:** 2
-**Status:** Requirements Definition
+**Status:** Partially Complete — see Implementation Status below
 **Date:** February 2026
+**Last Updated:** February 26, 2026
 
 ---
 
@@ -12,6 +13,22 @@
 Phase 1 delivered the core organization registration portal — a multi-step form that allows NGOs, trusts, and government bodies across India to self-register, capture their service offerings, branch locations, languages supported, and upload required documents. Organizations submit their records and the data is stored pending review.
 
 Phase 2 introduces the **Volunteer** — a new user persona who acts as a field-level quality guardian. Volunteers travel across cities and villages in India, ensuring that the data captured in the system is accurate, coherent, and ready for consumption by end users on the mobile app. They also oversee the multi-language translation of organization content so it can reach communities in their own languages.
+
+---
+
+## Implementation Status (as of February 26, 2026)
+
+| Feature | What Was Built | Status |
+|---------|----------------|--------|
+| Feature 1: Volunteer Authentication | Login page, NextAuth session, VOLUNTEER role, 8-hr inactivity timeout | ✅ Complete |
+| Feature 2: Record Integrity Validation | Dashboard, org detail review, 3-action approval (Approve / Request Clarification / Reject), review notes, status history | ✅ Complete |
+| Feature 3: Translation Review Interface | UI page scaffold exists at `/volunteer/organizations/[id]/translate` (parked). Backend review APIs exist in `backend/`. Not linked from UI. | ⏸ Pending |
+| Feature 4: Multi-Language Data Storage | `OrganizationTranslation`, `BranchTranslation` models complete. Public API reads `VOLUNTEER_REVIEWED` translations with English fallback. | ✅ Schema done · ⏸ Pipeline pending |
+| Feature 5: Language Coverage Dashboard | Page scaffold at `/volunteer/languages` exists but parked. Dashboard tile missing. | ⏸ Pending |
+| Feature 6: Automated Translation Pipeline | Bhashini worker exists at `backend/src/app/api/internal/translation-worker/route.ts` but parked — cron disabled, job creation on approval disabled, env vars missing. | ⏸ Pending |
+| Feature 7: Language Lifecycle Management | Admin panel — activate/deactivate languages, auto-cancels PENDING jobs on deactivation. Complete. | ✅ Complete |
+| Feature 8: Font & Typeface Management | Language model extended (scriptFamily, isRTL, fontFamily, googleFontName). Admin UI complete. | ✅ Complete |
+| Additional: Admin Data Management Panels | 6 CRUD panels added beyond original scope: service-categories, service-resources, faiths, social-categories, regions, languages | ✅ Complete |
 
 ---
 
@@ -455,3 +472,76 @@ The language seed script (`backend/prisma/seed.ts`) must be updated to populate 
 6. **Translation job runner:** Should the background translation worker run as a Next.js API route called by a cron job, or as a standalone Node.js worker process? The latter is more robust but requires infrastructure changes.
 7. **Font licensing:** Noto Sans fonts are open-source (SIL Open Font License) — no licensing concern. Confirm if any custom branded fonts are required for Indian scripts.
 8. **ID code mismatch resolution:** The frontend currently uses 4-character language codes (e.g., `hini`, `tata`) while the database seeds ISO 639 codes (e.g., `hi`, `ta`). This must be resolved before any translation feature goes live — which code format should be the canonical one?
+
+---
+
+## Phase 2 Remaining Backlog — Translation & Per-Language Approval
+
+**Owner:** Akarsha (Backend Lead)
+
+Features 3, 4 (pipeline portion), 5, and 6 remain to be enabled. The infrastructure (DB schema, Bhashini worker, backend APIs) is already built — the remaining work is wiring it together, mirroring backend APIs into the root (Vercel) app, and un-parking the frontend.
+
+### Per-Org Per-Language Approval Flow
+
+```
+Org APPROVED by volunteer
+    ↓
+TranslationJob created per active language (PENDING_TRANSLATION)
+    ↓
+Bhashini worker runs → OrganizationTranslation rows created (MACHINE_TRANSLATED)
+    ↓
+Volunteer opens /translate page → reviews each field in each language → Accept / Edit
+    ↓  (when all fields done for a language)
+TranslationJob → VOLUNTEER_REVIEWED
+    ↓
+Public API serves this language's translation to mobile app
+(GET /api/orgs?lang=hi — only VOLUNTEER_REVIEWED content is returned)
+```
+
+### Task B1 — Re-enable Bhashini Pipeline
+- Configure env vars: `BHASHINI_USER_ID`, `BHASHINI_API_KEY`, `INTERNAL_API_KEY`
+- Restore `translationJob.createMany()` in org approval route when status → APPROVED
+- Re-add cron entry in `vercel.json` (`/api/internal/translation-worker`, every 5 mins)
+- Mirror worker from `backend/src/app/api/internal/translation-worker/route.ts` into the root app
+- Verify: approval → jobs created → worker runs → MACHINE_TRANSLATED
+
+### Task B2 — Add Translation Review APIs to Root App
+The volunteer translation review routes live in `backend/src/app/api/volunteer/organizations/[id]/translations/`. Mirror them in `src/app/api/volunteer/organizations/[id]/translations/` so the Vercel-deployed frontend can call them.
+
+- `GET /api/volunteer/organizations/[id]/translations` — per-language status (jobStatus, reviewedFieldCount, totalFieldCount)
+- `GET /api/volunteer/organizations/[id]/translations/[langCode]` — source + translated fields for review UI
+- `PATCH /api/volunteer/organizations/[id]/translations/[langCode]` — volunteer accepts/edits one field; auto-marks job VOLUNTEER_REVIEWED when all fields done
+
+### Task B3 — Un-park Translation Review Frontend
+- Remove "Feature Unavailable" placeholder from `src/app/volunteer/organizations/[id]/translate/page.tsx`
+- Wire to B2 APIs; side-by-side layout (English source left, translation right)
+- Per-field Accept / Edit inline actions; language sidebar with per-language completion %
+- RTL support (`dir="rtl"`) for Urdu, Sindhi, Kashmiri
+- Surface from review page: "Review Translations" link when org is APPROVED
+
+### Task B4 — Un-park Language Coverage Dashboard
+- Remove "Feature Unavailable" from `src/app/volunteer/languages/page.tsx`
+- Wire to existing `GET /api/admin/languages` (already returns `coveragePercent`)
+- Add "Language Coverage" tile to volunteer dashboard (visible to VOLUNTEER+, not just ADMIN)
+
+### Task B5 — Translation Status Panel on Review Page
+- After org is APPROVED, show collapsible "Translation Status" section on the review page
+- Calls `GET /api/volunteer/organizations/[id]/translations`
+- Per-language badge + link to translate page for each language
+
+### Dependency Order
+
+```
+B1 (pipeline) → B2 (APIs) → B3 (review UI) and B5 (status panel)
+                            B4 (coverage dashboard) is mostly independent
+```
+
+### Definition of Done
+
+- [ ] Approving an org creates `TranslationJob` rows for all active non-English languages
+- [ ] Bhashini worker processes the queue; jobs → `MACHINE_TRANSLATED`; `OrganizationTranslation` rows created
+- [ ] Volunteer opens translate page, reviews fields, marks as `VOLUNTEER_REVIEWED`
+- [ ] When all fields reviewed for a language, `TranslationJob.status → VOLUNTEER_REVIEWED`
+- [ ] `GET /api/orgs?lang=hi` returns Hindi name for fully reviewed org; falls back to English otherwise
+- [ ] Language coverage dashboard shows accurate counts
+- [ ] RTL languages render correctly in the translation review UI

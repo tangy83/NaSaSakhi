@@ -2454,5 +2454,221 @@ By **Feb 7 evening**, you must have:
 
 ---
 
-**Last Updated:** Feb 17, 2026
-**Status:** ✅ ALL 16 STAGES COMPLETE — Backend fully delivered, all API routes live, database seeded, 121 orgs migrated, deployed to DC Deploy (Build #24). Integrated with frontend, customer demo delivered Feb 7. E2E testing (Playwright) added post-MVP for ongoing quality assurance.
+**Last Updated:** Feb 26, 2026
+**Status:** ✅ ALL 16 STAGES COMPLETE — Backend fully delivered, all API routes live, database seeded, 121 orgs migrated, deployed to DC Deploy (Build #24). Integrated with frontend, customer demo delivered Feb 7. E2E testing (Playwright) added post-MVP. Volunteer portal and admin data management panels added post-MVP (Phase 2 partial). Translation pipeline parked pending Bhashini credentials — see Phase 2 Backlog below.
+
+---
+
+## Phase 2 Backlog — Translation & Per-Language Approval
+
+**Assigned to:** Akarsha (Backend Lead)
+**Sprint:** Post-MVP Phase 2
+**Context:** The volunteer portal (auth, review, approve/reject) and all 6 admin data management CRUD panels are complete. The translation pipeline infrastructure (DB schema, Bhashini worker, volunteer review APIs) was built but intentionally parked — Bhashini credentials were unavailable and the feature was deferred. This section captures the remaining backlog to fully enable the per-organisation per-language translation approval workflow.
+
+---
+
+### Current State of Translation Infrastructure
+
+| Component | Location | Status |
+|-----------|----------|--------|
+| DB models: `TranslationJob`, `OrganizationTranslation`, `BranchTranslation`, `TranslationStatus` enum | `backend/prisma/schema.prisma` | ✅ Done |
+| Bhashini translation worker | `backend/src/app/api/internal/translation-worker/route.ts` | ⏸ Parked — cron removed, env vars not set |
+| Job creation on org approval | Removed from status-update route | ⏸ Needs restoring |
+| Volunteer translation review APIs | `backend/src/app/api/volunteer/organizations/[id]/translations/` | ⏸ Parked — not mirrored in root (Vercel) app |
+| Translation review frontend | `src/app/volunteer/organizations/[id]/translate/page.tsx` | ⏸ Parked — shows "Feature Unavailable" |
+| Language coverage dashboard | `src/app/volunteer/languages/page.tsx` | ⏸ Parked — shows "Feature Unavailable" |
+
+---
+
+### Per-Org Per-Language Approval Flow
+
+```
+Org APPROVED by volunteer
+    ↓
+TranslationJob created per active language (PENDING_TRANSLATION)
+    ↓
+Bhashini worker runs → OrganizationTranslation rows created per field (MACHINE_TRANSLATED)
+    ↓
+Volunteer opens /translate page → reviews each field in each language → Accept / Edit
+    ↓  (when all fields done for a language)
+TranslationJob → VOLUNTEER_REVIEWED
+    ↓
+Public API serves this language's translation to mobile app
+(GET /api/orgs?lang=hi — only VOLUNTEER_REVIEWED content returned)
+```
+
+---
+
+### Task B1 — Re-enable Bhashini Translation Pipeline
+
+**Priority:** High — blocks all downstream translation features
+
+**Steps:**
+
+1. **Add environment variables** to Vercel project settings and `.env.local`:
+   - `BHASHINI_USER_ID` — from [bhashini.gov.in](https://bhashini.gov.in) / MeitY API portal
+   - `BHASHINI_API_KEY` — Bhashini ULCA API key
+   - `INTERNAL_API_KEY` — any secret string to secure the internal worker endpoint
+
+2. **Restore job creation on approval** in `src/app/api/volunteer/organizations/[id]/status/route.ts`. When `newStatus === 'APPROVED'`, add:
+   ```typescript
+   const activeLanguages = await prisma.language.findMany({
+     where: { isActive: true, code: { not: 'en' } }, // skip English
+   });
+   await prisma.translationJob.createMany({
+     data: activeLanguages.map((lang) => ({
+       organizationId: id,
+       languageId: lang.id,
+       status: 'PENDING_TRANSLATION',
+     })),
+     skipDuplicates: true,
+   });
+   ```
+
+3. **Mirror translation worker in root app** — create `src/app/api/internal/translation-worker/route.ts` based on the existing implementation at `backend/src/app/api/internal/translation-worker/route.ts`. The root app is what Vercel deploys and calls via cron.
+
+4. **Restore cron entry** in `vercel.json`:
+   ```json
+   {
+     "crons": [
+       { "path": "/api/internal/translation-worker", "schedule": "*/5 * * * *" }
+     ]
+   }
+   ```
+
+**Acceptance criteria:**
+- Approving a test org creates one `TranslationJob` row per active language (status: `PENDING_TRANSLATION`)
+- `curl -X POST /api/internal/translation-worker -H "x-api-key: $INTERNAL_API_KEY"` processes the queue
+- Jobs move to `MACHINE_TRANSLATED`; `OrganizationTranslation` rows are created per translatable field
+
+---
+
+### Task B2 — Mirror Translation Review APIs in Root App
+
+**Priority:** High — required before frontend can call them
+
+The volunteer translation review routes exist in `backend/src/app/api/volunteer/organizations/[id]/translations/` but the Vercel-deployed root app needs them under `src/app/api/volunteer/organizations/[id]/translations/`.
+
+**Files to create:**
+
+**`src/app/api/volunteer/organizations/[id]/translations/route.ts`**
+- Auth: VOLUNTEER+ (use `getCurrentUser()` from `src/lib/auth.ts`)
+- `GET`: For each active language, return:
+  ```json
+  {
+    "languageId": "...", "languageName": "Hindi", "languageCode": "hi",
+    "fontFamily": "Noto Sans Devanagari", "isRTL": false,
+    "jobStatus": "MACHINE_TRANSLATED", "reviewedFieldCount": 0, "totalFieldCount": 2
+  }
+  ```
+  - Query `TranslationJob` by `(organizationId, languageId)`
+  - Count `OrganizationTranslation` rows grouped by status
+
+**`src/app/api/volunteer/organizations/[id]/translations/[langCode]/route.ts`**
+- Auth: VOLUNTEER+
+- `GET`: Return all translatable fields for this (org × language):
+  - Resolve language by `code` field
+  - Source text from `org.name`, `org.description`
+  - Existing translations with status
+  - Response: `{ languageId, languageName, isRTL, fields: [{ fieldKey, fieldLabel, sourceText, translatedText, status }] }`
+- `PATCH`: Volunteer accepts/edits one field
+  - Body: `{ fieldKey: string, translatedText: string }`
+  - Upsert `OrganizationTranslation` with `status = VOLUNTEER_REVIEWED`, `translatedBy = userId`
+  - After upsert: if all fields for this (org × language) are `VOLUNTEER_REVIEWED` → update `TranslationJob.status = VOLUNTEER_REVIEWED`
+
+**Translatable fields:** `name`, `description`
+**Never translated:** `registrationNumber`, `yearEstablished`, `websiteUrl`, phone numbers, emails, addresses, PIN codes
+
+**Acceptance criteria:**
+- `GET /api/volunteer/organizations/:id/translations` returns array with one entry per active language
+- `GET /api/volunteer/organizations/:id/translations/hi` returns English source + Hindi translations for each field
+- `PATCH /api/volunteer/organizations/:id/translations/hi` with `{ fieldKey: "name", translatedText: "परीक्षण" }` upserts and returns updated translation
+
+---
+
+### Task B3 — Un-park Translation Review Frontend
+
+**Priority:** Medium — depends on B1 + B2
+
+**`src/app/volunteer/organizations/[id]/translate/page.tsx`**
+- Remove "Feature Unavailable" placeholder
+- Fetch language list via `GET /api/volunteer/organizations/:id/translations` (language sidebar)
+- Fetch current language fields via `GET .../translations/:langCode`
+- Side-by-side layout: English source (left) | translated content (right)
+- Per-field actions: **Accept** (PATCH with existing translated text) / **Edit inline** (textarea + Save)
+- RTL support: when `language.isRTL === true`, apply `dir="rtl"` to the translated content pane
+- Language sidebar: per-language completion % and status badge (Not started / In progress / Reviewed)
+- Progress bar at top showing overall reviewed field count / total
+
+**`src/app/volunteer/organizations/[id]/review/page.tsx`**
+- When `org.status === 'APPROVED'`, show a "Review Translations" link in the page header
+- After submitting an APPROVED action, show CTA: "Now review translations →"
+
+**Acceptance criteria:**
+- Opening translate page for an approved org shows language sidebar + side-by-side fields
+- Accepting a field sends the PATCH request and updates UI immediately
+- When all fields accepted for a language, sidebar entry shows "Reviewed" badge
+- Urdu renders `dir="rtl"` in the right-hand content pane
+
+---
+
+### Task B4 — Un-park Language Coverage Dashboard
+
+**Priority:** Low — depends on B1 for meaningful data
+
+**`src/app/volunteer/languages/page.tsx`**
+- Remove "Feature Unavailable" placeholder
+- Fetch: `GET /api/admin/languages` (already returns `coveragePercent` per language — no API changes needed)
+- Table columns: Language, Script Family, RTL, Machine Translated (count), Volunteer Reviewed (count), Coverage %
+- Filter chips: All / Not started / In progress / Fully reviewed
+
+**`src/app/volunteer/dashboard/page.tsx`**
+- Add "Language Coverage" tile to the data management section
+- Visible to VOLUNTEER, ADMIN, and SUPER_ADMIN (unlike other admin tiles which require ADMIN+)
+- Route: `/volunteer/languages`
+- Description: "Review translation coverage across all active languages"
+
+**Acceptance criteria:**
+- Tile appears on dashboard for VOLUNTEER accounts
+- Coverage table shows correct % after some translations are `VOLUNTEER_REVIEWED`
+
+---
+
+### Task B5 — Translation Status Panel on Org Review Page
+
+**Priority:** Low — nice-to-have; depends on B2
+
+**`src/app/volunteer/organizations/[id]/review/page.tsx`**
+- When `org.status === 'APPROVED'`, fetch `GET /api/volunteer/organizations/:id/translations`
+- Render a collapsible "Translation Status" section below the review history
+- Compact language grid: language name + job status badge + field coverage (e.g., "2/2 fields reviewed")
+- Each language entry links to `/volunteer/organizations/:id/translate`
+
+**Acceptance criteria:**
+- Panel is hidden for PENDING/REJECTED orgs
+- Shows for APPROVED orgs after translation jobs have been queued (B1)
+- Each language entry links to the translate page
+
+---
+
+### Dependency Order
+
+```
+B1 — Bhashini pipeline (env vars + cron + job creation on approval + worker in root app)
+  ├── B2 — Translation review APIs in root app
+  │     ├── B3 — Translation review UI (translate page + review page CTA)
+  │     └── B5 — Translation status panel on review page
+  └── B4 — Language coverage dashboard (independent; uses existing GET /api/admin/languages)
+```
+
+---
+
+### Definition of Done for Full Translation Feature
+
+- [ ] Approving an org creates `TranslationJob` rows for all active non-English languages
+- [ ] Bhashini worker processes the queue; jobs → `MACHINE_TRANSLATED`; `OrganizationTranslation` rows created per field
+- [ ] Volunteer opens translate page, reviews each field, marks as `VOLUNTEER_REVIEWED`
+- [ ] When all fields reviewed for a language, `TranslationJob.status → VOLUNTEER_REVIEWED`
+- [ ] `GET /api/orgs?lang=hi` returns Hindi `name` for a fully reviewed org; falls back to English otherwise
+- [ ] Language coverage dashboard shows accurate machine-translated vs volunteer-reviewed counts
+- [ ] RTL languages (Urdu, Sindhi, Kashmiri) render `dir="rtl"` correctly in the review UI
