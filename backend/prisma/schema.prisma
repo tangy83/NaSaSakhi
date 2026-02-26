@@ -263,7 +263,7 @@ model OrganizationLanguage {
 
 model User {
   id            String    @id @default(uuid())
-  email         String    @unique
+  email         String?   @unique
   emailVerified DateTime?
   name          String?
   password      String? // Hashed with bcrypt

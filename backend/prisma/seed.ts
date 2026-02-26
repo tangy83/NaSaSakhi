@@ -625,6 +625,27 @@ async function main() {
     console.log('ℹ️  Admin user already exists — skipped');
   }
 
+  // 9. Seed demo volunteer user (idempotent — skipped if volunteerId already exists)
+  const demoVolunteerId = 'VOL-DEMO-001';
+  const demoVolunteerPassword = 'Demo@Volunteer2026';
+  const existingVolunteer = await prisma.user.findUnique({ where: { volunteerId: demoVolunteerId } });
+  if (!existingVolunteer) {
+    const hashed = await bcrypt.hash(demoVolunteerPassword, 10);
+    await prisma.user.create({
+      data: {
+        volunteerId: demoVolunteerId,
+        password: hashed,
+        name: 'Demo Volunteer',
+        role: 'VOLUNTEER',
+      },
+    });
+    console.log(`✅ Seeded demo volunteer user`);
+    console.log(`   Volunteer ID: ${demoVolunteerId}`);
+    console.log(`   Password:     ${demoVolunteerPassword}`);
+  } else {
+    console.log('ℹ️  Demo volunteer already exists — skipped');
+  }
+
   console.log('🎉 Database seeding completed successfully!');
 }
 

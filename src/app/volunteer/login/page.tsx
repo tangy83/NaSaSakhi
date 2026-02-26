@@ -10,6 +10,11 @@ import { TextInput } from '@/components/form/TextInput';
 
 type Mode = 'volunteer' | 'admin';
 
+const DEMO_CREDENTIALS: Record<Mode, { label: string; identifier: string; password: string }> = {
+  volunteer: { label: 'Volunteer ID', identifier: 'VOL-DEMO-001', password: 'Demo@Volunteer2026' },
+  admin:     { label: 'Email',        identifier: 'admin@naarisamata.org', password: 'Admin@NaariSamata2026' },
+};
+
 export default function VolunteerLoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -159,7 +164,35 @@ export default function VolunteerLoginPage() {
           </form>
         </div>
 
-        <p className="text-center font-body text-sm text-gray-500 mt-6">
+        {/* Demo credentials hint */}
+        <div className="mt-6 bg-amber-50 border border-amber-200 rounded-xl px-5 py-4">
+          <p className="font-body text-xs font-semibold text-amber-700 uppercase tracking-wide mb-2">
+            Demo credentials
+          </p>
+          <div className="space-y-1 mb-3">
+            <p className="font-body text-sm text-amber-900">
+              <span className="font-medium">{DEMO_CREDENTIALS[mode].label}:</span>{' '}
+              <span className="font-mono">{DEMO_CREDENTIALS[mode].identifier}</span>
+            </p>
+            <p className="font-body text-sm text-amber-900">
+              <span className="font-medium">Password:</span>{' '}
+              <span className="font-mono">{DEMO_CREDENTIALS[mode].password}</span>
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setIdentifier(DEMO_CREDENTIALS[mode].identifier);
+              setPassword(DEMO_CREDENTIALS[mode].password);
+              setError('');
+            }}
+            className="font-body text-xs font-semibold text-amber-700 underline hover:text-amber-800"
+          >
+            Click to fill in
+          </button>
+        </div>
+
+        <p className="text-center font-body text-sm text-gray-500 mt-4">
           Empowering women and children across India
         </p>
       </div>
