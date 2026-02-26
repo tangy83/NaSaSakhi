@@ -5,20 +5,36 @@ import { isDevelopment } from '@/lib/env';
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
+      {/* Top Navigation */}
+      <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <Image
+              src="/assets/logo/coloured.png"
+              alt="NaariSamata Logo"
+              width={120}
+              height={48}
+              priority
+            />
+            <Link
+              href="/volunteer/login"
+              className="inline-flex items-center justify-center px-5 py-2 border-2 border-primary-500 text-primary-600 rounded-lg font-ui font-semibold text-sm
+                         hover:bg-primary-50 hover:border-primary-600
+                         focus:outline-none focus:ring-4 focus:ring-primary-100 focus:ring-offset-2
+                         transition-colors duration-150"
+            >
+              Staff Login
+            </Link>
+          </div>
+        </div>
+      </nav>
+
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-white via-primary-50 to-primary-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             {/* Left Side - Content */}
             <div className="order-2 lg:order-1">
-              <Image
-                src="/assets/logo/coloured.png"
-                alt="NaariSamata Logo"
-                width={180}
-                height={72}
-                className="mb-8"
-                priority
-              />
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-gray-900 mb-6 leading-tight">
                 Empowering Organizations to Transform Lives
               </h1>
