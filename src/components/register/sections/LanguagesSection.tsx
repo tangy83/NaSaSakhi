@@ -1,7 +1,15 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { UseFormRegister, FieldErrors, UseFormSetValue, UseFormWatch } from 'react-hook-form';
 import { Checkbox } from '@/components/form/Checkbox';
+import { fetchLanguages } from '@/lib/api';
+
+interface Language {
+  id: string;
+  name: string;
+  code: string;
+}
 
 interface LanguagesSectionProps {
   register: UseFormRegister<any>;
@@ -10,49 +18,28 @@ interface LanguagesSectionProps {
   watch: UseFormWatch<any>;
 }
 
-// Top 30 Indian languages
-// IDs use 4-char codes aligned with SQL sakhi_language.sql where available:
-// enuk=English, hini=Hindi, sant=Santali, tata=Tamil, tete=Telugu
-const INDIAN_LANGUAGES = [
-  { id: 'hini', name: 'Hindi' },
-  { id: 'enuk', name: 'English' },
-  { id: 'beng', name: 'Bengali' },
-  { id: 'tete', name: 'Telugu' },
-  { id: 'mara', name: 'Marathi' },
-  { id: 'tata', name: 'Tamil' },
-  { id: 'guja', name: 'Gujarati' },
-  { id: 'urdu', name: 'Urdu' },
-  { id: 'kann', name: 'Kannada' },
-  { id: 'odia', name: 'Odia' },
-  { id: 'mala', name: 'Malayalam' },
-  { id: 'punj', name: 'Punjabi' },
-  { id: 'assa', name: 'Assamese' },
-  { id: 'mait', name: 'Maithili' },
-  { id: 'sant', name: 'Santali' },
-  { id: 'kash', name: 'Kashmiri' },
-  { id: 'nepa', name: 'Nepali' },
-  { id: 'sind', name: 'Sindhi' },
-  { id: 'konk', name: 'Konkani' },
-  { id: 'dogr', name: 'Dogri' },
-  { id: 'mani', name: 'Manipuri (Meitei)' },
-  { id: 'bodo', name: 'Bodo' },
-  { id: 'sans', name: 'Sanskrit' },
-  { id: 'bhoj', name: 'Bhojpuri' },
-  { id: 'maga', name: 'Magahi' },
-  { id: 'hary', name: 'Haryanvi' },
-  { id: 'raja', name: 'Rajasthani' },
-  { id: 'chha', name: 'Chhattisgarhi' },
-  { id: 'awad', name: 'Awadhi' },
-  { id: 'tulu', name: 'Tulu' },
-];
-
 export function LanguagesSection({ register, errors, setValue, watch }: LanguagesSectionProps) {
   const selectedLanguageIds = watch('languageIds', []) as string[];
+  const [languages, setLanguages] = useState<Language[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState('');
 
   // Register field
   register('languageIds');
 
-  // Handle language selection change
+  useEffect(() => {
+    fetchLanguages()
+      .then((res) => {
+        if (res.success && res.data) {
+          setLanguages(res.data);
+        } else {
+          setFetchError('Failed to load languages');
+        }
+      })
+      .catch(() => setFetchError('Failed to load languages'))
+      .finally(() => setLoading(false));
+  }, []);
+
   const handleLanguageChange = (languageId: string, isChecked: boolean) => {
     let newLanguageIds = selectedLanguageIds ? [...selectedLanguageIds] : [];
 
@@ -66,6 +53,22 @@ export function LanguagesSection({ register, errors, setValue, watch }: Language
 
     setValue('languageIds', newLanguageIds, { shouldValidate: true });
   };
+
+  if (loading) {
+    return (
+      <div className="py-8 text-center">
+        <p className="text-sm text-gray-500">Loading languages...</p>
+      </div>
+    );
+  }
+
+  if (fetchError) {
+    return (
+      <div className="py-8 text-center">
+        <p className="text-sm text-error-600">{fetchError}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -84,7 +87,7 @@ export function LanguagesSection({ register, errors, setValue, watch }: Language
 
         {/* Languages Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {INDIAN_LANGUAGES.map((language) => (
+          {languages.map((language) => (
             <div
               key={language.id}
               className="p-3 border border-gray-200 rounded-md hover:border-primary-300
@@ -120,7 +123,7 @@ export function LanguagesSection({ register, errors, setValue, watch }: Language
           </h4>
           <div className="flex flex-wrap gap-2">
             {selectedLanguageIds.map((langId) => {
-              const language = INDIAN_LANGUAGES.find((l) => l.id === langId);
+              const language = languages.find((l) => l.id === langId);
               return language ? (
                 <span
                   key={langId}
