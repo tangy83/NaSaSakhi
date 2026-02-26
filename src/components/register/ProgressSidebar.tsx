@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 
 export interface SectionStatus {
   number: number;
@@ -37,9 +38,9 @@ export function ProgressSidebar({
       className={`w-64 bg-white border-r border-gray-200 flex flex-col h-screen sticky top-0 ${className}`}
       aria-label="Registration progress"
     >
-      {/* Logo */}
+      {/* Logo + Home link */}
       <div className="p-6 border-b border-gray-200">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 mb-3">
           <Image
             src="/assets/logo/coloured.png"
             alt="NaariSamata Sakhi"
@@ -52,6 +53,15 @@ export function ProgressSidebar({
             <p className="text-xs text-gray-600">Registration</p>
           </div>
         </div>
+        <Link
+          href="/"
+          className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-primary-600 transition-colors"
+        >
+          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Back to Home
+        </Link>
       </div>
 
       {/* Progress Stats */}

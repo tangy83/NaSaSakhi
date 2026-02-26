@@ -158,7 +158,7 @@ export default function AccordionFormPage() {
       number: 8,
       title: 'Document Uploads',
       isRequired: true,
-      fields: ['documents.registrationCertificateUrl'],
+      fields: ['registrationCertificateUrl'],
     },
   ];
 
@@ -254,6 +254,13 @@ export default function AccordionFormPage() {
     } finally {
       setIsSavingDraft(false);
     }
+  };
+
+  // Handle RHF validation failure (called when handleSubmit finds errors before reaching onSubmit)
+  const onFormError = () => {
+    showError('Some sections have validation errors. Please review each section and fix any issues.', 6000);
+    // Re-validate all sections so error badges light up in the sidebar
+    sections.forEach((s) => validateSection(s.number));
   };
 
   // Handle final form submission
@@ -384,7 +391,7 @@ export default function AccordionFormPage() {
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit, onFormError)} className="space-y-4">
               {/* Section 1: Organization Details */}
               <AccordionSection
                 sectionNumber={1}

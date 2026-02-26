@@ -4,6 +4,16 @@ import Image from 'next/image';
 export default function RegisterStartPage() {
   return (
     <div className="max-w-4xl mx-auto">
+      {/* Home link */}
+      <div className="pt-6 pb-2 px-4">
+        <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-primary-600 transition-colors">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Back to Home
+        </Link>
+      </div>
+
       {/* Welcome Hero */}
       <section className="text-center mb-12 sm:mb-16">
         <div className="mb-8">
