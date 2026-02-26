@@ -33,9 +33,12 @@ export default function FaithsPage() {
   useEffect(() => {
     if (status !== 'authenticated' || !isAdmin) return;
     fetch(`${API_BASE}/admin/faiths`, { credentials: 'include' })
-      .then((r) => r.json())
-      .then((j) => setFaiths(j.data))
-      .catch(() => setError('Failed to load faiths'))
+      .then(async (r) => {
+        const j = await r.json();
+        if (!r.ok) throw new Error(j.error || `HTTP ${r.status}`);
+        setFaiths(j.data ?? []);
+      })
+      .catch((e) => setError(e.message || 'Failed to load faiths'))
       .finally(() => setLoading(false));
   }, [status, isAdmin]);
 

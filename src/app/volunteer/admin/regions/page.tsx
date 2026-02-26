@@ -41,12 +41,14 @@ export default function RegionsPage() {
   useEffect(() => {
     if (status !== 'authenticated' || !isAdmin) return;
     fetch(`${API_BASE}/admin/regions`, { credentials: 'include' })
-      .then((r) => r.json())
-      .then((j) => {
-        setStates(j.data);
-        if (j.data.length > 0) setForm((f) => ({ ...f, stateId: j.data[0].id }));
+      .then(async (r) => {
+        const j = await r.json();
+        if (!r.ok) throw new Error(j.error || `HTTP ${r.status}`);
+        const data = j.data ?? [];
+        setStates(data);
+        if (data.length > 0) setForm((f) => ({ ...f, stateId: data[0].id }));
       })
-      .catch(() => setError('Failed to load regions'))
+      .catch((e) => setError(e.message || 'Failed to load regions'))
       .finally(() => setLoading(false));
   }, [status, isAdmin]);
 

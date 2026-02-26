@@ -12,7 +12,7 @@ interface Category {
   name: string;
   targetGroup: 'CHILDREN' | 'WOMEN';
   displayOrder: number;
-  _count: { resources: number };
+  resourceCount: number;
 }
 
 export default function ServiceCategoriesPage() {
@@ -36,9 +36,12 @@ export default function ServiceCategoriesPage() {
   useEffect(() => {
     if (status !== 'authenticated' || !isAdmin) return;
     fetch(`${API_BASE}/admin/service-categories`, { credentials: 'include' })
-      .then((r) => r.json())
-      .then((j) => setCategories(j.data))
-      .catch(() => setError('Failed to load categories'))
+      .then(async (r) => {
+        const j = await r.json();
+        if (!r.ok) throw new Error(j.error || `HTTP ${r.status}`);
+        setCategories(j.data ?? []);
+      })
+      .catch((e) => setError(e.message || 'Failed to load categories'))
       .finally(() => setLoading(false));
   }, [status, isAdmin]);
 
@@ -134,7 +137,7 @@ export default function ServiceCategoriesPage() {
                     </span>
                   </td>
                   <td className="px-4 py-3 font-body text-sm text-gray-500">{cat.displayOrder}</td>
-                  <td className="px-4 py-3 font-body text-sm text-gray-500">{cat._count.resources}</td>
+                  <td className="px-4 py-3 font-body text-sm text-gray-500">{cat.resourceCount}</td>
                 </tr>
               ))}
             </tbody>

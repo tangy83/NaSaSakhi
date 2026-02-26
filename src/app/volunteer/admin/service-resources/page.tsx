@@ -42,17 +42,25 @@ export default function ServiceResourcesPage() {
   useEffect(() => {
     if (status !== 'authenticated' || !isAdmin) return;
     Promise.all([
-      fetch(`${API_BASE}/admin/service-resources`, { credentials: 'include' }).then((r) => r.json()),
-      fetch(`${API_BASE}/admin/service-categories`, { credentials: 'include' }).then((r) => r.json()),
+      fetch(`${API_BASE}/admin/service-resources`, { credentials: 'include' }).then(async (r) => {
+        const j = await r.json();
+        if (!r.ok) throw new Error(j.error || `HTTP ${r.status}`);
+        return j;
+      }),
+      fetch(`${API_BASE}/admin/service-categories`, { credentials: 'include' }).then(async (r) => {
+        const j = await r.json();
+        if (!r.ok) throw new Error(j.error || `HTTP ${r.status}`);
+        return j;
+      }),
     ])
       .then(([resJson, catJson]) => {
-        setResources(resJson.data);
-        setCategories(catJson.data);
-        if (catJson.data.length > 0) {
+        setResources(resJson.data ?? []);
+        setCategories(catJson.data ?? []);
+        if ((catJson.data ?? []).length > 0) {
           setForm((f) => ({ ...f, categoryId: catJson.data[0].id }));
         }
       })
-      .catch(() => setError('Failed to load data'))
+      .catch((e) => setError(e.message || 'Failed to load data'))
       .finally(() => setLoading(false));
   }, [status, isAdmin]);
 

@@ -33,9 +33,12 @@ export default function SocialCategoriesPage() {
   useEffect(() => {
     if (status !== 'authenticated' || !isAdmin) return;
     fetch(`${API_BASE}/admin/social-categories`, { credentials: 'include' })
-      .then((r) => r.json())
-      .then((j) => setCategories(j.data))
-      .catch(() => setError('Failed to load social categories'))
+      .then(async (r) => {
+        const j = await r.json();
+        if (!r.ok) throw new Error(j.error || `HTTP ${r.status}`);
+        setCategories(j.data ?? []);
+      })
+      .catch((e) => setError(e.message || 'Failed to load social categories'))
       .finally(() => setLoading(false));
   }, [status, isAdmin]);
 

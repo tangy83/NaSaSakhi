@@ -16,49 +16,65 @@ async function getAuth() {
 }
 
 export async function GET(req: NextRequest) {
-  const auth = await getAuth();
-  const allowed = await auth.isAdmin();
-  if (!allowed) {
-    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+  try {
+    const auth = await getAuth();
+    const allowed = await auth.isAdmin();
+    if (!allowed) {
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const prisma = await getPrisma();
+
+    const resources = await prisma.serviceResource.findMany({
+      orderBy: [{ category: { name: 'asc' } }, { name: 'asc' }],
+      include: { category: { select: { id: true, name: true, targetGroup: true } } },
+    });
+
+    return NextResponse.json({ success: true, data: resources });
+  } catch (error) {
+    console.error('[admin/service-resources GET]', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to load service resources' },
+      { status: 500 }
+    );
   }
-
-  const prisma = await getPrisma();
-
-  const resources = await prisma.serviceResource.findMany({
-    orderBy: [{ category: { name: 'asc' } }, { name: 'asc' }],
-    include: { category: { select: { id: true, name: true, targetGroup: true } } },
-  });
-
-  return NextResponse.json({ success: true, data: resources });
 }
 
 export async function POST(req: NextRequest) {
-  const auth = await getAuth();
-  const allowed = await auth.isAdmin();
-  if (!allowed) {
-    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
-  }
+  try {
+    const auth = await getAuth();
+    const allowed = await auth.isAdmin();
+    if (!allowed) {
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    }
 
-  const body = await req.json();
-  const { name, description, categoryId } = body;
+    const body = await req.json();
+    const { name, description, categoryId } = body;
 
-  if (!name || !categoryId) {
+    if (!name || !categoryId) {
+      return NextResponse.json(
+        { success: false, error: 'name and categoryId are required' },
+        { status: 400 }
+      );
+    }
+
+    const prisma = await getPrisma();
+
+    const resource = await prisma.serviceResource.create({
+      data: {
+        name: name.trim(),
+        description: description?.trim() || null,
+        categoryId,
+      },
+      include: { category: { select: { id: true, name: true, targetGroup: true } } },
+    });
+
+    return NextResponse.json({ success: true, data: resource }, { status: 201 });
+  } catch (error) {
+    console.error('[admin/service-resources POST]', error);
     return NextResponse.json(
-      { success: false, error: 'name and categoryId are required' },
-      { status: 400 }
+      { success: false, error: 'Failed to create service resource' },
+      { status: 500 }
     );
   }
-
-  const prisma = await getPrisma();
-
-  const resource = await prisma.serviceResource.create({
-    data: {
-      name: name.trim(),
-      description: description?.trim() || null,
-      categoryId,
-    },
-    include: { category: { select: { id: true, name: true, targetGroup: true } } },
-  });
-
-  return NextResponse.json({ success: true, data: resource }, { status: 201 });
 }

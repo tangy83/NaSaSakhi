@@ -46,9 +46,12 @@ export default function LanguagesPage() {
   useEffect(() => {
     if (status !== 'authenticated' || !isAdmin) return;
     fetch(`${API_BASE}/admin/languages`, { credentials: 'include' })
-      .then((r) => r.json())
-      .then((j) => setLanguages(j.data?.languages ?? []))
-      .catch(() => setError('Failed to load languages'))
+      .then(async (r) => {
+        const j = await r.json();
+        if (!r.ok) throw new Error(j.error || `HTTP ${r.status}`);
+        setLanguages(j.data?.languages ?? []);
+      })
+      .catch((e) => setError(e.message || 'Failed to load languages'))
       .finally(() => setLoading(false));
   }, [status, isAdmin]);
 
