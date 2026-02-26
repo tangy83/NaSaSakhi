@@ -2,6 +2,7 @@ import { PrismaClient, TargetGroup } from '@prisma/client';
 import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
 import * as dotenv from 'dotenv';
+import bcrypt from 'bcrypt';
 
 dotenv.config();
 
@@ -601,6 +602,28 @@ async function main() {
 
   await prisma.socialCategory.createMany({ data: socialCategories, skipDuplicates: true });
   console.log('✅ Seeded 6 social categories');
+
+  // 8. Seed default admin user (idempotent — skipped if email already exists)
+  const adminEmail = 'admin@naarisamata.org';
+  const adminPassword = 'Admin@NaariSamata2026';
+  const existingAdmin = await prisma.user.findUnique({ where: { email: adminEmail } });
+  if (!existingAdmin) {
+    const hashed = await bcrypt.hash(adminPassword, 10);
+    await prisma.user.create({
+      data: {
+        email: adminEmail,
+        password: hashed,
+        name: 'NaariSamata Admin',
+        role: 'ADMIN',
+      },
+    });
+    console.log(`✅ Seeded default admin user`);
+    console.log(`   Email:    ${adminEmail}`);
+    console.log(`   Password: ${adminPassword}`);
+    console.log(`   ⚠️  Change this password immediately after first login.`);
+  } else {
+    console.log('ℹ️  Admin user already exists — skipped');
+  }
 
   console.log('🎉 Database seeding completed successfully!');
 }

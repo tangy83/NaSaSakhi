@@ -1,7 +1,8 @@
 'use client';
 
-// Volunteer Login Page
-// Uses Volunteer ID + password for authentication (not email)
+// Volunteer / Admin Login Page
+// Accepts Volunteer ID (e.g. VOL-2024-001) or Email address.
+// The auth backend auto-routes based on which field is provided.
 
 import { useState, FormEvent } from 'react';
 import { signIn } from 'next-auth/react';
@@ -13,7 +14,7 @@ export default function VolunteerLoginPage() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/volunteer/dashboard';
 
-  const [volunteerId, setVolunteerId] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -22,8 +23,8 @@ export default function VolunteerLoginPage() {
     e.preventDefault();
     setError('');
 
-    if (!volunteerId.trim()) {
-      setError('Volunteer ID is required');
+    if (!identifier.trim()) {
+      setError('Volunteer ID or email is required');
       return;
     }
     if (!password) {
@@ -33,17 +34,21 @@ export default function VolunteerLoginPage() {
 
     setIsLoading(true);
 
+    // Route to the correct credential field based on input format
+    const isEmail = identifier.includes('@');
+    const credentials = isEmail
+      ? { email: identifier.trim(), password }
+      : { volunteerId: identifier.trim(), password };
+
     try {
       const result = await signIn('credentials', {
-        volunteerId: volunteerId.trim(),
-        password,
+        ...credentials,
         redirect: false,
       });
 
       if (result?.error) {
-        // NextAuth surfaces the thrown error message here
         setError(result.error === 'CredentialsSignin'
-          ? 'Invalid Volunteer ID or password'
+          ? 'Invalid credentials. Check your Volunteer ID or email and password.'
           : result.error);
       } else if (result?.ok) {
         router.push(callbackUrl);
@@ -73,11 +78,11 @@ export default function VolunteerLoginPage() {
 
           <form onSubmit={handleSubmit} noValidate className="space-y-5">
             <TextInput
-              label="Volunteer ID"
+              label="Volunteer ID or Email"
               type="text"
-              value={volunteerId}
-              onChange={(e) => setVolunteerId(e.target.value)}
-              placeholder="e.g. VOL-2024-001"
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
+              placeholder="e.g. VOL-2024-001 or admin@example.org"
               autoComplete="username"
               required
               disabled={isLoading}
