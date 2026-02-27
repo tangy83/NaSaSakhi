@@ -32,6 +32,11 @@ COPY . .
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
+# Dummy DATABASE_URL so Next.js can collect page data at build time without a
+# real DB connection. Prisma initialises the module but doesn't connect until a
+# query is actually executed — the real URL is injected at runtime by DC Deploy.
+ENV DATABASE_URL="postgresql://build:build@localhost:5432/build"
+
 # Build application (standalone output configured in next.config.ts)
 RUN npm run build
 
