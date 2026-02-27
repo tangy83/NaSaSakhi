@@ -4,6 +4,6 @@
     "SKIP_ENV_VALIDATION": "1"
   },
   "git": {
-    "deploymentEnabled": true
+    "deploymentEnabled": false
   }
 }

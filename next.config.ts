@@ -1,16 +1,12 @@
 import type { NextConfig } from 'next';
-import path from 'path';
 
 const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: true,
   poweredByHeader: false,
 
-  // Disable standalone output to fix pre-rendering issues
-  // output: 'standalone',
-
-  // Fix lockfile warning - set workspace root explicitly
-  outputFileTracingRoot: path.join(__dirname),
+  // Standalone output for Docker / DC Deploy
+  output: 'standalone',
 
   // Optimize for production
   compress: true,

@@ -1,23 +1,27 @@
 # Multi-stage Dockerfile for NaariSamata Portal
-# Optimized for production deployment
+# Standalone mode — optimised for DC Deploy
 
 # Stage 1: Dependencies
-FROM node:18-alpine AS deps
+FROM node:20-alpine AS deps
 RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 
 # Copy package files
 COPY package.json package-lock.json ./
-COPY prisma ./prisma/
+
+# prisma.config.ts points to backend/prisma/schema.prisma (full 25-model schema)
+# Both must be present before `prisma generate` runs
+COPY prisma.config.ts ./
+COPY backend/prisma ./backend/prisma/
 
 # Install dependencies
 RUN npm ci
 
-# Generate Prisma Client
+# Generate Prisma Client using the full backend schema
 RUN npx prisma generate
 
 # Stage 2: Builder
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Copy dependencies from deps stage
@@ -28,11 +32,11 @@ COPY . .
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Build application
+# Build application (standalone output configured in next.config.ts)
 RUN npm run build
 
 # Stage 3: Runner
-FROM node:18-alpine AS runner
+FROM node:20-alpine AS runner
 WORKDIR /app
 
 # Set environment
@@ -43,20 +47,15 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copy necessary files
+# Copy static assets
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/node_modules ./node_modules
 
-# Copy Next.js build output (non-standalone mode)
-COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
+# Standalone output bundles everything needed to run — no node_modules copy required
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Copy Prisma files
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
-
-# Copy Next.js config
-COPY --from=builder /app/next.config.ts ./next.config.ts
+# Prisma runtime (.so files for the query engine)
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 
 # Switch to non-root user
 USER nextjs
@@ -67,5 +66,5 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# Start application (using npm start for non-standalone mode)
-CMD ["npm", "start"]
+# Standalone entrypoint produced by Next.js build
+CMD ["node", "server.js"]
