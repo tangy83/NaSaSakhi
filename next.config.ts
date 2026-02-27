@@ -5,9 +5,6 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
 
-  // Standalone output for Docker / DC Deploy
-  output: 'standalone',
-
   // Optimize for production
   compress: true,
 
