@@ -1,7 +1,7 @@
 # NASA Sakhi API Endpoints
 
 **Base URL:** `http://localhost:3000/api` (Development)
-**Production URL:** Update with your production URL
+**Production URL:** `https://nasasakhi-nmjuxe7e5m.dcdeploy.cloud/api`
 **Last Updated:** February 26, 2026
 
 ---

@@ -49,7 +49,7 @@ The NASA Sakhi API provides endpoints for:
 
 ```
 Development: http://localhost:3000/api
-Production: [To be updated]
+Production:  https://nasasakhi-nmjuxe7e5m.dcdeploy.cloud/api
 ```
 
 ### Response Format

@@ -1,68 +1,85 @@
 # DC Deploy - Actual Production Configuration
 
-**Last Updated:** February 3, 2026 19:00 IST
-**Status:** ✅ Successfully Deployed (Build #24)
+**Last Updated:** February 27, 2026
+**Status:** ✅ Two services running on DC Deploy
 
 ---
 
-## Application Configuration
+## Services Overview
+
+| Service | URL | App | Dockerfile |
+|---------|-----|-----|------------|
+| `nasasakhi` | https://nasasakhi-nmjuxe7e5m.dcdeploy.cloud | Root app (`src/`) — all API routes, volunteer portal, registration form | `./Dockerfile` |
+| `nasassakhibestg` | https://nasassakhibestg.dcdeployapp.com | Backend app (`backend/`) — legacy backend APIs | `backend/Dockerfile` |
+
+**Primary application URL:** https://nasasakhi-nmjuxe7e5m.dcdeploy.cloud
+
+---
+
+## Service 1: nasasakhi (Root App — Primary)
+
+**Application Name:** nasasakhi
+**Platform:** DC Deploy (Docker-based PaaS)
+**Deployment URL:** https://nasasakhi-nmjuxe7e5m.dcdeploy.cloud
+**Status:** Active
+
+### Build Configuration
+
+**Context:** `./` (repo root)
+**Dockerfile:** `./Dockerfile`
+**Branch:** main
+**Port:** 3000
+**Build Type:** Docker multi-stage, node:20-alpine
+**Output:** Next.js standalone (`node server.js`)
+
+### Environment Variables
+
+| Variable | Value | Purpose |
+|----------|-------|---------|
+| `NODE_ENV` | `production` | Runtime environment |
+| `DATABASE_URL` | `postgresql://JQZAEG:***@nasasakhidbstg:5432/nasasakhidbstg-db` | Shared database |
+| `NEXTAUTH_URL` | `https://nasasakhi-nmjuxe7e5m.dcdeploy.cloud` | NextAuth base URL |
+| `NEXTAUTH_SECRET` | [Securely configured] | NextAuth secret key |
+| `NEXT_PUBLIC_APP_URL` | `https://nasasakhi-nmjuxe7e5m.dcdeploy.cloud` | Public app URL |
+| `NEXT_PUBLIC_API_URL` | `https://nasasakhi-nmjuxe7e5m.dcdeploy.cloud/api` | Public API URL |
+| `SKIP_ENV_VALIDATION` | `1` | Skip env validation at build time |
+| `ALLOWED_ORIGINS` | `*` | CORS allowed origins |
+
+---
+
+## Service 2: nasassakhibestg (Backend — Legacy)
 
 **Application Name:** nasassakhibestg
-**Platform:** DC Deploy (Docker-based PaaS)
 **Deployment URL:** https://nasassakhibestg.dcdeployapp.com
-**Status:** Active and running
+**Status:** Active (Build #24)
 
----
-
-## Build Configuration
+### Build Configuration
 
 **Root Directory:** `backend`
-**Build Command:** `npm install && npm run build`
-**Start Command:** `npm start`
+**Dockerfile:** `backend/Dockerfile`
 **Port:** 3000
-
-**Dockerfile Location:** `backend/Dockerfile`
-**Build Type:** Docker multi-stage build
-**Base Image:** node:20-alpine
 **Output:** Next.js standalone
 
 ---
 
 ## Database Configuration
 
-**Database Instance:** nasasakhidbstg
+**Database Instance:** nasasakhidbstg (shared by both services)
 **Type:** PostgreSQL 17.5 (DC Deploy Managed)
 **Port:** 5432
-**Connection String Format:**
-```
-postgresql://[USER]:[PASSWORD]@nasasakhidbstg:5432/nasasakhidbstg-db
-```
 
-**Connection String (Development):**
+**Connection String:**
 ```
 DATABASE_URL="postgresql://JQZAEG:%2B1h8t3x%7Baa@nasasakhidbstg:5432/nasasakhidbstg-db"
 ```
 
 ---
 
-## Environment Variables
-
-Configured in DC Deploy Dashboard:
-
-| Variable | Value | Purpose |
-|----------|-------|---------|
-| NODE_ENV | production | Runtime environment |
-| PORT | 3000 | Application port |
-| DATABASE_URL | postgresql://JQZAEG:***@nasasakhidbstg:5432/nasasakhidbstg-db | Database connection |
-| NEXT_PUBLIC_APP_URL | https://nasassakhibestg.dcdeployapp.com | Public app URL |
-| NEXTAUTH_URL | https://nasassakhibestg.dcdeployapp.com | NextAuth base URL |
-| NEXTAUTH_SECRET | [Securely configured] | NextAuth secret key |
-
----
-
 ## Deployment Process
 
 ### Automatic Deployment
+
+Both services auto-deploy on push to `main`:
 
 1. **Developer Action:**
    ```bash
@@ -71,42 +88,38 @@ Configured in DC Deploy Dashboard:
    git push origin main
    ```
 
-2. **DC Deploy Process:**
-   - Detects push to main branch via webhook
-   - Pulls latest code from GitHub
-   - Extracts `backend/` directory
-   - Runs Docker build using `backend/Dockerfile`
-   - Generates Prisma Client
-   - Builds Next.js application
-   - Deploys new container
-   - Restarts application
+2. **DC Deploy Process (nasasakhi — root app):**
+   - Detects push to main via webhook
+   - Builds from `./Dockerfile` (repo root context)
+   - Generates Prisma client from `backend/prisma/schema.prisma`
+   - Builds Next.js standalone output
+   - Deploys container running `node server.js`
 
-3. **Build Time:** ~2-3 minutes
+3. **Build Time:** ~3-4 minutes
 4. **Downtime:** < 10 seconds (rolling deployment)
 
 ### Monitoring Deployment
 
 - **DC Deploy Dashboard:** View build logs and status
-- **GitHub:** Check commit triggered build
-- **Health Check:**
+- **Health Check (root app):**
   ```bash
-  curl https://nasassakhibestg.dcdeployapp.com/api/health
+  curl https://nasasakhi-nmjuxe7e5m.dcdeploy.cloud/api/health
   ```
 
 ---
 
 ## Testing Deployed Application
 
-### Health Check (No Database)
+### Health Check
 ```bash
-curl https://nasassakhibestg.dcdeployapp.com/api/health
+curl https://nasasakhi-nmjuxe7e5m.dcdeploy.cloud/api/health
 ```
 
 Expected response:
 ```json
 {
   "status": "healthy",
-  "timestamp": "2026-02-03T...",
+  "timestamp": "2026-02-27T...",
   "service": "NASA Sakhi API",
   "version": "1.0.0",
   "environment": "production"
@@ -115,7 +128,7 @@ Expected response:
 
 ### Database Connection Test
 ```bash
-curl https://nasassakhibestg.dcdeployapp.com/api/db-test
+curl https://nasasakhi-nmjuxe7e5m.dcdeploy.cloud/api/db-test
 ```
 
 Expected response:

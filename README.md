@@ -36,9 +36,11 @@ Both apps share the same PostgreSQL database (`NaSaSakhiDB`). The root app's Pri
 
 ## Staging Infrastructure
 
-- `NaSaSakhiDB` — PostgreSQL 17 database instance
-- `NaSaSakhiBEStg` — Backend standalone server (Docker)
-- `NaSaSakhiFEStg` — Frontend/root app on Vercel
+| Service | URL | Description |
+|---------|-----|-------------|
+| `nasasakhi` | https://nasasakhi-nmjuxe7e5m.dcdeploy.cloud | Root app — primary service (DC Deploy) |
+| `nasassakhibestg` | https://nasassakhibestg.dcdeployapp.com | Backend legacy service (DC Deploy) |
+| `NaSaSakhiDB` | nasasakhidbstg:5432 | PostgreSQL 17 (DC Deploy managed) |
 
 ## Getting Started
 

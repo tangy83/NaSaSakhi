@@ -5,7 +5,7 @@
 ## Base URL
 ```
 Development: http://localhost:3000/api
-Production: [Update with production URL]/api
+Production:  https://nasasakhi-nmjuxe7e5m.dcdeploy.cloud/api
 ```
 
 ## Reference Data (No Auth Required)
