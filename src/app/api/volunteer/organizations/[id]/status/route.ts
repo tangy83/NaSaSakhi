@@ -91,8 +91,6 @@ export async function PATCH(
       },
     });
 
-    // 4. Translation job creation deferred — restore translationJob.createMany() here when re-enabling.
-
     return updated;
   });
 

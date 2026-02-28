@@ -1,28 +1,27 @@
 'use client';
 
-// PARKED: Language Coverage Dashboard
-// This page is part of the translation workflow (Bhashini integration).
-// Translation feature is deferred. This route is intentionally unreachable from the UI.
-// Do not link to this page until the translation feature is re-enabled.
+// Language Coverage Dashboard — parked, pending Phase 2 pipeline work
+// Un-park when translation pipeline is live (Phase 2, Task B4)
 
 import { useRouter } from 'next/navigation';
 
 export default function LanguagesDashboardPage() {
   const router = useRouter();
+
   return (
-    <div className="max-w-4xl mx-auto px-4 py-10 text-center">
-      <p className="font-heading text-2xl text-gray-700 font-medium mb-2">
-        Feature Unavailable
-      </p>
-      <p className="font-body text-gray-500 mb-6">
-        The language coverage dashboard is not available in this version.
-      </p>
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <button
         onClick={() => router.push('/volunteer/dashboard')}
-        className="font-body text-sm text-primary-600 hover:text-primary-700 underline"
+        className="font-body text-sm text-gray-500 hover:text-primary-600 mb-6 flex items-center gap-1"
       >
-        Back to Dashboard
+        ← Back to Dashboard
       </button>
+      <div className="bg-gray-50 border border-gray-200 rounded-xl px-8 py-16 text-center">
+        <p className="font-heading text-xl text-gray-600 font-medium">Feature Unavailable</p>
+        <p className="font-body text-sm text-gray-400 mt-2">
+          Language coverage tracking will be available in a future update.
+        </p>
+      </div>
     </div>
   );
 }
