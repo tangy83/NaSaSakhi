@@ -1,8 +1,8 @@
 // API Client for Frontend to Backend Communication
 // This allows the frontend to call the backend API when deployed separately
 
-// API Base URL - should include /api at the end (e.g., http://localhost:3000/api)
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+// API Base URL - should include /api at the end (e.g., /api)
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || '/api';
 
 export interface ApiResponse<T = any> {
   success: boolean;

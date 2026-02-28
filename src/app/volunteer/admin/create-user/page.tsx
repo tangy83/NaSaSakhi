@@ -10,7 +10,7 @@ import { useSession } from 'next-auth/react';
 import { TextInput } from '@/components/form/TextInput';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || '/api';
 
 export default function CreateUserPage() {
   const router = useRouter();

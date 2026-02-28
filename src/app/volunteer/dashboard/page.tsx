@@ -32,7 +32,7 @@ interface Pagination {
   totalPages: number;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || '/api';
 
 async function fetchJSON<T>(url: string): Promise<T> {
   const res = await fetch(url, { credentials: 'include' });
