@@ -102,6 +102,8 @@ export async function POST(req: NextRequest) {
         type: 'REGISTRATION_CERTIFICATE',
         fileUrl: '/test/placeholder.pdf',
         filename: 'placeholder.pdf',
+        fileSize: 1,
+        mimeType: 'application/pdf',
       },
     });
 
