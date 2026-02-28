@@ -28,3 +28,24 @@ export async function deleteTestVolunteer(volunteerId: string): Promise<void> {
     method: 'DELETE',
   });
 }
+
+/** Creates a minimal PENDING organization via the internal seed API */
+export async function createTestOrg(): Promise<{ id: string; name: string }> {
+  const res = await fetch(`${BASE_URL}/api/test/seed-org`, {
+    method: 'POST',
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Failed to seed test org: ${res.status} ${text}`);
+  }
+
+  return res.json();
+}
+
+/** Deletes a test organization by orgId */
+export async function deleteTestOrg(orgId: string): Promise<void> {
+  await fetch(`${BASE_URL}/api/test/seed-org?orgId=${orgId}`, {
+    method: 'DELETE',
+  });
+}
