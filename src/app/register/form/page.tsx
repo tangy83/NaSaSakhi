@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -383,6 +384,19 @@ export default function AccordionFormPage() {
                 <span>
                   Registering as a branch of: <span className="font-semibold">{parentOrgName}</span>
                 </span>
+              </div>
+            )}
+
+            {/* Branch registration hint — shown for org flow so users can switch if needed */}
+            {!isBranchRegistration && (
+              <div className="mb-4 flex items-center justify-end gap-1 text-sm text-gray-500">
+                <span>Registering a branch of an existing organization?</span>
+                <Link
+                  href="/register/start"
+                  className="text-primary-600 hover:text-primary-700 font-medium hover:underline"
+                >
+                  Switch here →
+                </Link>
               </div>
             )}
 
