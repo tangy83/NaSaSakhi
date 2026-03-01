@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       data: {
-        url,
+        fileUrl: url,
         filename,
         size: file.size,
         type: file.type,

@@ -183,6 +183,7 @@ model ServiceResource {
   category ServiceCategory  @relation(fields: [categoryId], references: [id])
   branches BranchResource[]
 
+  @@unique([categoryId, name])
   @@map("service_resources")
 }
 

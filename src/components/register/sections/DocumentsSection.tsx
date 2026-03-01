@@ -11,50 +11,50 @@ interface DocumentsSectionProps {
 }
 
 export function DocumentsSection({ register, errors, setValue, watch }: DocumentsSectionProps) {
-  const registrationCertificateUrl = watch('documents.registrationCertificateUrl', '');
-  const logoUrl = watch('documents.logoUrl', '');
-  const additionalCertificateUrls = watch('documents.additionalCertificateUrls', []) as string[];
+  const registrationCertificateUrl = watch('registrationCertificateUrl', '');
+  const logoUrl = watch('logoUrl', '');
+  const additionalCertificateUrls = watch('additionalCertificateUrls', []) as string[];
 
   // Register fields
-  register('documents.registrationCertificateUrl');
-  register('documents.logoUrl');
-  register('documents.additionalCertificateUrls');
+  register('registrationCertificateUrl');
+  register('logoUrl');
+  register('additionalCertificateUrls');
 
   // Handle registration certificate upload
   const handleRegistrationCertificateChange = (fileUrl: string) => {
-    setValue('documents.registrationCertificateUrl', fileUrl, { shouldValidate: true });
+    setValue('registrationCertificateUrl', fileUrl, { shouldValidate: true });
   };
 
   const handleRegistrationCertificateRemove = () => {
-    setValue('documents.registrationCertificateUrl', '', { shouldValidate: true });
+    setValue('registrationCertificateUrl', '', { shouldValidate: true });
   };
 
   // Handle logo upload
   const handleLogoChange = (fileUrl: string) => {
-    setValue('documents.logoUrl', fileUrl, { shouldValidate: true });
+    setValue('logoUrl', fileUrl, { shouldValidate: true });
   };
 
   const handleLogoRemove = () => {
-    setValue('documents.logoUrl', '', { shouldValidate: true });
+    setValue('logoUrl', '', { shouldValidate: true });
   };
 
   // Handle additional certificates
   const handleAddAdditionalCertificate = () => {
     if (additionalCertificateUrls.length < 3) {
       const newUrls = [...additionalCertificateUrls, ''];
-      setValue('documents.additionalCertificateUrls', newUrls, { shouldValidate: true });
+      setValue('additionalCertificateUrls', newUrls, { shouldValidate: true });
     }
   };
 
   const handleAdditionalCertificateChange = (index: number, fileUrl: string) => {
     const newUrls = [...additionalCertificateUrls];
     newUrls[index] = fileUrl;
-    setValue('documents.additionalCertificateUrls', newUrls, { shouldValidate: true });
+    setValue('additionalCertificateUrls', newUrls, { shouldValidate: true });
   };
 
   const handleAdditionalCertificateRemove = (index: number) => {
     const newUrls = additionalCertificateUrls.filter((_, i) => i !== index);
-    setValue('documents.additionalCertificateUrls', newUrls, { shouldValidate: true });
+    setValue('additionalCertificateUrls', newUrls, { shouldValidate: true });
   };
 
   return (
