@@ -296,7 +296,11 @@ export default function VolunteerDashboardPage() {
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {orgs.map((org) => (
-                  <tr key={org.id} className="hover:bg-gray-50 transition-colors">
+                  <tr
+                    key={org.id}
+                    onClick={() => router.push(`/volunteer/organizations/${org.id}/review`)}
+                    className="hover:bg-gray-50 transition-colors cursor-pointer"
+                  >
                     <td className="px-4 py-3">
                       <span className="font-body text-sm font-medium text-gray-800">
                         {org.name}
