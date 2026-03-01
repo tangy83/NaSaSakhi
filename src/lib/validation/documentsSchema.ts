@@ -25,8 +25,26 @@ const urlSchema = z
   );
 
 export const documentsSchema = z.object({
-  // Registration certificate (required)
-  registrationCertificateUrl: urlSchema,
+  // Registration certificate (optional)
+  registrationCertificateUrl: z
+    .preprocess(
+      (val) => (val === undefined || val === null ? '' : val),
+      z.union([
+        z.string().refine(
+          (val) => {
+            if (val === '') return true;
+            if (val.startsWith('http://') || val.startsWith('https://')) {
+              try { new URL(val); return true; } catch { return false; }
+            }
+            if (val.startsWith('/')) return true;
+            return false;
+          },
+          { message: 'Please provide a valid file URL' }
+        ),
+        z.literal(''),
+      ])
+    )
+    .optional(),
 
   // Organization logo (optional) - accepts empty string, undefined, or valid URL/path
   // Empty strings are allowed (treated as "not provided")

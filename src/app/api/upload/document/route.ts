@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { NextRequest } from 'next/server';
-import { writeFile } from 'fs/promises';
-import { join } from 'path';
+import { put } from '@vercel/blob';
 
 /**
  * POST /api/upload/document
@@ -50,25 +49,19 @@ export async function POST(request: NextRequest) {
     // Generate unique filename
     const timestamp = Date.now();
     const originalName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-    const filename = `${timestamp}-${originalName}`;
+    const filename = `documents/${timestamp}-${originalName}`;
 
-    // Convert file to buffer
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    // Save to public/uploads/documents
-    const uploadDir = join(process.cwd(), 'public', 'uploads', 'documents');
-    const filepath = join(uploadDir, filename);
-    await writeFile(filepath, buffer);
-
-    // Return URL path (relative to public)
-    const url = `/uploads/documents/${filename}`;
+    // Upload to Vercel Blob
+    const blob = await put(filename, file, {
+      access: 'public',
+      contentType: file.type,
+    });
 
     return NextResponse.json({
       success: true,
       data: {
-        fileUrl: url,
-        filename,
+        fileUrl: blob.url,
+        filename: blob.pathname,
         size: file.size,
         type: file.type,
       },

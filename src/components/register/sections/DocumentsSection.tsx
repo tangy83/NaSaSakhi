@@ -59,11 +59,10 @@ export function DocumentsSection({ register, errors, setValue, watch }: Document
 
   return (
     <div className="space-y-8">
-      {/* Registration Certificate (Required) */}
+      {/* Registration Certificate (Optional) */}
       <div className="space-y-2">
         <FileUpload
           label="Registration Certificate"
-          required
           uploadType="document"
           value={registrationCertificateUrl}
           onChange={handleRegistrationCertificateChange}
@@ -188,7 +187,7 @@ export function DocumentsSection({ register, errors, setValue, watch }: Document
             <span className={registrationCertificateUrl ? 'text-success-500' : 'text-error-500'}>
               {registrationCertificateUrl ? '✓' : '✗'}
             </span>
-            Registration Certificate {registrationCertificateUrl ? '(Uploaded)' : '(Required)'}
+            Registration Certificate {registrationCertificateUrl ? '(Uploaded)' : '(Optional)'}
           </li>
           <li className="flex items-center gap-2">
             <span className={logoUrl ? 'text-success-500' : 'text-gray-400'}>
