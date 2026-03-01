@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -38,7 +38,7 @@ const fullFormSchema = organizationSchema
 
 type FullFormData = z.infer<typeof fullFormSchema>;
 
-export default function AccordionFormPage() {
+function AccordionFormPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { formData, updateStepData, saveDraft, clearDraft, loadDraftFromBackend } = useFormState();
@@ -675,5 +675,18 @@ export default function AccordionFormPage() {
         </main>
       </div>
     </div>
+  );
+}
+
+// useSearchParams() requires a Suspense boundary (Next.js static prerendering requirement)
+export default function RegisterFormPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <p className="text-gray-500">Loading registration form…</p>
+      </div>
+    }>
+      <AccordionFormPage />
+    </Suspense>
   );
 }
