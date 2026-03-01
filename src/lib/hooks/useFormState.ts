@@ -16,6 +16,10 @@ const DRAFT_STORAGE_KEY = 'nasa_sakhi_registration_draft';
 
 // Initial empty form data
 const initialFormData: Partial<RegistrationFormData> = {
+  // Branch registration context
+  entityType: 'ORGANIZATION',
+  parentOrganizationId: undefined,
+
   // Step 1: Organization Details
   organizationName: '',
   registrationType: undefined,

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useFormState } from '@/lib/hooks/useFormState';
 import { AccordionSection } from '@/components/register/AccordionSection';
 import { ProgressSidebar, SectionStatus } from '@/components/register/ProgressSidebar';
@@ -39,9 +39,16 @@ type FullFormData = z.infer<typeof fullFormSchema>;
 
 export default function AccordionFormPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { formData, updateStepData, saveDraft, clearDraft, loadDraftFromBackend } = useFormState();
   const { handleError } = useApiError();
   const { showSuccess, showError } = useToast();
+
+  // Branch registration context from URL params
+  const entityType = (searchParams.get('entityType') || 'organization') as 'organization' | 'branch';
+  const parentOrgId = searchParams.get('parentOrgId') || undefined;
+  const parentOrgName = searchParams.get('parentOrgName') || undefined;
+  const isBranchRegistration = entityType === 'branch' && !!parentOrgId;
 
   // Section state management
   const [openSection, setOpenSection] = useState(1);
@@ -281,6 +288,9 @@ export default function AccordionFormPage() {
 
       // Prepare submission data
       const submissionData: RegistrationFormData = {
+        // Branch context
+        entityType: isBranchRegistration ? 'BRANCH' : 'ORGANIZATION',
+        parentOrganizationId: isBranchRegistration ? parentOrgId : undefined,
         // Organization
         organizationName: data.organizationName,
         registrationType: data.registrationType,
@@ -364,13 +374,25 @@ export default function AccordionFormPage() {
         {/* Main Content */}
         <main className="flex-1 p-4 sm:p-6 lg:p-8">
           <div className="max-w-4xl mx-auto">
+            {/* Branch registration banner */}
+            {isBranchRegistration && parentOrgName && (
+              <div className="mb-6 flex items-center gap-3 bg-primary-50 border border-primary-200 rounded-lg px-4 py-3 text-sm font-body text-primary-800">
+                <svg className="w-5 h-5 text-primary-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                </svg>
+                <span>
+                  Registering as a branch of: <span className="font-semibold">{parentOrgName}</span>
+                </span>
+              </div>
+            )}
+
             {/* Page Header */}
             <div className="mb-8">
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 font-ui mb-2">
-                Organization Registration
+                {isBranchRegistration ? 'Branch Registration' : 'Organization Registration'}
               </h1>
               <p className="text-gray-600">
-                Complete all required sections to register your organization with NaariSamata Sakhi
+                Complete all required sections to register your {isBranchRegistration ? 'branch' : 'organization'} with NaariSamata Sakhi
               </p>
             </div>
 
@@ -410,6 +432,7 @@ export default function AccordionFormPage() {
                   errors={errors}
                   setValue={setValue}
                   watch={watch}
+                  entityType={entityType}
                 />
               </AccordionSection>
 

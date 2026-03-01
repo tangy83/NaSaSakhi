@@ -34,7 +34,13 @@ export interface ValidationError {
  * Complete registration form data structure
  * This is what the frontend sends to POST /api/registration/submit
  */
+export type EntityType = 'ORGANIZATION' | 'BRANCH';
+
 export interface RegistrationFormData {
+  // Branch registration context
+  entityType?: EntityType;
+  parentOrganizationId?: string;
+
   // Step 1: Organization Details
   organizationName: string;
   registrationType: RegistrationType;
@@ -226,6 +232,8 @@ export interface DraftLoadResponse {
  */
 export interface RegistrationSubmitResponse {
   organizationId: string;
+  customId?: string;
+  entityType?: EntityType;
   status: OrganizationStatus;
   message: string;
 }

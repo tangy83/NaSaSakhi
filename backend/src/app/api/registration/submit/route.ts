@@ -13,12 +13,15 @@ import {
   checkDuplicateOrganization,
   ValidationError,
 } from '@/lib/validation/server';
+import { generateOrgCustomId, generateBranchCustomId } from '@/lib/organizationId';
 
 // Prevent static generation - this route must be dynamic
 export const dynamic = 'force-dynamic';
 
 // Validation schema
 const registrationSchema = z.object({
+  entityType: z.enum(['ORGANIZATION', 'BRANCH']).default('ORGANIZATION'),
+  parentOrganizationId: z.string().uuid().optional(),
   organizationName: z.string().min(3).max(100),
   registrationType: z.enum(['NGO', 'TRUST', 'GOVERNMENT', 'PRIVATE', 'OTHER']),
   registrationNumber: z.string().min(1).max(50),
@@ -95,6 +98,14 @@ export async function POST(request: NextRequest) {
 
     const data = validationResult.data;
 
+    // Branch registration: parentOrganizationId is required
+    if (data.entityType === 'BRANCH' && !data.parentOrganizationId) {
+      return NextResponse.json(
+        { success: false, error: 'parentOrganizationId is required for branch registration' },
+        { status: 400 }
+      );
+    }
+
     // Additional server-side validation using validation functions
     try {
       // Validate organization name
@@ -121,21 +132,23 @@ export async function POST(request: NextRequest) {
       // Validate category and resource relationships
       await validateCategoryAndResources(data.categoryIds, data.resourceIds);
 
-      // Check for duplicate organization
-      const firstBranch = data.branches[0];
-      const isDuplicate = await checkDuplicateOrganization(
-        data.organizationName,
-        firstBranch.cityId
-      );
-
-      if (isDuplicate) {
-        return NextResponse.json(
-          {
-            success: false,
-            error: 'An organization with this name already exists in this city',
-          },
-          { status: 409 }
+      // For new organizations only: check for duplicate name in same city
+      if (data.entityType === 'ORGANIZATION') {
+        const firstBranch = data.branches[0];
+        const isDuplicate = await checkDuplicateOrganization(
+          data.organizationName,
+          firstBranch.cityId
         );
+
+        if (isDuplicate) {
+          return NextResponse.json(
+            {
+              success: false,
+              error: 'An organization with this name already exists in this city',
+            },
+            { status: 409 }
+          );
+        }
       }
     } catch (error) {
       if (error instanceof ValidationError) {
@@ -153,9 +166,35 @@ export async function POST(request: NextRequest) {
 
     // Create organization with all related data in a transaction
     const organization = await prisma.$transaction(async (tx) => {
-      // 1. Create organization
+      // 1. Generate custom ID and validate parent org (if branch)
+      let customId: string;
+      let parentOrganizationId: string | null = null;
+
+      if (data.entityType === 'BRANCH') {
+        const parent = await tx.organization.findUnique({
+          where: { id: data.parentOrganizationId },
+          select: { customId: true, status: true, entityType: true },
+        });
+
+        if (!parent || parent.status !== 'APPROVED' || parent.entityType !== 'ORGANIZATION') {
+          throw new Error('Parent organization not found, not approved, or is itself a branch');
+        }
+        if (!parent.customId) {
+          throw new Error('Parent organization does not have a custom ID assigned');
+        }
+
+        customId = await generateBranchCustomId(tx, parent.customId);
+        parentOrganizationId = data.parentOrganizationId!;
+      } else {
+        customId = await generateOrgCustomId(tx);
+      }
+
+      // 2. Create organization
       const org = await tx.organization.create({
         data: {
+          customId,
+          entityType: data.entityType,
+          parentOrganizationId,
           name: data.organizationName,
           registrationType: data.registrationType,
           registrationNumber: data.registrationNumber,
@@ -167,7 +206,7 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      // 2. Create contacts
+      // 3. Create contacts
       await tx.contactInformation.create({
         data: {
           organizationId: org.id,
@@ -193,7 +232,7 @@ export async function POST(request: NextRequest) {
         });
       }
 
-      // 3. Create branches with timings
+      // 4. Create branches with timings
       for (const branchData of data.branches) {
         const branch = await tx.organizationBranch.create({
           data: {
@@ -236,7 +275,7 @@ export async function POST(request: NextRequest) {
         });
       }
 
-      // 4. Create organization-language associations
+      // 5. Create organization-language associations
       await tx.organizationLanguage.createMany({
         data: data.languageIds.map((languageId) => ({
           organizationId: org.id,
@@ -244,7 +283,7 @@ export async function POST(request: NextRequest) {
         })),
       });
 
-      // 5. Create document records
+      // 6. Create document records
       await tx.document.create({
         data: {
           organizationId: org.id,
@@ -291,6 +330,8 @@ export async function POST(request: NextRequest) {
       success: true,
       data: {
         organizationId: organization.id,
+        customId: organization.customId,
+        entityType: organization.entityType,
         status: organization.status,
         message: 'Registration submitted successfully. Your submission will be reviewed by our team within 48 hours.',
       },

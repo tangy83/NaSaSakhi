@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { generateOrgCustomId, generateBranchCustomId } from '@/lib/organizationId';
 
 /**
  * POST /api/registration/submit
@@ -17,6 +18,10 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const {
+      // Entity type (ORGANIZATION or BRANCH)
+      entityType = 'ORGANIZATION',
+      parentOrganizationId,
+
       // Step 1: Organization Details
       organizationName,
       registrationType,
@@ -103,11 +108,44 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (entityType === 'BRANCH' && !parentOrganizationId) {
+      return NextResponse.json(
+        { success: false, error: 'parentOrganizationId is required for branch registration' },
+        { status: 400 }
+      );
+    }
+
     // Execute transaction
     const result = await prisma.$transaction(async (tx) => {
-      // 1. Create Organization
+      // 1. Generate customId and validate parent org (if branch)
+      let customId: string;
+      let resolvedParentOrgId: string | null = null;
+
+      if (entityType === 'BRANCH') {
+        const parent = await tx.organization.findUnique({
+          where: { id: parentOrganizationId },
+          select: { customId: true, status: true, entityType: true },
+        });
+
+        if (!parent || parent.status !== 'APPROVED' || parent.entityType !== 'ORGANIZATION') {
+          throw new Error('Parent organization not found, not approved, or is itself a branch');
+        }
+        if (!parent.customId) {
+          throw new Error('Parent organization does not have a custom ID assigned');
+        }
+
+        customId = await generateBranchCustomId(tx, parent.customId);
+        resolvedParentOrgId = parentOrganizationId!;
+      } else {
+        customId = await generateOrgCustomId(tx);
+      }
+
+      // 2. Create Organization
       const organization = await tx.organization.create({
         data: {
+          customId,
+          entityType: entityType === 'BRANCH' ? 'BRANCH' : 'ORGANIZATION',
+          parentOrganizationId: resolvedParentOrgId,
           name: organizationName,
           registrationType,
           registrationNumber,
@@ -118,7 +156,7 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      // 2. Create Primary Contact Information
+      // 3. Create Primary Contact Information
       await tx.contactInformation.create({
         data: {
           organizationId: organization.id,
@@ -132,7 +170,7 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      // 3. Create Secondary Contact Information (if provided)
+      // 4. Create Secondary Contact Information (if provided)
       if (secondaryContact && secondaryContact.name) {
         await tx.contactInformation.create({
           data: {
@@ -145,7 +183,7 @@ export async function POST(request: NextRequest) {
         });
       }
 
-      // 4. Create Branches with addresses and timings
+      // 5. Create Branches with addresses and timings
       for (const branch of branches) {
         const organizationBranch = await tx.organizationBranch.create({
           data: {
@@ -160,7 +198,7 @@ export async function POST(request: NextRequest) {
           },
         });
 
-        // 5. Link categories to branch
+        // 6. Link categories to branch
         if (categoryIds && categoryIds.length > 0) {
           await tx.branchCategory.createMany({
             data: categoryIds.map((categoryId: string) => ({
@@ -170,7 +208,7 @@ export async function POST(request: NextRequest) {
           });
         }
 
-        // 6. Link resources to branch
+        // 7. Link resources to branch
         if (resourceIds && resourceIds.length > 0) {
           await tx.branchResource.createMany({
             data: resourceIds.map((resourceId: string) => ({
@@ -180,7 +218,7 @@ export async function POST(request: NextRequest) {
           });
         }
 
-        // 7. Create branch timings (one for each day of the week)
+        // 8. Create branch timings (one for each day of the week)
         if (branch.timings && branch.timings.openTime && branch.timings.closeTime) {
           const daysOfWeek = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
           await tx.branchTimings.createMany({
@@ -195,7 +233,7 @@ export async function POST(request: NextRequest) {
         }
       }
 
-      // 8. Link languages to organization
+      // 9. Link languages to organization
       if (languageIds && languageIds.length > 0) {
         await tx.organizationLanguage.createMany({
           data: languageIds.map((languageId: string) => ({
@@ -205,7 +243,7 @@ export async function POST(request: NextRequest) {
         });
       }
 
-      // 9. Create document records
+      // 10. Create document records
       const documents = [];
 
       if (logoUrl) {
@@ -249,7 +287,7 @@ export async function POST(request: NextRequest) {
         await tx.document.createMany({ data: documents });
       }
 
-      // 10. Delete draft if token provided
+      // 11. Delete draft if token provided
       if (draftToken) {
         try {
           await tx.registrationDraft.delete({
@@ -268,6 +306,8 @@ export async function POST(request: NextRequest) {
       success: true,
       data: {
         organizationId: result.id,
+        customId: result.customId,
+        entityType: result.entityType,
         organizationName: result.name,
         status: result.status,
       },

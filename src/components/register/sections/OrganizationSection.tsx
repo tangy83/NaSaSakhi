@@ -14,6 +14,7 @@ interface OrganizationSectionProps {
   errors: FieldErrors<any>;
   setValue: UseFormSetValue<any>;
   watch: UseFormWatch<any>;
+  entityType?: 'organization' | 'branch';
 }
 
 const registrationTypeOptions = [
@@ -24,7 +25,8 @@ const registrationTypeOptions = [
   { value: 'OTHER', label: 'Other' },
 ];
 
-export function OrganizationSection({ register, errors, setValue, watch }: OrganizationSectionProps) {
+export function OrganizationSection({ register, errors, setValue, watch, entityType = 'organization' }: OrganizationSectionProps) {
+  const isBranch = entityType === 'branch';
   const [faiths, setFaiths] = useState<Faith[]>([]);
   const [socialCategories, setSocialCategories] = useState<SocialCategory[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -81,9 +83,9 @@ export function OrganizationSection({ register, errors, setValue, watch }: Organ
   return (
     <div className="space-y-6">
       <TextInput
-        label="Organization Name"
+        label={isBranch ? 'Branch Name' : 'Organization Name'}
         required
-        placeholder="Enter your organization's full legal name"
+        placeholder={isBranch ? "Enter your branch's full legal name" : "Enter your organization's full legal name"}
         error={errors.organizationName?.message as string}
         helperText="Enter the name as it appears on your registration certificate"
         {...register('organizationName')}

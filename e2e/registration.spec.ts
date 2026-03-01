@@ -12,6 +12,9 @@ test.describe('Registration Form E2E Tests', () => {
   });
 
   test('should navigate to registration form', async ({ page }) => {
+    // Select "New Organization" card to reveal the Start Registration link
+    await page.getByRole('button', { name: /New Organization/i }).click();
+
     // Wait for the link to be visible and clickable
     const startLink = page.getByRole('link', { name: /Start Registration/i });
     await expect(startLink).toBeVisible();

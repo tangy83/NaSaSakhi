@@ -1,7 +1,85 @@
+'use client';
+
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+
+interface OrgSearchResult {
+  id: string;
+  name: string;
+  customId: string | null;
+}
 
 export default function RegisterStartPage() {
+  const router = useRouter();
+
+  // Registration type selection
+  const [registrationType, setRegistrationType] = useState<'organization' | 'branch' | null>(null);
+
+  // Branch parent org search state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<OrgSearchResult[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [selectedParentOrg, setSelectedParentOrg] = useState<OrgSearchResult | null>(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setShowDropdown(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Debounced search
+  useEffect(() => {
+    if (registrationType !== 'branch') return;
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+
+    debounceRef.current = setTimeout(async () => {
+      setIsSearching(true);
+      try {
+        const res = await fetch(`/api/organizations/search?q=${encodeURIComponent(searchQuery)}`);
+        const json = await res.json();
+        if (json.success) {
+          setSearchResults(json.data);
+          setShowDropdown(true);
+        }
+      } catch {
+        setSearchResults([]);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 300);
+
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [searchQuery, registrationType]);
+
+  function handleSelectOrg(org: OrgSearchResult) {
+    setSelectedParentOrg(org);
+    setSearchQuery(org.name);
+    setShowDropdown(false);
+  }
+
+  function handleContinueAsBranch() {
+    if (!selectedParentOrg) return;
+    const params = new URLSearchParams({
+      entityType: 'branch',
+      parentOrgId: selectedParentOrg.id,
+      parentOrgName: selectedParentOrg.name,
+      ...(selectedParentOrg.customId ? { parentOrgCustomId: selectedParentOrg.customId } : {}),
+    });
+    router.push(`/register/form?${params.toString()}`);
+  }
+
   return (
     <div className="max-w-4xl mx-auto">
       {/* Home link */}
@@ -236,19 +314,161 @@ export default function RegisterStartPage() {
         </div>
       </section>
 
-      {/* CTA Buttons */}
-      <section className="text-center pb-8">
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
-          <Link
-            href="/register/form"
-            className="inline-flex items-center justify-center min-h-[56px] px-8 py-4 bg-primary-600 text-white rounded-lg font-ui font-semibold text-lg
-                       shadow-lg hover:shadow-xl hover:bg-primary-700 hover:-translate-y-0.5
-                       active:bg-primary-800 active:translate-y-0 active:shadow-md
-                       focus:outline-none focus:ring-4 focus:ring-primary-100 focus:ring-offset-2
-                       transition-all duration-200"
+      {/* CTA — Registration Type Selection */}
+      <section className="pb-8">
+        <h2 className="text-2xl sm:text-3xl font-heading font-semibold text-gray-900 text-center mb-6">
+          How would you like to register?
+        </h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+          {/* Card: New Organization */}
+          <button
+            onClick={() => { setRegistrationType('organization'); setSelectedParentOrg(null); setSearchQuery(''); }}
+            className={`text-left p-6 rounded-xl border-2 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-primary-100
+              ${registrationType === 'organization'
+                ? 'border-primary-600 bg-primary-50 shadow-md'
+                : 'border-gray-200 bg-white hover:border-primary-300 hover:shadow-sm'}`}
           >
-            Start Registration →
-          </Link>
+            <div className="flex items-start gap-4">
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${registrationType === 'organization' ? 'bg-primary-600 text-white' : 'bg-primary-100 text-primary-600'}`}>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-lg font-ui font-semibold text-gray-900 mb-1">New Organization</h3>
+                <p className="text-sm font-body text-gray-600">
+                  Register your organization on NaariSamata Sakhi for the first time
+                </p>
+              </div>
+            </div>
+          </button>
+
+          {/* Card: Branch of Existing Organization */}
+          <button
+            onClick={() => setRegistrationType('branch')}
+            className={`text-left p-6 rounded-xl border-2 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-primary-100
+              ${registrationType === 'branch'
+                ? 'border-primary-600 bg-primary-50 shadow-md'
+                : 'border-gray-200 bg-white hover:border-primary-300 hover:shadow-sm'}`}
+          >
+            <div className="flex items-start gap-4">
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${registrationType === 'branch' ? 'bg-primary-600 text-white' : 'bg-primary-100 text-primary-600'}`}>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-lg font-ui font-semibold text-gray-900 mb-1">Branch of Existing Organization</h3>
+                <p className="text-sm font-body text-gray-600">
+                  Register a branch of an organization already registered on Sakhi
+                </p>
+              </div>
+            </div>
+          </button>
+        </div>
+
+        {/* Branch: Parent org search */}
+        {registrationType === 'branch' && (
+          <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6 shadow-sm">
+            <h3 className="text-base font-ui font-semibold text-gray-900 mb-1">
+              Select Parent Organization
+            </h3>
+            <p className="text-sm font-body text-gray-500 mb-4">
+              Search for the approved organization this branch belongs to
+            </p>
+
+            <div className="relative" ref={searchRef}>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => { setSearchQuery(e.target.value); setSelectedParentOrg(null); }}
+                onFocus={() => { if (searchResults.length > 0) setShowDropdown(true); }}
+                placeholder="Type organization name to search…"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm font-body focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent"
+              />
+              {isSearching && (
+                <div className="absolute right-3 top-3.5">
+                  <div className="w-4 h-4 border-2 border-primary-400 border-t-transparent rounded-full animate-spin" />
+                </div>
+              )}
+
+              {showDropdown && searchResults.length > 0 && (
+                <ul className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-56 overflow-y-auto">
+                  {searchResults.map((org) => (
+                    <li key={org.id}>
+                      <button
+                        type="button"
+                        onClick={() => handleSelectOrg(org)}
+                        className="w-full text-left px-4 py-3 hover:bg-primary-50 transition-colors"
+                      >
+                        <span className="block text-sm font-ui font-medium text-gray-900">{org.name}</span>
+                        {org.customId && (
+                          <span className="block text-xs font-body text-gray-400 mt-0.5">{org.customId}</span>
+                        )}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              {showDropdown && !isSearching && searchResults.length === 0 && searchQuery.length > 0 && (
+                <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg px-4 py-3 text-sm font-body text-gray-500">
+                  No approved organizations found for &quot;{searchQuery}&quot;
+                </div>
+              )}
+            </div>
+
+            {selectedParentOrg && (
+              <div className="mt-3 flex items-center gap-2 text-sm font-body text-success-700 bg-success-50 border border-success-200 rounded-lg px-4 py-2">
+                <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                Registering as a branch of: <span className="font-semibold">{selectedParentOrg.name}</span>
+                {selectedParentOrg.customId && (
+                  <span className="text-success-500">({selectedParentOrg.customId})</span>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Action buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
+          {registrationType === 'organization' && (
+            <Link
+              href="/register/form"
+              className="inline-flex items-center justify-center min-h-[56px] px-8 py-4 bg-primary-600 text-white rounded-lg font-ui font-semibold text-lg
+                         shadow-lg hover:shadow-xl hover:bg-primary-700 hover:-translate-y-0.5
+                         active:bg-primary-800 active:translate-y-0 active:shadow-md
+                         focus:outline-none focus:ring-4 focus:ring-primary-100 focus:ring-offset-2
+                         transition-all duration-200"
+            >
+              Start Registration →
+            </Link>
+          )}
+
+          {registrationType === 'branch' && (
+            <button
+              onClick={handleContinueAsBranch}
+              disabled={!selectedParentOrg}
+              className="inline-flex items-center justify-center min-h-[56px] px-8 py-4 bg-primary-600 text-white rounded-lg font-ui font-semibold text-lg
+                         shadow-lg hover:shadow-xl hover:bg-primary-700 hover:-translate-y-0.5
+                         active:bg-primary-800 active:translate-y-0 active:shadow-md
+                         focus:outline-none focus:ring-4 focus:ring-primary-100 focus:ring-offset-2
+                         transition-all duration-200
+                         disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-lg disabled:hover:translate-y-0"
+            >
+              Continue as Branch →
+            </button>
+          )}
+
+          {!registrationType && (
+            <p className="text-sm font-body text-gray-500 text-center">
+              Select a registration type above to continue
+            </p>
+          )}
+
           <Link
             href="/register/resume?token="
             className="inline-flex items-center justify-center min-h-[56px] px-8 py-4 bg-white border-2 border-primary-500 text-primary-600 rounded-lg font-ui font-semibold text-lg
@@ -259,7 +479,7 @@ export default function RegisterStartPage() {
             Resume Saved Draft
           </Link>
         </div>
-        <p className="text-sm font-body text-gray-600">
+        <p className="text-sm font-body text-gray-600 text-center">
           Already started your application? Resume where you left off
         </p>
       </section>

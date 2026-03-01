@@ -646,6 +646,14 @@ async function main() {
     console.log('ℹ️  Demo volunteer already exists — skipped');
   }
 
+  // 9. Seed OrgIdCounter — ensures the counter row exists (id=1)
+  await prisma.orgIdCounter.upsert({
+    where: { id: 1 },
+    update: {},
+    create: { id: 1, nextOrgNum: 1 },
+  });
+  console.log('✅ Seeded OrgIdCounter');
+
   console.log('🎉 Database seeding completed successfully!');
 }
 

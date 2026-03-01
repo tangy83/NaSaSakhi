@@ -2,6 +2,7 @@
 // ONLY active in non-production environments
 
 import { NextRequest, NextResponse } from 'next/server';
+import { generateOrgCustomId } from '@/lib/organizationId';
 
 export const dynamic = 'force-dynamic';
 
@@ -37,9 +38,12 @@ export async function POST(req: NextRequest) {
   const regNumber = `E2E-TEST-${timestamp}`;
 
   const org = await prisma.$transaction(async (tx) => {
-    // 1. Create the organization
+    // 1. Generate customId and create the organization
+    const customId = await generateOrgCustomId(tx);
     const newOrg = await tx.organization.create({
       data: {
+        customId,
+        entityType: 'ORGANIZATION',
         name: orgName,
         registrationType: 'NGO',
         registrationNumber: regNumber,
@@ -110,7 +114,7 @@ export async function POST(req: NextRequest) {
     return newOrg;
   });
 
-  return NextResponse.json({ id: org.id, name: org.name });
+  return NextResponse.json({ id: org.id, name: org.name, customId: org.customId });
 }
 
 export async function DELETE(req: NextRequest) {

@@ -14,15 +14,22 @@ datasource db {
 // ============================================================================
 
 model Organization {
-  id                 String             @id @default(uuid())
-  name               String
-  registrationType   RegistrationType
-  registrationNumber String
-  yearEstablished    Int
-  description        String?
-  faithId            String?
-  status             OrganizationStatus @default(PENDING)
-  websiteUrl         String?
+  id                   String             @id @default(uuid())
+  customId             String?            @unique @db.VarChar(10) // ORG00001 or BR00001a
+  entityType           EntityType         @default(ORGANIZATION)
+  parentOrganizationId String?
+  name                 String
+  registrationType     RegistrationType
+  registrationNumber   String
+  yearEstablished      Int
+  description          String?
+  faithId              String?
+  status               OrganizationStatus @default(PENDING)
+  websiteUrl           String?
+
+  // Self-referential relationship for branches
+  parentOrganization Organization?  @relation("OrgBranches", fields: [parentOrganizationId], references: [id])
+  childBranches      Organization[] @relation("OrgBranches")
 
   // Relationships
   branches                 OrganizationBranch[]
@@ -37,7 +44,20 @@ model Organization {
   updatedAt DateTime @updatedAt
 
   @@index([name, status])
+  @@index([entityType, status])
   @@map("organizations")
+}
+
+enum EntityType {
+  ORGANIZATION
+  BRANCH
+}
+
+model OrgIdCounter {
+  id         Int @id @default(autoincrement())
+  nextOrgNum Int @default(1)
+
+  @@map("org_id_counter")
 }
 
 enum RegistrationType {
