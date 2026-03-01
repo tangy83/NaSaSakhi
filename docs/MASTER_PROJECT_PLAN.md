@@ -1,4 +1,4 @@
-# NASA Sakhi MVP - Master Project Plan
+# Saathi MVP - Master Project Plan
 ## Overall Team Coordination & Progress Tracking
 ## Timeline: February 3-7, 2026
 
@@ -15,7 +15,7 @@
 
 ## 🎯 Project Overview
 
-**Mission:** Build an MVP organization registration portal for NASA Sakhi that enables NGOs and support organizations to self-register their services.
+**Mission:** Build an MVP organization registration portal for Saathi that enables NGOs and support organizations to self-register their services.
 
 **Deadline:** February 7, 2026 (Customer Demo)
 
@@ -174,7 +174,7 @@ Feb 3 (Mon)      Feb 4 (Tue)         Feb 5 (Wed)         Feb 6 (Thu)         Feb
 
 ```
 ┌───────────────────────────────────────────────────────────────┐
-│                     NASA Sakhi MVP                            │
+│                     Saathi MVP                            │
 ├───────────────────────────────────────────────────────────────┤
 │                                                               │
 │  ┌─────────────────────┐           ┌─────────────────────┐   │
@@ -213,7 +213,7 @@ Feb 3 (Mon)      Feb 4 (Tue)         Feb 5 (Wed)         Feb 6 (Thu)         Feb
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
 │  ┌───────────────────────────────────────────────┐        │
-│  │  nasassakhibestg (Docker Container)           │        │
+│  │  saathibestg (Docker Container)           │        │
 │  │                                                │        │
 │  │  GitHub (main) ──push──▶ DC Deploy ──build──▶ │        │
 │  │                                                │        │
@@ -222,13 +222,13 @@ Feb 3 (Mon)      Feb 4 (Tue)         Feb 5 (Wed)         Feb 6 (Thu)         Feb
 │  │  • Port 3000 (internal)                       │        │
 │  │  • Auto-deploy on push                        │        │
 │  │                                                │        │
-│  │  URL: https://nasassakhibestg.dcdeployapp.com │        │
+│  │  URL: https://saathibestg.dcdeployapp.com │        │
 │  └───────────────┬───────────────────────────────┘        │
 │                  │                                          │
 │                  │ DATABASE_URL                             │
 │                  ▼                                          │
 │  ┌──────────────────────────────────────────────┐         │
-│  │  nasasakhidbstg (PostgreSQL 17.5)            │         │
+│  │  saathidbstg (PostgreSQL 17.5)            │         │
 │  │                                               │         │
 │  │  • Managed Database (DC Deploy)              │         │
 │  │  • Port 5432                                 │         │
@@ -243,14 +243,14 @@ Feb 3 (Mon)      Feb 4 (Tue)         Feb 5 (Wed)         Feb 6 (Thu)         Feb
 2. DC Deploy detects push via webhook
 3. Runs Docker build from `backend/Dockerfile`
 4. Deploys new container automatically (~2-3 min)
-5. App available at https://nasassakhibestg.dcdeployapp.com
+5. App available at https://saathibestg.dcdeployapp.com
 
 **Environment Variables (configured in DC Deploy):**
 - `NODE_ENV=production`
 - `PORT=3000`
-- `DATABASE_URL=postgresql://JQZAEG:***@nasasakhidbstg:5432/nasasakhidbstg-db`
-- `NEXT_PUBLIC_APP_URL=https://nasassakhibestg.dcdeployapp.com`
-- `NEXTAUTH_URL=https://nasassakhibestg.dcdeployapp.com`
+- `DATABASE_URL=postgresql://JQZAEG:***@saathidbstg:5432/saathidbstg-db`
+- `NEXT_PUBLIC_APP_URL=https://saathibestg.dcdeployapp.com`
+- `NEXTAUTH_URL=https://saathibestg.dcdeployapp.com`
 - `NEXTAUTH_SECRET=[configured securely]`
 
 ### Tech Stack Summary
@@ -290,7 +290,7 @@ Each developer runs their own PostgreSQL instance locally:
 
 **Connection String:**
 ```
-postgresql://postgres:password@localhost:5432/nasa_sakhi_dev
+postgresql://postgres:password@localhost:5432/saathi_dev
 ```
 
 **Setup:**
@@ -298,13 +298,13 @@ postgresql://postgres:password@localhost:5432/nasa_sakhi_dev
 - [WINDOWS-SETUP.md](../WINDOWS-SETUP.md) for Windows users
 - [CROSS-PLATFORM.md](../CROSS-PLATFORM.md) for all platforms
 
-### Staging Database (NaSaSakhiDB)
+### Staging Database (SaathiDB)
 
 Shared staging database for integration testing (Feb 6+):
 
 **Connection String:**
 ```
-postgresql://naarisamata_user:STAGING_PASSWORD@NaSaSakhiDB_IP:5432/naarisamata_staging
+postgresql://naarisamata_user:STAGING_PASSWORD@SaathiDB_IP:5432/naarisamata_staging
 ```
 
 **Access:**
@@ -317,14 +317,14 @@ postgresql://naarisamata_user:STAGING_PASSWORD@NaSaSakhiDB_IP:5432/naarisamata_s
 ### Staging Deployment Options
 
 **Option A: Monolithic (Recommended for MVP)**
-- Deploy entire Next.js app to **NaSaSakhiFEStg**
+- Deploy entire Next.js app to **SaathiFEStg**
 - Frontend + Backend in one process
 - Simpler for MVP
 - Uses PM2 + Nginx
 
 **Option B: Split Deployment (Future)**
-- Frontend on **NaSaSakhiFEStg**
-- Backend API on **NaSaSakhiBEStg**
+- Frontend on **SaathiFEStg**
+- Backend API on **SaathiBEStg**
 - Better scalability
 - More complex setup
 
@@ -341,8 +341,8 @@ The team needs access to DC Deploy staging infrastructure on Feb 6 for integrati
 
 | Team Member | SSH Access | Database Access | When Needed |
 |-------------|-----------|----------------|-------------|
-| **Akarsha** | ✅ Yes (NaSaSakhiFEStg) | ✅ Yes (NaSaSakhiDB) | Feb 6 AM (deploy backend) |
-| **Sunitha** | ⚠️ Optional (NaSaSakhiFEStg) | ❌ No | Feb 6 PM (test/deploy frontend) |
+| **Akarsha** | ✅ Yes (SaathiFEStg) | ✅ Yes (SaathiDB) | Feb 6 AM (deploy backend) |
+| **Sunitha** | ⚠️ Optional (SaathiFEStg) | ❌ No | Feb 6 PM (test/deploy frontend) |
 | **Tanuj** | ⚠️ Optional (for QA) | ⚠️ Optional (verify data) | Feb 7 (QA testing) |
 
 ---
@@ -351,7 +351,7 @@ The team needs access to DC Deploy staging infrastructure on Feb 6 for integrati
 
 **From Infrastructure Team, obtain:**
 
-**1. SSH Access to NaSaSakhiFEStg Server**
+**1. SSH Access to SaathiFEStg Server**
 
 ```bash
 # Server details
@@ -360,28 +360,28 @@ USER="<ssh-username>"  # e.g., deploy, ubuntu, etc.
 PORT="22"  # Default SSH port
 
 # Authentication method: SSH key (recommended) or password
-SSH_KEY="~/.ssh/nasasakhi_staging_rsa"
+SSH_KEY="~/.ssh/saathi_staging_rsa"
 ```
 
 **How to set up SSH key:**
 
 ```bash
 # Generate SSH key pair (if you don't have one)
-ssh-keygen -t rsa -b 4096 -C "your_email@example.com" -f ~/.ssh/nasasakhi_staging_rsa
+ssh-keygen -t rsa -b 4096 -C "your_email@example.com" -f ~/.ssh/saathi_staging_rsa
 
 # Copy public key to server (ask infrastructure team to add it)
-cat ~/.ssh/nasasakhi_staging_rsa.pub
+cat ~/.ssh/saathi_staging_rsa.pub
 # Send this to infrastructure team
 
 # Test connection
-ssh -i ~/.ssh/nasasakhi_staging_rsa <USER>@<HOST>
+ssh -i ~/.ssh/saathi_staging_rsa <USER>@<HOST>
 ```
 
-**2. PostgreSQL Database Credentials (NaSaSakhiDB)**
+**2. PostgreSQL Database Credentials (SaathiDB)**
 
 ```bash
 # Request these details
-DB_HOST="<NaSaSakhiDB IP or hostname>"
+DB_HOST="<SaathiDB IP or hostname>"
 DB_PORT="5432"
 DB_NAME="naarisamata_staging"
 DB_USER="naarisamata_user"
@@ -397,9 +397,9 @@ Check if servers are behind firewall:
 
 ```bash
 # Can you reach the server from your location?
-ping <NaSaSakhiFEStg_HOST>
-telnet <NaSaSakhiFEStg_HOST> 22
-telnet <NaSaSakhiDB_IP> 5432
+ping <SaathiFEStg_HOST>
+telnet <SaathiFEStg_HOST> 22
+telnet <SaathiDB_IP> 5432
 ```
 
 If not accessible:
@@ -410,8 +410,8 @@ If not accessible:
 **4. Application Deployment Details**
 
 ```bash
-# Where is the app deployed on NaSaSakhiFEStg?
-APP_DIR="/var/www/nasa_sakhi"  # Confirm with infrastructure team
+# Where is the app deployed on SaathiFEStg?
+APP_DIR="/var/www/saathi"  # Confirm with infrastructure team
 
 # Which user owns the app files?
 APP_USER="deploy"  # or www-data, ubuntu, etc.
@@ -428,25 +428,25 @@ APP_USER="deploy"  # or www-data, ubuntu, etc.
 
 **Akarsha's Setup Checklist:**
 
-- [x] Receive SSH credentials for NaSaSakhiFEStg
+- [x] Receive SSH credentials for SaathiFEStg
 - [x] Test SSH connection: `ssh <USER>@<HOST>`
-- [x] Receive database credentials for NaSaSakhiDB
+- [x] Receive database credentials for SaathiDB
 - [x] Test database connection:
   ```bash
   psql "postgresql://naarisamata_user:<PASSWORD>@<DB_HOST>:5432/naarisamata_staging"
   ```
 - [x] If database not accessible, set up SSH tunnel:
   ```bash
-  ssh -L 5433:<DB_IP>:5432 <USER>@<NaSaSakhiFEStg_HOST>
+  ssh -L 5433:<DB_IP>:5432 <USER>@<SaathiFEStg_HOST>
   ```
-- [x] Verify app directory exists on server: `ls /var/www/nasa_sakhi`
+- [x] Verify app directory exists on server: `ls /var/www/saathi`
 - [x] Verify PM2 is installed: `pm2 --version`
 - [x] Verify Node.js version: `node --version` (should be 18+)
 - [x] Review [deployment/DEPLOYMENT-GUIDE.md](../deployment/DEPLOYMENT-GUIDE.md)
 
 **Sunitha's Setup Checklist:**
 
-- [x] Receive staging application URL: `https://nasassakhibestg.dcdeployapp.com`
+- [x] Receive staging application URL: `https://saathibestg.dcdeployapp.com`
 - [x] Test URL accessibility from browser
 - [x] (Optional) Receive SSH credentials if deploying directly
 - [x] Confirm with Akarsha: Will he deploy or should you?
@@ -455,7 +455,7 @@ APP_USER="deploy"  # or www-data, ubuntu, etc.
 **Tanuj's Setup Checklist:**
 
 - [x] Ensure team has all required credentials by Feb 5
-- [x] Test staging URL is accessible: `https://nasassakhibestg.dcdeployapp.com`
+- [x] Test staging URL is accessible: `https://saathibestg.dcdeployapp.com`
 - [x] (Optional) Get database read-only access for QA verification
 - [x] Prepare list of test scenarios for Feb 7 QA
 - [x] Ensure mobile testing setup ready (devices or browser dev tools)
@@ -464,38 +464,38 @@ APP_USER="deploy"  # or www-data, ubuntu, etc.
 
 #### Staging Access Troubleshooting
 
-**Problem: Can't SSH into NaSaSakhiFEStg**
+**Problem: Can't SSH into SaathiFEStg**
 
 ```bash
 # 1. Check if server is reachable
-ping <NaSaSakhiFEStg_HOST>
+ping <SaathiFEStg_HOST>
 
 # 2. Check if SSH port is open
-telnet <NaSaSakhiFEStg_HOST> 22
+telnet <SaathiFEStg_HOST> 22
 # or
-nc -zv <NaSaSakhiFEStg_HOST> 22
+nc -zv <SaathiFEStg_HOST> 22
 
 # 3. Check SSH key permissions
-chmod 600 ~/.ssh/nasasakhi_staging_rsa
-ls -l ~/.ssh/nasasakhi_staging_rsa
+chmod 600 ~/.ssh/saathi_staging_rsa
+ls -l ~/.ssh/saathi_staging_rsa
 
 # 4. Try verbose SSH to see errors
-ssh -v -i ~/.ssh/nasasakhi_staging_rsa <USER>@<HOST>
+ssh -v -i ~/.ssh/saathi_staging_rsa <USER>@<HOST>
 
 # 5. If behind firewall, connect to VPN first
 # Then retry SSH
 ```
 
-**Problem: Can't connect to NaSaSakhiDB database**
+**Problem: Can't connect to SaathiDB database**
 
 ```bash
 # 1. Check if PostgreSQL port is accessible
-telnet <NaSaSakhiDB_IP> 5432
+telnet <SaathiDB_IP> 5432
 # or
-nc -zv <NaSaSakhiDB_IP> 5432
+nc -zv <SaathiDB_IP> 5432
 
 # 2. If port not accessible, use SSH tunnel
-ssh -L 5433:<NaSaSakhiDB_IP>:5432 <USER>@<NaSaSakhiFEStg_HOST>
+ssh -L 5433:<SaathiDB_IP>:5432 <USER>@<SaathiFEStg_HOST>
 # Keep this terminal open
 
 # 3. In another terminal, connect via tunnel
@@ -512,7 +512,7 @@ psql "postgresql://naarisamata_user:<PASSWORD>@localhost:5433/naarisamata_stagin
 whoami
 
 # 2. Check file/directory ownership
-ls -l /var/www/nasa_sakhi
+ls -l /var/www/saathi
 
 # 3. Check your user groups
 groups
@@ -553,7 +553,7 @@ curl http://localhost/      # Test through Nginx
 
 # 3. Check Nginx configuration
 sudo nginx -t
-sudo cat /etc/nginx/sites-enabled/nasa_sakhi
+sudo cat /etc/nginx/sites-enabled/saathi
 
 # 4. Check firewall allows HTTP/HTTPS
 sudo ufw status
@@ -623,14 +623,14 @@ If you encounter access issues on Feb 6:
    git push origin integration/mvp
    ```
 
-2. **Deploy backend to staging (NaSaSakhiFEStg)**
+2. **Deploy backend to staging (SaathiFEStg)**
 
    **Option A: Using PM2 + Nginx (Recommended)**
 
    SSH into staging server:
    ```bash
-   ssh user@NaSaSakhiFEStg
-   cd /var/www/nasa_sakhi
+   ssh user@SaathiFEStg
+   cd /var/www/saathi
    git pull origin integration/mvp
    npm install
    npx prisma generate
@@ -649,18 +649,18 @@ If you encounter access issues on Feb 6:
 
 3. **Configure staging environment variables**
 
-   On NaSaSakhiFEStg server, edit `.env`:
+   On SaathiFEStg server, edit `.env`:
    ```env
    NODE_ENV=staging
-   DATABASE_URL="postgresql://naarisamata_user:PASSWORD@NaSaSakhiDB_IP:5432/naarisamata_staging"
-   NEXTAUTH_URL="http://NaSaSakhiFEStg_IP"
+   DATABASE_URL="postgresql://naarisamata_user:PASSWORD@SaathiDB_IP:5432/naarisamata_staging"
+   NEXTAUTH_URL="http://SaathiFEStg_IP"
    NEXTAUTH_SECRET="staging-secret"
    ```
 
 4. **Verify API endpoints accessible**
    ```bash
-   curl http://NaSaSakhiFEStg_IP/api/reference/categories
-   curl http://NaSaSakhiFEStg_IP/health
+   curl http://SaathiFEStg_IP/api/reference/categories
+   curl http://SaathiFEStg_IP/health
    ```
 
 5. **Sunitha switches to real API**
@@ -684,7 +684,7 @@ If you encounter access issues on Feb 6:
 6. **Local integration testing**
    - Sunitha runs frontend locally
    - Points to Akarsha's local backend: `http://localhost:3000/api`
-   - Or points to staging: `http://NaSaSakhiFEStg_IP/api`
+   - Or points to staging: `http://SaathiFEStg_IP/api`
    - Both test complete flow
    - Fix any contract mismatches
    - Adjust response formats if needed
@@ -701,10 +701,10 @@ If you encounter access issues on Feb 6:
 
 2. **Deploy full application to staging**
 
-   **SSH into NaSaSakhiFEStg:**
+   **SSH into SaathiFEStg:**
    ```bash
-   ssh user@NaSaSakhiFEStg
-   cd /var/www/nasa_sakhi
+   ssh user@SaathiFEStg
+   cd /var/www/saathi
 
    # Pull latest code
    git pull origin integration/mvp
@@ -732,13 +732,13 @@ If you encounter access issues on Feb 6:
 
    **Check application logs:**
    ```bash
-   pm2 logs nasa_sakhi --lines 50
+   pm2 logs saathi --lines 50
    tail -f /var/log/nginx/access.log
    ```
 
 3. **End-to-end testing on staging**
 
-   Access staging from browser: `http://NaSaSakhiFEStg_IP`
+   Access staging from browser: `http://SaathiFEStg_IP`
 
    Test:
    - [x] Complete registration flow (all 7 steps)
@@ -751,9 +751,9 @@ If you encounter access issues on Feb 6:
 
 4. **Database verification**
 
-   Connect to NaSaSakhiDB:
+   Connect to SaathiDB:
    ```bash
-   psql "postgresql://naarisamata_user:PASSWORD@NaSaSakhiDB_IP:5432/naarisamata_staging"
+   psql "postgresql://naarisamata_user:PASSWORD@SaathiDB_IP:5432/naarisamata_staging"
 
    # Verify tables exist
    \dt
@@ -790,10 +790,10 @@ If you encounter access issues on Feb 6:
 - Ready for Tanuj's QA on Feb 7
 
 **Staging URLs (for testing):**
-- Frontend: `http://NaSaSakhiFEStg_IP`
-- API: `http://NaSaSakhiFEStg_IP/api`
-- Health: `http://NaSaSakhiFEStg_IP/health`
-- Database: `postgresql://naarisamata_user:PASSWORD@NaSaSakhiDB_IP:5432/naarisamata_staging`
+- Frontend: `http://SaathiFEStg_IP`
+- API: `http://SaathiFEStg_IP/api`
+- Health: `http://SaathiFEStg_IP/health`
+- Database: `postgresql://naarisamata_user:PASSWORD@SaathiDB_IP:5432/naarisamata_staging`
 
 ---
 
@@ -892,7 +892,7 @@ Tanuj prepares:
 **Standup Notes:**
 - [x] Tanuj: Design system created, wireframes done, API contract defined in `/src/types/api.ts`
 - [x] Sunitha: Environment setup complete, dev server running
-- [x] Akarsha: Local database configured, connected to staging DB (nasasakhidbstg)
+- [x] Akarsha: Local database configured, connected to staging DB (saathidbstg)
 
 **Completed Today:**
 - Design system document created (`/docs/DESIGN_SYSTEM.md`)
@@ -1001,7 +1001,7 @@ Tanuj prepares:
 - [x] Feedback received and documented
 
 **Final Status:**
-- MVP successfully delivered. All 7 steps functional, 121 orgs migrated, deployed to https://nasassakhibestg.dcdeployapp.com. Customer demo delivered with positive feedback. E2E testing infrastructure (Playwright) added post-demo for ongoing quality assurance.
+- MVP successfully delivered. All 7 steps functional, 121 orgs migrated, deployed to https://saathibestg.dcdeployapp.com. Customer demo delivered with positive feedback. E2E testing infrastructure (Playwright) added post-demo for ongoing quality assurance.
 
 ---
 
@@ -1438,14 +1438,14 @@ The work plans below were written for Phase 1 (Feb 3-7, 2026 sprint) and are now
   - **Linux:** `sudo apt install postgresql-15`
 - [x] Run `npm run setup`
 - [x] Create feature branch: `feature/backend-api`
-- [x] Set up local PostgreSQL database: `nasa_sakhi_dev`
+- [x] Set up local PostgreSQL database: `saathi_dev`
 - [x] Configure `.env` with database URL
 - [x] Pull Tanuj's files (api.ts)
 - [x] Verify Prisma connection: `npx prisma db push`
 - [x] Verify dev server runs: `npm run dev`
 
 **Staging Access (Not needed until Feb 6):**
-- [x] Obtain NaSaSakhiDB credentials (for integration testing)
+- [x] Obtain SaathiDB credentials (for integration testing)
 - [x] Test staging database connection
 - [x] Review [deployment/DEPLOYMENT-GUIDE.md](../deployment/DEPLOYMENT-GUIDE.md)
 
@@ -1524,6 +1524,6 @@ This master plan is the single source of truth for project coordination. Update 
 **Last Updated:** Feb 17, 2026
 **Phase 1 Status:** ✅ Complete — All deliverables shipped, customer demo delivered, E2E testing infrastructure added
 **Phase 2 Status:** 🟡 Requirements defined — development not yet started (see [PHASE_2_BUILD.md](./PHASE_2_BUILD.md))
-**Deployed URL:** https://nasassakhibestg.dcdeployapp.com
+**Deployed URL:** https://saathibestg.dcdeployapp.com
 **Phase 2 Developer:** Akarsha (sole developer going forward)
 **Next Milestone:** Phase 2 — Volunteer admin portal, automated translation pipeline, Indian script font support

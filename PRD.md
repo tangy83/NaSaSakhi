@@ -1,5 +1,5 @@
 # Product Requirements Document (PRD)
-## NASA Sakhi - NaariSamata Organization Registration Portal
+## Saathi - NaariSamata Organization Registration Portal
 
 **Version:** 1.0
 **Date:** February 1, 2026
@@ -10,7 +10,7 @@
 
 ## Executive Summary
 
-NASA Sakhi is a comprehensive web-based organization registration portal designed to empower women and vulnerable children across India through accessible support services. The platform enables NGOs, support organizations, and service providers to self-register their services, undergo admin vetting, and make their offerings discoverable through a mobile app ecosystem supporting 30 Indian languages.
+Saathi is a comprehensive web-based organization registration portal designed to empower women and vulnerable children across India through accessible support services. The platform enables NGOs, support organizations, and service providers to self-register their services, undergo admin vetting, and make their offerings discoverable through a mobile app ecosystem supporting 30 Indian languages.
 
 **Mission:** Democratize access to support services for women and children across India by creating a centralized, multilingual, and accessible registry of organizations.
 
@@ -30,7 +30,7 @@ NASA Sakhi is a comprehensive web-based organization registration portal designe
 
 ### 1.2 Solution Overview
 
-NASA Sakhi addresses these challenges through:
+Saathi addresses these challenges through:
 
 1. **Self-Service Registration:** Multi-step web form enabling organizations to register independently
 2. **Admin Vetting Workflow:** Quality control through administrative review and approval
@@ -779,20 +779,20 @@ Hindi, English, Bengali, Telugu, Marathi, Tamil, Gujarati, Urdu, Kannada, Odia, 
 
 **Staging Environment:**
 
-1. **NaSaSakhiDB Server** (PostgreSQL)
+1. **SaathiDB Server** (PostgreSQL)
    - Ubuntu 22.04
    - PostgreSQL 15
    - 4GB RAM, 2 vCPU
    - Firewall: Allow port 5432 from app servers only
 
-2. **NaSaSakhiFEStg Server** (Application)
+2. **SaathiFEStg Server** (Application)
    - Ubuntu 22.04
    - Node.js 18+
    - PM2 (cluster mode, 2 instances)
    - Nginx reverse proxy
    - 8GB RAM, 4 vCPU
 
-3. **NaSaSakhiBEStg Server** (Optional, for scaling)
+3. **SaathiBEStg Server** (Optional, for scaling)
    - Same as frontend
    - Separate API server
 
@@ -1100,7 +1100,7 @@ Hindi, English, Bengali, Telugu, Marathi, Tamil, Gujarati, Urdu, Kannada, Odia, 
 4. **PostgreSQL Database**
    - Purpose: Primary data store
    - Version: 15+
-   - Hosting: Dedicated server (NaSaSakhiDB)
+   - Hosting: Dedicated server (SaathiDB)
 
 5. **MySQL Database (Legacy)**
    - Purpose: Read-only access for migration

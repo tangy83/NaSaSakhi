@@ -43,7 +43,7 @@ const technical = Roboto({
 // in volunteer/languages/page.tsx and volunteer/organizations/[id]/translate/page.tsx.
 
 export const metadata: Metadata = {
-  title: 'NaariSamata Sakhi - Organization Registration Portal',
+  title: 'NaariSamata Saathi - Organization Registration Portal',
   description: 'Empowering women and vulnerable children across India',
 };
 

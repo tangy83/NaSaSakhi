@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# NASA Sakhi - Staging Access Verification Script
+# Saathi - Staging Access Verification Script
 # This script helps verify and document your DC Deploy staging configuration
 
 set -e
 
 echo "========================================="
-echo "NASA Sakhi Staging Access Checker"
+echo "Saathi Staging Access Checker"
 echo "========================================="
 echo ""
 
@@ -119,13 +119,13 @@ echo "Press Enter to start, or Ctrl+C to cancel."
 read
 
 echo ""
-echo "=== Step 1: NaSaSakhiFEStg Server Configuration ==="
+echo "=== Step 1: SaathiFEStg Server Configuration ==="
 echo ""
 
 STAGING_HOST=$(prompt "STAGING_HOST" "Enter staging server IP or hostname")
 STAGING_USER=$(prompt "STAGING_USER" "Enter SSH username" "deploy")
 STAGING_PORT=$(prompt "STAGING_PORT" "Enter SSH port" "22")
-APP_DIR=$(prompt "APP_DIR" "Enter application directory" "/var/www/nasa_sakhi")
+APP_DIR=$(prompt "APP_DIR" "Enter application directory" "/var/www/saathi")
 
 echo ""
 read -p "Do you have an SSH key for this server? (y/n): " has_key
@@ -136,7 +136,7 @@ else
 fi
 
 echo ""
-echo "=== Step 2: NaSaSakhiDB Database Configuration ==="
+echo "=== Step 2: SaathiDB Database Configuration ==="
 echo ""
 
 read -p "Is database on the same server as application? (y/n): " same_server
@@ -212,17 +212,17 @@ echo ""
 
 # Save configuration
 cat > "$CONFIG_FILE" <<EOF
-# NASA Sakhi Staging Configuration
+# Saathi Staging Configuration
 # Generated on $(date)
 
-# NaSaSakhiFEStg Server
+# SaathiFEStg Server
 export STAGING_HOST="$STAGING_HOST"
 export STAGING_USER="$STAGING_USER"
 export STAGING_PORT="$STAGING_PORT"
 export APP_DIR="$APP_DIR"
 export SSH_KEY="$SSH_KEY"
 
-# NaSaSakhiDB Database
+# SaathiDB Database
 export DB_HOST="$DB_HOST"
 export DB_PORT="$DB_PORT"
 export DB_NAME="$DB_NAME"
@@ -239,7 +239,7 @@ export STAGING_API_URL="$STAGING_API_URL"
 # Quick Connect Commands
 alias ssh-staging='ssh -i $SSH_KEY $STAGING_USER@$STAGING_HOST'
 alias db-staging='psql "$DATABASE_URL"'
-alias logs-staging='ssh -i $SSH_KEY $STAGING_USER@$STAGING_HOST "pm2 logs nasa-sakhi --lines 50"'
+alias logs-staging='ssh -i $SSH_KEY $STAGING_USER@$STAGING_HOST "pm2 logs saathi --lines 50"'
 EOF
 
 echo -e "${GREEN}✓ Configuration saved to: $CONFIG_FILE${NC}"

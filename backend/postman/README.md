@@ -1,11 +1,11 @@
-# NASA Sakhi API - Postman Collection
+# Saathi API - Postman Collection
 
-This folder contains Postman collection and environment files for testing the NASA Sakhi API.
+This folder contains Postman collection and environment files for testing the Saathi API.
 
 ## Files
 
-- `NASA_Sakhi_API.postman_collection.json` - Complete API collection
-- `NASA_Sakhi_API.postman_environment.json` - Development environment variables
+- `Saathi_API.postman_collection.json` - Complete API collection
+- `Saathi_API.postman_environment.json` - Development environment variables
 
 ## Import Instructions
 
@@ -14,14 +14,14 @@ This folder contains Postman collection and environment files for testing the NA
 1. Open Postman
 2. Click **"Import"** button (top left)
 3. Select **"File"** tab
-4. Choose `NASA_Sakhi_API.postman_collection.json`
+4. Choose `Saathi_API.postman_collection.json`
 5. Click **"Import"**
 
 ### Step 2: Import Environment
 
 1. Click **"Import"** button again
 2. Select **"File"** tab
-3. Choose `NASA_Sakhi_API.postman_environment.json`
+3. Choose `Saathi_API.postman_environment.json`
 4. Click **"Import"**
 5. Select the environment from the dropdown (top right)
 

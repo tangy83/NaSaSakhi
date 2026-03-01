@@ -24,8 +24,8 @@ This project is designed to work seamlessly across **Windows, macOS, and Linux**
 
 ```bash
 # Clone repository
-git clone https://github.com/tangy83/NaSaSakhi.git
-cd NaSaSakhi
+git clone https://github.com/tangy83/Saathi.git
+cd Saathi
 
 # Run cross-platform setup
 npm run setup

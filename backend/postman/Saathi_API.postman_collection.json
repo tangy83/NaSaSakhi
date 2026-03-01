@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "nasa-sakhi-api-v1",
-		"name": "NASA Sakhi API",
-		"description": "Complete API collection for NASA Sakhi backend endpoints",
+		"_postman_id": "saathi-api-v1",
+		"name": "Saathi API",
+		"description": "Complete API collection for Saathi backend endpoints",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "nasa-sakhi"
+		"_exporter_id": "saathi"
 	},
 	"item": [
 		{

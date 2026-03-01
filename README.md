@@ -1,4 +1,4 @@
-# NaariSamata Organization Registration Portal (NASA Sakhi)
+# NaariSamata Organization Registration Portal (Saathi)
 
 A full-stack organization registration portal for NaariSamata, enabling NGOs and support organizations to self-register, and providing volunteers and admins with a review + data management workflow.
 
@@ -30,17 +30,17 @@ A full-stack organization registration portal for NaariSamata, enabling NGOs and
 The project uses a **split-deployment architecture**:
 
 - **Root app** (`src/`) — the primary Next.js app deployed to Vercel. Handles the public registration form, volunteer portal, admin CRUD API routes, and mobile/public API endpoints.
-- **Backend app** (`backend/`) — a separate Next.js app with `output: 'standalone'` for Docker deployment on a dedicated server (`NaSaSakhiBEStg`).
+- **Backend app** (`backend/`) — a separate Next.js app with `output: 'standalone'` for Docker deployment on a dedicated server (`SaathiBEStg`).
 
-Both apps share the same PostgreSQL database (`NaSaSakhiDB`). The root app's Prisma client is generated from `backend/prisma/schema.prisma` via the root `prisma.config.ts`, giving it access to all 25 database models.
+Both apps share the same PostgreSQL database (`SaathiDB`). The root app's Prisma client is generated from `backend/prisma/schema.prisma` via the root `prisma.config.ts`, giving it access to all 25 database models.
 
 ## Staging Infrastructure
 
 | Service | URL | Description |
 |---------|-----|-------------|
-| `nasasakhi` | https://nasasakhi-nmjuxe7e5m.dcdeploy.cloud | Root app — primary service (DC Deploy) |
-| `nasassakhibestg` | https://nasassakhibestg.dcdeployapp.com | Backend legacy service (DC Deploy) |
-| `NaSaSakhiDB` | nasasakhidbstg:5432 | PostgreSQL 17 (DC Deploy managed) |
+| `saathi` | https://saathi-nmjuxe7e5m.dcdeploy.cloud | Root app — primary service (DC Deploy) |
+| `saathibestg` | https://saathibestg.dcdeployapp.com | Backend legacy service (DC Deploy) |
+| `SaathiDB` | saathidbstg:5432 | PostgreSQL 17 (DC Deploy managed) |
 
 ## Getting Started
 
@@ -221,7 +221,7 @@ Private and Confidential — NaariSamata Organization
 
 ## Links
 
-- **GitHub:** https://github.com/tangy83/NaSaSakhi.git
+- **GitHub:** https://github.com/tangy83/Saathi.git
 - **NaariSamata Website:** https://naarisamata.org/
 - **PRD Document:** See `/docs/prd.md`
 - **API Documentation:** See `/docs/API.md`

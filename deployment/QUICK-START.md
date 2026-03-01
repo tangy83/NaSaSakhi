@@ -2,7 +2,7 @@
 
 ## Server Requirements Summary
 
-### 1️⃣ NaSaSakhiDB (Database Server)
+### 1️⃣ SaathiDB (Database Server)
 
 **OS:** Ubuntu 20.04+ / Debian 11+
 **RAM:** Minimum 2GB, Recommended 4GB
@@ -40,7 +40,7 @@ postgresql://naarisamata_user:YOUR_PASSWORD@DB_SERVER_IP:5432/naarisamata_stagin
 
 ---
 
-### 2️⃣ NaSaSakhiFEStg (Application Server)
+### 2️⃣ SaathiFEStg (Application Server)
 
 **OS:** Ubuntu 20.04+ / Debian 11+
 **RAM:** Minimum 2GB, Recommended 4GB
@@ -79,7 +79,7 @@ sudo apt install nginx -y
 sudo mkdir -p /var/www/naarisamata-portal
 sudo chown $USER:$USER /var/www/naarisamata-portal
 cd /var/www/naarisamata-portal
-git clone https://github.com/tangy83/NaSaSakhi.git .
+git clone https://github.com/tangy83/Saathi.git .
 ```
 
 **Environment Variables (.env):**
@@ -115,12 +115,12 @@ sudo systemctl reload nginx
 
 ---
 
-### 3️⃣ NaSaSakhiBEStg (Backend - Optional for Staging)
+### 3️⃣ SaathiBEStg (Backend - Optional for Staging)
 
-**For staging, you can skip this server.** Use NaSaSakhiFEStg for both frontend and backend.
+**For staging, you can skip this server.** Use SaathiFEStg for both frontend and backend.
 
 For production, if you want to split:
-- Same setup as NaSaSakhiFEStg
+- Same setup as SaathiFEStg
 - Configure to serve only `/api/*` routes
 - Update frontend to use this backend URL
 
@@ -152,17 +152,17 @@ Before deployment, prepare these:
 
 ## 📝 Deployment Checklist
 
-- [ ] **NaSaSakhiDB**: PostgreSQL installed and accessible
-- [ ] **NaSaSakhiDB**: Database created with proper user
-- [ ] **NaSaSakhiDB**: Firewall allows port 5432 from app server
-- [ ] **NaSaSakhiFEStg**: Node.js 18+ installed
-- [ ] **NaSaSakhiFEStg**: PM2 installed globally
-- [ ] **NaSaSakhiFEStg**: Nginx installed and running
-- [ ] **NaSaSakhiFEStg**: Repository cloned to `/var/www/naarisamata-portal`
-- [ ] **NaSaSakhiFEStg**: `.env` file created with all variables
-- [ ] **NaSaSakhiFEStg**: Application built successfully
-- [ ] **NaSaSakhiFEStg**: PM2 running the application
-- [ ] **NaSaSakhiFEStg**: Nginx configured as reverse proxy
+- [ ] **SaathiDB**: PostgreSQL installed and accessible
+- [ ] **SaathiDB**: Database created with proper user
+- [ ] **SaathiDB**: Firewall allows port 5432 from app server
+- [ ] **SaathiFEStg**: Node.js 18+ installed
+- [ ] **SaathiFEStg**: PM2 installed globally
+- [ ] **SaathiFEStg**: Nginx installed and running
+- [ ] **SaathiFEStg**: Repository cloned to `/var/www/naarisamata-portal`
+- [ ] **SaathiFEStg**: `.env` file created with all variables
+- [ ] **SaathiFEStg**: Application built successfully
+- [ ] **SaathiFEStg**: PM2 running the application
+- [ ] **SaathiFEStg**: Nginx configured as reverse proxy
 - [ ] **Network**: Database accessible from app server
 - [ ] **Network**: Application accessible from your browser
 - [ ] **Network**: Firewall rules configured (80, 443, 5432)
@@ -175,7 +175,7 @@ Once servers are set up, deploy updates with:
 
 ```bash
 # From your local machine
-cd /Users/tanujsaluja/nasa_sakhi
+cd /Users/tanujsaluja/saathi
 
 # Set environment variables
 export DEPLOY_HOST="YOUR_SERVER_IP_OR_HOSTNAME"
@@ -276,4 +276,4 @@ For detailed instructions, see:
 **Need Help?**
 - Check logs: `pm2 logs`
 - Review full guide: `deployment/DEPLOYMENT-GUIDE.md`
-- GitHub Issues: https://github.com/tangy83/NaSaSakhi/issues
+- GitHub Issues: https://github.com/tangy83/Saathi/issues

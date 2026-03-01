@@ -1,4 +1,4 @@
-// NASA Sakhi - Homepage
+// Saathi - Homepage
 // This is a minimal page to verify frontend is working
 
 export default function HomePage() {
@@ -15,7 +15,7 @@ export default function HomePage() {
       padding: '20px',
     }}>
       <h1 style={{ fontSize: '3rem', marginBottom: '1rem' }}>
-        🌟 NASA Sakhi
+        🌟 NaariSamata Saathi
       </h1>
       <p style={{ fontSize: '1.5rem', marginBottom: '2rem', textAlign: 'center' }}>
         Organization Registration Portal

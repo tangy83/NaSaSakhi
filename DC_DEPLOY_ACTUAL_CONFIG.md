@@ -1,4 +1,4 @@
-# NASA Sakhi - DC Deploy Configuration (Actual Values)
+# Saathi - DC Deploy Configuration (Actual Values)
 ## ✅ Your Database is Ready and Tested!
 
 **Date:** February 3, 2026
@@ -11,7 +11,7 @@
 ### Database Information
 
 ```yaml
-Database Name: nasasakhidbstg-db
+Database Name: saathidbstg-db
 Database Type: PostgreSQL 17.5
 Status: ✅ Connected and tested
 Tables Created: ✅ health_checks, users, organizations
@@ -21,22 +21,22 @@ Tables Created: ✅ health_checks, users, organizations
 
 **External (for local development):**
 ```
-postgresql://JQZAEG:+1h8t3x{aa@nasasakhidbstg-nmjuxe7e5m.tcp-proxy-2212.dcdeploy.cloud:30095/nasasakhidbstg-db
+postgresql://JQZAEG:+1h8t3x{aa@saathidbstg-nmjuxe7e5m.tcp-proxy-2212.dcdeploy.cloud:30095/saathidbstg-db
 ```
 
 **Internal (for DC Deploy deployment):**
 ```
-postgresql://JQZAEG:+1h8t3x{aa@nasasakhidbstg:5432/nasasakhidbstg-db
+postgresql://JQZAEG:+1h8t3x{aa@saathidbstg:5432/saathidbstg-db
 ```
 
 **URL-Encoded (for .env files):**
 ```bash
 # Password special characters encoded: + → %2B, { → %7B
 # External (local dev):
-DATABASE_URL="postgresql://JQZAEG:%2B1h8t3x%7Baa@nasasakhidbstg-nmjuxe7e5m.tcp-proxy-2212.dcdeploy.cloud:30095/nasasakhidbstg-db"
+DATABASE_URL="postgresql://JQZAEG:%2B1h8t3x%7Baa@saathidbstg-nmjuxe7e5m.tcp-proxy-2212.dcdeploy.cloud:30095/saathidbstg-db"
 
 # Internal (DC Deploy app):
-DATABASE_URL="postgresql://JQZAEG:%2B1h8t3x%7Baa@nasasakhidbstg:5432/nasasakhidbstg-db"
+DATABASE_URL="postgresql://JQZAEG:%2B1h8t3x%7Baa@saathidbstg:5432/saathidbstg-db"
 ```
 
 ---
@@ -48,7 +48,7 @@ DATABASE_URL="postgresql://JQZAEG:%2B1h8t3x%7Baa@nasasakhidbstg:5432/nasasakhidb
 ```yaml
 Application Name: nasa-sakhi-staging
 Runtime: Node.js 18.x (or 20.x)
-Repository: tangy83/NaSaSakhi
+Repository: tangy83/Saathi
 Branch: main
 ```
 
@@ -72,7 +72,7 @@ NODE_ENV=production
 PORT=3000
 
 # Database (Use INTERNAL connection for DC Deploy)
-DATABASE_URL=postgresql://JQZAEG:%2B1h8t3x%7Baa@nasasakhidbstg:5432/nasasakhidbstg-db
+DATABASE_URL=postgresql://JQZAEG:%2B1h8t3x%7Baa@saathidbstg:5432/saathidbstg-db
 
 # Application URL (Update after first deploy)
 NEXT_PUBLIC_APP_URL=https://your-app.dcdeployapp.com
@@ -137,7 +137,7 @@ https://<your-url>.dcdeployapp.com/api/db-test
 {
   "status": "healthy",
   "timestamp": "2026-02-03T...",
-  "service": "NASA Sakhi API",
+  "service": "Saathi API",
   "version": "0.1.0",
   "environment": "production"
 }
@@ -208,7 +208,7 @@ All these files are ready in your repository:
 ### 1. Commit Changes to GitHub
 
 ```bash
-cd /Users/tanujsaluja/nasa_sakhi
+cd /Users/tanujsaluja/saathi
 
 # Add all changes
 git add next.config.ts tsconfig.json prisma/ src/ package.json DC_DEPLOY_ACTUAL_CONFIG.md DC_DEPLOY_README.md
@@ -229,7 +229,7 @@ git push origin main
 
 1. Go to DC Deploy dashboard
 2. Create new application
-3. Connect to GitHub repository: `tangy83/NaSaSakhi`
+3. Connect to GitHub repository: `tangy83/Saathi`
 4. Add environment variables (see Step 3 above)
 5. Set build commands (see Step 2 above)
 
@@ -274,7 +274,7 @@ Visit the test URLs (see Verification URLs section above)
 ```env
 NODE_ENV=production
 PORT=3000
-DATABASE_URL=postgresql://JQZAEG:%2B1h8t3x%7Baa@nasasakhidbstg:5432/nasasakhidbstg-db
+DATABASE_URL=postgresql://JQZAEG:%2B1h8t3x%7Baa@saathidbstg:5432/saathidbstg-db
 NEXT_PUBLIC_APP_URL=<update-after-deploy>
 NEXTAUTH_URL=<update-after-deploy>
 NEXTAUTH_SECRET=<generate-random>
@@ -282,9 +282,9 @@ NEXTAUTH_SECRET=<generate-random>
 
 **Database Credentials:**
 ```
-Host: nasasakhidbstg (internal) or nasasakhidbstg-nmjuxe7e5m.tcp-proxy-2212.dcdeploy.cloud (external)
+Host: saathidbstg (internal) or saathidbstg-nmjuxe7e5m.tcp-proxy-2212.dcdeploy.cloud (external)
 Port: 5432 (internal) or 30095 (external)
-Database: nasasakhidbstg-db
+Database: saathidbstg-db
 Username: JQZAEG
 Password: +1h8t3x{aa (use %2B1h8t3x%7Baa in connection strings)
 ```

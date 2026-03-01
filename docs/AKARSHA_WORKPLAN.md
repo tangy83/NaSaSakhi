@@ -1,4 +1,4 @@
-# NASA Sakhi MVP - Backend Development Plan
+# Saathi MVP - Backend Development Plan
 ## Developer: Akarsha (Backend Lead - 45% of Work)
 ## Timeline: February 3-7, 2026
 
@@ -21,9 +21,9 @@
 
 ## 🌟 Project Background
 
-### What is NASA Sakhi?
+### What is Saathi?
 
-NASA Sakhi is a comprehensive web-based organization registration portal designed to empower women and vulnerable children across India through accessible support services. The platform enables NGOs, support organizations, and service providers to self-register their services, undergo admin vetting, and make their offerings discoverable through a mobile app ecosystem.
+Saathi is a comprehensive web-based organization registration portal designed to empower women and vulnerable children across India through accessible support services. The platform enables NGOs, support organizations, and service providers to self-register their services, undergo admin vetting, and make their offerings discoverable through a mobile app ecosystem.
 
 **Mission:** Democratize access to support services for women and children across India by creating a centralized, multilingual, and accessible registry of organizations.
 
@@ -54,7 +54,7 @@ NASA Sakhi is a comprehensive web-based organization registration portal designe
 
 ### Backend Lead (45% of Total Effort)
 
-You are responsible for building the complete backend infrastructure that powers the NASA Sakhi registration portal. Your work is the foundation upon which the frontend depends.
+You are responsible for building the complete backend infrastructure that powers the Saathi registration portal. Your work is the foundation upon which the frontend depends.
 
 **Your Core Responsibilities:**
 
@@ -103,7 +103,7 @@ You are responsible for building the complete backend infrastructure that powers
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│                  NASA Sakhi MVP                      │
+│                  Saathi MVP                      │
 ├─────────────────────────────────────────────────────┤
 │                                                      │
 │  ┌──────────────┐         ┌──────────────────┐     │
@@ -187,7 +187,7 @@ You are responsible for building the complete backend infrastructure that powers
 ### Project Structure
 
 ```
-nasa_sakhi/
+saathi/
 ├── prisma/
 │   ├── schema.prisma          # You design this (all models)
 │   ├── seed.ts                # You create this (seed reference data)
@@ -236,8 +236,8 @@ nasa_sakhi/
 #### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/tangy83/NaSaSakhi.git
-cd nasa_sakhi
+git clone https://github.com/tangy83/Saathi.git
+cd saathi
 ```
 
 #### 2. Navigate to Backend Directory
@@ -269,7 +269,7 @@ Create `backend/.env`:
 
 ```env
 # Database (Use staging database for development)
-DATABASE_URL="postgresql://JQZAEG:%2B1h8t3x%7Baa@nasasakhidbstg:5432/nasasakhidbstg-db"
+DATABASE_URL="postgresql://JQZAEG:%2B1h8t3x%7Baa@saathidbstg:5432/saathidbstg-db"
 
 # Node Environment
 NODE_ENV=development
@@ -280,7 +280,7 @@ NEXTAUTH_SECRET="yiPTbj2ltp7Z01URNJhaNhxOsuyuqb2VMYwVAuAeeyQ"
 ```
 
 **⚠️ Important Notes:**
-- We use the **staging database** (nasasakhidbstg) for development
+- We use the **staging database** (saathidbstg) for development
 - No local PostgreSQL installation needed
 - The database is already configured with all necessary tables
 - This is the same database used in production (DC Deploy)
@@ -378,28 +378,28 @@ backend/                          ← DC Deploy deploys from here
    DC Deploy automatically:
    - Detects the push
    - Builds Docker container from `backend/Dockerfile`
-   - Deploys to https://nasassakhibestg.dcdeployapp.com
+   - Deploys to https://saathibestg.dcdeployapp.com
    - Takes ~2-3 minutes
 
 6. **Test deployed endpoint**
    ```bash
-   curl https://nasassakhibestg.dcdeployapp.com/api/your-endpoint
+   curl https://saathibestg.dcdeployapp.com/api/your-endpoint
    ```
 
 ---
 
 #### 9. DC Deploy Configuration (Already Done for You)
 
-**Application:** nasassakhibestg
-**Database:** nasasakhidbstg
+**Application:** saathibestg
+**Database:** saathidbstg
 **Status:** ✅ Successfully deployed (Build #24)
 
 **Environment Variables (Configured in DC Deploy):**
 - `NODE_ENV=production`
 - `PORT=3000`
-- `DATABASE_URL=postgresql://JQZAEG:***@nasasakhidbstg:5432/nasasakhidbstg-db`
-- `NEXT_PUBLIC_APP_URL=https://nasassakhibestg.dcdeployapp.com`
-- `NEXTAUTH_URL=https://nasassakhibestg.dcdeployapp.com`
+- `DATABASE_URL=postgresql://JQZAEG:***@saathidbstg:5432/saathidbstg-db`
+- `NEXT_PUBLIC_APP_URL=https://saathibestg.dcdeployapp.com`
+- `NEXTAUTH_URL=https://saathibestg.dcdeployapp.com`
 - `NEXTAUTH_SECRET=[configured]`
 
 You don't need to configure these - they're already set up in DC Deploy.
@@ -824,7 +824,7 @@ npx prisma migrate dev --name init
 
 **Verify:** Check PostgreSQL
 ```bash
-psql nasa_sakhi_dev
+psql saathi_dev
 \dt  # List all tables - should see ~20 tables
 ```
 
@@ -1056,7 +1056,7 @@ npx prisma db seed
 
 **Verify:**
 ```bash
-psql nasa_sakhi_dev
+psql saathi_dev
 SELECT COUNT(*) FROM "Language";  -- Should be 30
 SELECT COUNT(*) FROM "State";     -- Should be 36
 SELECT COUNT(*) FROM "ServiceCategory";  -- Should be 14
@@ -2356,7 +2356,7 @@ export interface ServiceResource {
 
 ```bash
 # Connect to PostgreSQL
-psql nasa_sakhi_dev
+psql saathi_dev
 
 # Useful commands
 \dt              # List tables
@@ -2388,7 +2388,7 @@ By **Feb 7 evening**, you must have:
 - ✅ 121 organizations migrated from MySQL
 - ✅ File upload functional (local storage for MVP)
 - ✅ Integrated with Sunitha's frontend
-- ✅ Deployed to staging environment (https://nasassakhibestg.dcdeployapp.com)
+- ✅ Deployed to staging environment (https://saathibestg.dcdeployapp.com)
 
 ### Should-Have (P1): ✅ ALL COMPLETE
 - ✅ Basic authentication with NextAuth.js

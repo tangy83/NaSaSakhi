@@ -2,28 +2,28 @@
 
 ## Infrastructure Overview
 
-- **NaSaSakhiDB**: PostgreSQL Database Server
-- **NaSaSakhiBEStg**: Backend API Server (Next.js API Routes)
-- **NaSaSakhiFEStg**: Frontend Server (Next.js SSR/Static)
+- **SaathiDB**: PostgreSQL Database Server
+- **SaathiBEStg**: Backend API Server (Next.js API Routes)
+- **SaathiFEStg**: Frontend Server (Next.js SSR/Static)
 
 ## Deployment Architecture
 
 ### Option A: Monolithic Deployment (Recommended for Staging)
-Deploy the entire Next.js app on **NaSaSakhiFEStg** and connect to **NaSaSakhiDB**.
+Deploy the entire Next.js app on **SaathiFEStg** and connect to **SaathiDB**.
 - Simpler setup
 - Single deployment pipeline
 - Frontend + Backend in one process
 
 ### Option B: Split Deployment (Production-Ready)
-- **NaSaSakhiFEStg**: Frontend only (SSR/Static pages)
-- **NaSaSakhiBEStg**: API Routes only
+- **SaathiFEStg**: Frontend only (SSR/Static pages)
+- **SaathiBEStg**: API Routes only
 - More complex but better scalability
 
 **For staging, we'll use Option A (Monolithic) for simplicity.**
 
 ---
 
-## 1️⃣ Database Server Setup (NaSaSakhiDB)
+## 1️⃣ Database Server Setup (SaathiDB)
 
 ### Prerequisites
 - Ubuntu/Debian server
@@ -33,8 +33,8 @@ Deploy the entire Next.js app on **NaSaSakhiFEStg** and connect to **NaSaSakhiDB
 ### Installation Steps
 
 ```bash
-# SSH into NaSaSakhiDB server
-ssh user@NaSaSakhiDB
+# SSH into SaathiDB server
+ssh user@SaathiDB
 
 # Update system
 sudo apt update && sudo apt upgrade -y
@@ -71,12 +71,12 @@ sudo ufw allow 5432/tcp
 
 ### Database Connection String
 ```
-postgresql://naarisamata_user:YOUR_PASSWORD@NaSaSakhiDB_IP:5432/naarisamata_staging
+postgresql://naarisamata_user:YOUR_PASSWORD@SaathiDB_IP:5432/naarisamata_staging
 ```
 
 ---
 
-## 2️⃣ Application Server Setup (NaSaSakhiFEStg)
+## 2️⃣ Application Server Setup (SaathiFEStg)
 
 ### Prerequisites
 - Ubuntu/Debian server
@@ -87,8 +87,8 @@ postgresql://naarisamata_user:YOUR_PASSWORD@NaSaSakhiDB_IP:5432/naarisamata_stag
 ### Step 1: Install Dependencies
 
 ```bash
-# SSH into NaSaSakhiFEStg
-ssh user@NaSaSakhiFEStg
+# SSH into SaathiFEStg
+ssh user@SaathiFEStg
 
 # Install Node.js 18.x
 curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
@@ -110,7 +110,7 @@ sudo chown $USER:$USER /var/www/naarisamata-portal
 
 # Clone repository
 cd /var/www/naarisamata-portal
-git clone https://github.com/tangy83/NaSaSakhi.git .
+git clone https://github.com/tangy83/Saathi.git .
 
 # Install dependencies
 npm install
@@ -119,16 +119,16 @@ npm install
 nano .env
 ```
 
-**Environment Variables for NaSaSakhiFEStg (.env):**
+**Environment Variables for SaathiFEStg (.env):**
 
 ```bash
 # Application
 NODE_ENV=staging
 PORT=3000
-NEXT_PUBLIC_APP_URL=http://NaSaSakhiFEStg_IP:3000
+NEXT_PUBLIC_APP_URL=http://SaathiFEStg_IP:3000
 
-# Database (NaSaSakhiDB)
-DATABASE_URL="postgresql://naarisamata_user:YOUR_PASSWORD@NaSaSakhiDB_IP:5432/naarisamata_staging"
+# Database (SaathiDB)
+DATABASE_URL="postgresql://naarisamata_user:YOUR_PASSWORD@SaathiDB_IP:5432/naarisamata_staging"
 
 # Existing MySQL Database (for data migration - temporary)
 MYSQL_HOST="your-mysql-host"
@@ -138,7 +138,7 @@ MYSQL_USER="your-mysql-user"
 MYSQL_PASSWORD="your-mysql-password"
 
 # NextAuth.js
-NEXTAUTH_URL="http://NaSaSakhiFEStg_IP:3000"
+NEXTAUTH_URL="http://SaathiFEStg_IP:3000"
 NEXTAUTH_SECRET="generate-random-secret-here-min-32-chars"
 
 # Google Cloud Translation API (add later)
@@ -222,7 +222,7 @@ sudo nano /etc/nginx/sites-available/naarisamata
 ```nginx
 server {
     listen 80;
-    server_name NaSaSakhiFEStg_IP;
+    server_name SaathiFEStg_IP;
 
     # Client max body size (for file uploads)
     client_max_body_size 20M;
@@ -278,14 +278,14 @@ sudo ufw allow 443/tcp
 
 ---
 
-## 3️⃣ Backend Server Setup (NaSaSakhiBEStg) - Optional for Staging
+## 3️⃣ Backend Server Setup (SaathiBEStg) - Optional for Staging
 
 **Note:** For staging, you can skip this and use Option A (monolithic deployment). This is here for reference if you want to split services later.
 
 If you want to deploy API routes separately:
 
 ```bash
-# Same setup as NaSaSakhiFEStg, but:
+# Same setup as SaathiFEStg, but:
 # 1. Set PORT=4000 in .env
 # 2. Configure Nginx to proxy only /api/* routes
 # 3. Update NEXT_PUBLIC_API_URL to point to this server
@@ -301,7 +301,7 @@ If you want to deploy API routes separately:
 # On your local machine
 git push origin main
 
-# On NaSaSakhiFEStg
+# On SaathiFEStg
 cd /var/www/naarisamata-portal
 git pull origin main
 npm install
@@ -322,7 +322,7 @@ See `deployment/scripts/deploy-staging.sh`
 ### Database Setup
 
 ```bash
-# On NaSaSakhiFEStg
+# On SaathiFEStg
 cd /var/www/naarisamata-portal
 
 # Seed initial data (languages, service categories)
@@ -341,7 +341,7 @@ npm run db:migrate-organizations
 
 ```bash
 # Access PostgreSQL
-psql "postgresql://naarisamata_user:YOUR_PASSWORD@NaSaSakhiDB_IP:5432/naarisamata_staging"
+psql "postgresql://naarisamata_user:YOUR_PASSWORD@SaathiDB_IP:5432/naarisamata_staging"
 
 # Insert admin user (update with real values)
 INSERT INTO admin_users (id, email, name, role, password_hash, is_active, created_at)
@@ -401,14 +401,14 @@ pm2 monit
 ### Application Health
 
 ```bash
-curl http://NaSaSakhiFEStg_IP/health
-curl http://NaSaSakhiFEStg_IP/api/health
+curl http://SaathiFEStg_IP/health
+curl http://SaathiFEStg_IP/api/health
 ```
 
 ### Database Health
 
 ```bash
-psql "postgresql://naarisamata_user:YOUR_PASSWORD@NaSaSakhiDB_IP:5432/naarisamata_staging" -c "SELECT version();"
+psql "postgresql://naarisamata_user:YOUR_PASSWORD@SaathiDB_IP:5432/naarisamata_staging" -c "SELECT version();"
 ```
 
 ---
@@ -460,7 +460,7 @@ pm2 env 0
 
 ```bash
 # Test connectivity
-psql "postgresql://naarisamata_user:PASSWORD@NaSaSakhiDB_IP:5432/naarisamata_staging"
+psql "postgresql://naarisamata_user:PASSWORD@SaathiDB_IP:5432/naarisamata_staging"
 
 # Check PostgreSQL is listening
 sudo netstat -plnt | grep 5432
@@ -489,4 +489,4 @@ sudo systemctl reload nginx
 For issues or questions, refer to:
 - Project README: `/README.md`
 - PRD Document: `/docs/prd.md`
-- GitHub Issues: https://github.com/tangy83/NaSaSakhi/issues
+- GitHub Issues: https://github.com/tangy83/Saathi/issues

@@ -2,7 +2,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'NASA Sakhi - Organization Registration Portal',
+  title: 'NaariSamata Saathi - Organization Registration Portal',
   description: 'Empowering women and vulnerable children across India',
 };
 

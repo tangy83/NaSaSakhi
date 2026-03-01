@@ -100,7 +100,7 @@ export async function apiPatch<T = any>(
   });
 }
 
-// Specific API functions for NASA Sakhi
+// Specific API functions for Saathi
 
 /**
  * Health check endpoint

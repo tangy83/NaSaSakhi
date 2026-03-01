@@ -1,4 +1,4 @@
-// NASA Sakhi - Complete Prisma Schema
+// Saathi - Complete Prisma Schema
 // Phase 2: Volunteer Admin & Multi-Language Platform
 
 generator client {

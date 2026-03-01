@@ -63,7 +63,7 @@ If you have PostgreSQL client tools installed:
 
 ```bash
 # Connect to database (using connection string from .env)
-psql "postgresql://JQZAEG:%2B1h8t3x%7Baa@nasasakhidbstg-nmjuxe7e5m.tcp-proxy-2212.dcdeploy.cloud:30095/nasasakhidbstg-db"
+psql "postgresql://JQZAEG:%2B1h8t3x%7Baa@saathidbstg-nmjuxe7e5m.tcp-proxy-2212.dcdeploy.cloud:30095/saathidbstg-db"
 
 # Then run queries:
 SELECT COUNT(*) FROM "Language";        -- Should be 30

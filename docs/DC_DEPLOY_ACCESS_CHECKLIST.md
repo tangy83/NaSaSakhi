@@ -1,5 +1,5 @@
 # DC Deploy Staging Access Checklist
-## NASA Sakhi MVP - Infrastructure Access Setup
+## Saathi MVP - Infrastructure Access Setup
 
 **Date:** February 3, 2026
 **Deadline:** Required by February 6, 2026 (integration day)
@@ -17,14 +17,14 @@ Akarsha and Sunitha need access to DC Deploy staging infrastructure on **Februar
 
 | Resource | Akarsha Needs | Sunitha Needs | Tanuj Needs |
 |----------|--------------|---------------|-------------|
-| **SSH to NaSaSakhiFEStg** | ✅ Yes (deploy backend) | ⚠️ Optional (deploy frontend) | ⚠️ Optional (QA) |
-| **Database (NaSaSakhiDB)** | ✅ Yes (migrations, testing) | ❌ No | ⚠️ Optional (verify data) |
+| **SSH to SaathiFEStg** | ✅ Yes (deploy backend) | ⚠️ Optional (deploy frontend) | ⚠️ Optional (QA) |
+| **Database (SaathiDB)** | ✅ Yes (migrations, testing) | ❌ No | ⚠️ Optional (verify data) |
 | **Staging URL Access** | ✅ Yes (test API) | ✅ Yes (test frontend) | ✅ Yes (QA testing) |
 | **VPN (if behind firewall)** | ✅ Yes (if required) | ✅ Yes (if required) | ✅ Yes (if required) |
 
 ---
 
-## 1️⃣ SSH Access to NaSaSakhiFEStg Server
+## 1️⃣ SSH Access to SaathiFEStg Server
 
 ### Required Information
 
@@ -33,7 +33,7 @@ Akarsha and Sunitha need access to DC Deploy staging infrastructure on **Februar
 ```yaml
 Server Hostname/IP: "<provide IP or hostname>"
 SSH Port: "22" (default)
-SSH Username: "<e.g., deploy, ubuntu, nasasakhi>"
+SSH Username: "<e.g., deploy, ubuntu, saathi>"
 Authentication: "SSH key or password"
 ```
 
@@ -43,24 +43,24 @@ Authentication: "SSH key or password"
 
 - [ ] Create user accounts for Akarsha, Sunitha (optional), Tanuj (optional)
 - [ ] Collect SSH public keys from team members
-- [ ] Add public keys to `~/.ssh/authorized_keys` on NaSaSakhiFEStg
+- [ ] Add public keys to `~/.ssh/authorized_keys` on SaathiFEStg
 - [ ] Verify team members can SSH successfully
-- [ ] Ensure users have correct permissions for `/var/www/nasa_sakhi` (or app directory)
+- [ ] Ensure users have correct permissions for `/var/www/saathi` (or app directory)
 - [ ] Add users to appropriate groups (`www-data`, `deploy`, etc.)
 
 **For Team Members:**
 
 - [ ] Generate SSH key pair if don't have one:
   ```bash
-  ssh-keygen -t rsa -b 4096 -C "your_email@example.com" -f ~/.ssh/nasasakhi_staging_rsa
+  ssh-keygen -t rsa -b 4096 -C "your_email@example.com" -f ~/.ssh/saathi_staging_rsa
   ```
 - [ ] Send public key to infrastructure team:
   ```bash
-  cat ~/.ssh/nasasakhi_staging_rsa.pub
+  cat ~/.ssh/saathi_staging_rsa.pub
   ```
 - [ ] Test SSH connection once access granted:
   ```bash
-  ssh -i ~/.ssh/nasasakhi_staging_rsa <username>@<host>
+  ssh -i ~/.ssh/saathi_staging_rsa <username>@<host>
   ```
 
 ### Server Details Template
@@ -68,28 +68,28 @@ Authentication: "SSH key or password"
 **Fill this out and share with team by Feb 5:**
 
 ```bash
-# NaSaSakhiFEStg Server Access
+# SaathiFEStg Server Access
 export STAGING_HOST="<IP or hostname>"
 export STAGING_USER="<username>"
-export STAGING_SSH_KEY="~/.ssh/nasasakhi_staging_rsa"
+export STAGING_SSH_KEY="~/.ssh/saathi_staging_rsa"
 
 # Test connection
 ssh -i $STAGING_SSH_KEY $STAGING_USER@$STAGING_HOST
 
 # App location on server
-export APP_DIR="/var/www/nasa_sakhi"  # Confirm this path
+export APP_DIR="/var/www/saathi"  # Confirm this path
 ```
 
 ---
 
-## 2️⃣ PostgreSQL Database Access (NaSaSakhiDB)
+## 2️⃣ PostgreSQL Database Access (SaathiDB)
 
 ### Required Information
 
 **Request from infrastructure team:**
 
 ```yaml
-Database Host: "<NaSaSakhiDB IP or hostname>"
+Database Host: "<SaathiDB IP or hostname>"
 Database Port: "5432"
 Database Name: "naarisamata_staging"
 Database User: "naarisamata_user"
@@ -132,7 +132,7 @@ Database Password: "<secure password>"
 **Fill this out and share with Akarsha by Feb 5:**
 
 ```bash
-# NaSaSakhiDB Database Access
+# SaathiDB Database Access
 export DB_HOST="<IP or hostname>"
 export DB_PORT="5432"
 export DB_NAME="naarisamata_staging"
@@ -159,9 +159,9 @@ psql "$DATABASE_URL" -c "SELECT version();"
 **Request from infrastructure team:**
 
 ```yaml
-Frontend URL: "http://<NaSaSakhiFEStg_IP>" or "https://staging.nasasakhi.org"
-API Base URL: "http://<NaSaSakhiFEStg_IP>/api"
-Health Check: "http://<NaSaSakhiFEStg_IP>/health"
+Frontend URL: "http://<SaathiFEStg_IP>" or "https://staging.saathi.org"
+API Base URL: "http://<SaathiFEStg_IP>/api"
+Health Check: "http://<SaathiFEStg_IP>/health"
 ```
 
 ### Action Items
@@ -171,7 +171,7 @@ Health Check: "http://<NaSaSakhiFEStg_IP>/health"
 - [ ] Confirm staging URL is accessible from public internet (or requires VPN)
 - [ ] Ensure Nginx is configured and running
 - [ ] Ensure firewall allows ports 80 (HTTP) and 443 (HTTPS)
-- [ ] Provide domain name if using (staging.nasasakhi.org) or IP address
+- [ ] Provide domain name if using (staging.saathi.org) or IP address
 - [ ] Test URL from external network
 
 **For Team Members:**
@@ -197,7 +197,7 @@ curl $STAGING_APP_URL/health
 curl $STAGING_API_URL/health
 
 # If using HTTPS (with SSL certificate):
-# export STAGING_APP_URL="https://staging.nasasakhi.org"
+# export STAGING_APP_URL="https://staging.saathi.org"
 ```
 
 ---
@@ -250,7 +250,7 @@ VPN_PASSWORD="<your-vpn-password>"
 # VPN setup instructions:
 # 1. Install OpenVPN: <command>
 # 2. Download config: <URL>
-# 3. Connect: sudo openvpn --config nasasakhi.ovpn
+# 3. Connect: sudo openvpn --config saathi.ovpn
 # 4. Test: ping <STAGING_HOST>
 
 # If IP whitelisting instead:
@@ -267,7 +267,7 @@ VPN_PASSWORD="<your-vpn-password>"
 **Request from infrastructure team:**
 
 ```yaml
-App directory on server: "<e.g., /var/www/nasa_sakhi>"
+App directory on server: "<e.g., /var/www/saathi>"
 App owner user: "<e.g., deploy, www-data>"
 Process manager: "<e.g., PM2, systemd, docker>"
 Node.js version: "18.x"
@@ -288,7 +288,7 @@ Git repository accessible from server: "Yes / No"
 
 **For Akarsha (will deploy backend):**
 
-- [ ] Know app directory: `/var/www/nasa_sakhi`
+- [ ] Know app directory: `/var/www/saathi`
 - [ ] Know how to restart app:
   ```bash
   pm2 reload all
@@ -303,7 +303,7 @@ Git repository accessible from server: "Yes / No"
   ```
 - [ ] Test deployment dry-run:
   ```bash
-  cd /var/www/nasa_sakhi
+  cd /var/www/saathi
   git pull origin integration/mvp
   npm install
   npm run build
@@ -314,8 +314,8 @@ Git repository accessible from server: "Yes / No"
 **Fill this out and share with Akarsha by Feb 5:**
 
 ```bash
-# Application Deployment on NaSaSakhiFEStg
-export APP_DIR="/var/www/nasa_sakhi"
+# Application Deployment on SaathiFEStg
+export APP_DIR="/var/www/saathi"
 export APP_USER="deploy"  # or www-data
 export PROCESS_MANAGER="pm2"  # or systemd
 
@@ -349,7 +349,7 @@ pm2 status
 **Confirm with infrastructure team:**
 
 ```yaml
-.env file location: "<e.g., /var/www/nasa_sakhi/.env>"
+.env file location: "<e.g., /var/www/saathi/.env>"
 Who manages .env: "<team or infrastructure>"
 How to update .env: "<manual edit or deployment script>"
 ```
@@ -371,23 +371,23 @@ How to update .env: "<manual edit or deployment script>"
 
 ### Staging .env Template
 
-**Create this file on NaSaSakhiFEStg at `/var/www/nasa_sakhi/.env`:**
+**Create this file on SaathiFEStg at `/var/www/saathi/.env`:**
 
 ```bash
 # Application
 NODE_ENV=staging
 PORT=3000
-NEXT_PUBLIC_APP_URL=http://<NaSaSakhiFEStg_IP>
+NEXT_PUBLIC_APP_URL=http://<SaathiFEStg_IP>
 
-# Database (NaSaSakhiDB)
-DATABASE_URL="postgresql://naarisamata_user:<PASSWORD>@<NaSaSakhiDB_IP>:5432/naarisamata_staging"
+# Database (SaathiDB)
+DATABASE_URL="postgresql://naarisamata_user:<PASSWORD>@<SaathiDB_IP>:5432/naarisamata_staging"
 
 # NextAuth.js
-NEXTAUTH_URL=http://<NaSaSakhiFEStg_IP>
+NEXTAUTH_URL=http://<SaathiFEStg_IP>
 NEXTAUTH_SECRET="<generate-secret-with-openssl-rand-base64-32>"
 
 # File Upload (local for MVP)
-UPLOAD_DIR=/var/www/nasa_sakhi/uploads
+UPLOAD_DIR=/var/www/saathi/uploads
 
 # Logging
 LOG_LEVEL=info
@@ -399,15 +399,15 @@ LOG_LEVEL=info
 
 ### Infrastructure Team Checklist
 
-- [ ] NaSaSakhiFEStg server provisioned and running
-- [ ] NaSaSakhiDB PostgreSQL server running and accessible
+- [ ] SaathiFEStg server provisioned and running
+- [ ] SaathiDB PostgreSQL server running and accessible
 - [ ] SSH access configured for Akarsha (required)
 - [ ] SSH access configured for Sunitha (optional)
 - [ ] SSH access configured for Tanuj (optional)
 - [ ] Database credentials created and shared
 - [ ] Firewall rules configured (ports 22, 80, 443, 5432)
 - [ ] VPN access provided (if required)
-- [ ] App directory created: `/var/www/nasa_sakhi`
+- [ ] App directory created: `/var/www/saathi`
 - [ ] PM2 installed and configured
 - [ ] Nginx installed and configured
 - [ ] `.env` file created with correct values
@@ -417,9 +417,9 @@ LOG_LEVEL=info
 
 ### Akarsha's Checklist (by Feb 5)
 
-- [ ] Received SSH credentials for NaSaSakhiFEStg
+- [ ] Received SSH credentials for SaathiFEStg
 - [ ] Tested SSH connection successfully
-- [ ] Received database credentials for NaSaSakhiDB
+- [ ] Received database credentials for SaathiDB
 - [ ] Tested database connection successfully
 - [ ] Verified can run `npx prisma migrate deploy`
 - [ ] Know app directory path
@@ -481,21 +481,21 @@ If staging infrastructure not ready by Feb 6:
 **Email to Infrastructure Team (send by Feb 3-4):**
 
 ```
-Subject: NASA Sakhi Staging Access Required by Feb 5
+Subject: Saathi Staging Access Required by Feb 5
 
 Hi [Infrastructure Team],
 
 We need access to the DC Deploy staging environment by February 5th for our
-NASA Sakhi MVP integration on February 6.
+Saathi MVP integration on February 6.
 
 Required Access:
 
-1. SSH Access to NaSaSakhiFEStg:
+1. SSH Access to SaathiFEStg:
    - Users: Akarsha (required), Sunitha (optional), Tanuj (optional)
    - Please add our SSH public keys (attached)
    - Confirm app directory path
 
-2. PostgreSQL Database Access (NaSaSakhiDB):
+2. PostgreSQL Database Access (SaathiDB):
    - User: Akarsha (backend developer)
    - Database: naarisamata_staging
    - Please provide connection string
@@ -539,11 +539,11 @@ Thank you!
 
 ```bash
 # 1. SSH into staging server
-ssh -i ~/.ssh/nasasakhi_staging_rsa $STAGING_USER@$STAGING_HOST
+ssh -i ~/.ssh/saathi_staging_rsa $STAGING_USER@$STAGING_HOST
 # Expected: Should see server prompt
 
 # 2. Check app directory
-ls /var/www/nasa_sakhi
+ls /var/www/saathi
 # Expected: Should see project files or empty directory
 
 # 3. Test database connection
@@ -551,7 +551,7 @@ psql "$DATABASE_URL" -c "SELECT version();"
 # Expected: Should see PostgreSQL version
 
 # 4. Test git access
-cd /var/www/nasa_sakhi && git pull origin main
+cd /var/www/saathi && git pull origin main
 # Expected: Should pull latest code
 
 # 5. Test PM2
@@ -567,7 +567,7 @@ curl $STAGING_APP_URL/health
 # Expected: HTTP 200 or similar
 
 # 2. (Optional) Test SSH
-ssh -i ~/.ssh/nasasakhi_staging_rsa $STAGING_USER@$STAGING_HOST
+ssh -i ~/.ssh/saathi_staging_rsa $STAGING_USER@$STAGING_HOST
 # Expected: Should see server prompt
 ```
 

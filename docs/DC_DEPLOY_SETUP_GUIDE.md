@@ -10,8 +10,8 @@
 ## 🎯 Goal
 
 By the end of this guide, you'll have:
-- ✅ Staging server (NaSaSakhiFEStg) configured and accessible
-- ✅ Database server (NaSaSakhiDB) running and accessible
+- ✅ Staging server (SaathiFEStg) configured and accessible
+- ✅ Database server (SaathiDB) running and accessible
 - ✅ SSH access for team members
 - ✅ Configuration documented and ready to share
 - ✅ All workplans updated with actual values
@@ -46,7 +46,7 @@ Before starting, you need to know:
 
 1. Run the automated configuration script:
    ```bash
-   cd /Users/tanujsaluja/nasa_sakhi
+   cd /Users/tanujsaluja/saathi
    ./scripts/check-staging-access.sh
    ```
 
@@ -76,23 +76,23 @@ Before starting, you need to know:
 1. Send this email to your infrastructure team:
 
    ```
-   Subject: NASA Sakhi Staging Infrastructure - Need Access Details by Feb 5
+   Subject: Saathi Staging Infrastructure - Need Access Details by Feb 5
 
    Hi [Infrastructure Team],
 
-   We need access to the staging environment for NASA Sakhi MVP deployment (target: Feb 7).
+   We need access to the staging environment for Saathi MVP deployment (target: Feb 7).
 
    Could you please provide the following details by February 5?
 
-   **NaSaSakhiFEStg Application Server:**
+   **SaathiFEStg Application Server:**
    1. Server IP address or hostname
    2. SSH username for deployment user
    3. SSH authentication method (key-based preferred)
-   4. Application directory path (e.g., /var/www/nasa_sakhi)
+   4. Application directory path (e.g., /var/www/saathi)
    5. How to restart application (PM2, systemd, other?)
    6. How to view application logs
 
-   **NaSaSakhiDB Database Server:**
+   **SaathiDB Database Server:**
    1. PostgreSQL host (IP or hostname)
    2. PostgreSQL port (default 5432)
    3. Database name (suggest: naarisamata_staging)
@@ -139,8 +139,8 @@ If you need to set up servers from scratch, follow the detailed guide in `docs/D
    **Option 1: Using DC Deploy Control Panel**
    - Log into DC Deploy dashboard
    - Create 2 new instances:
-     - `NaSaSakhiFEStg` (2 CPU, 4GB RAM, Ubuntu 22.04)
-     - `NaSaSakhiDB` (or use same server for both)
+     - `SaathiFEStg` (2 CPU, 4GB RAM, Ubuntu 22.04)
+     - `SaathiDB` (or use same server for both)
    - Note the IP addresses
 
    **Option 2: Using Cloud Provider (if DC Deploy is on AWS/Azure/GCP)**
@@ -167,15 +167,15 @@ If you need to set up servers from scratch, follow the detailed guide in `docs/D
 
 Regardless of which path you take, you need these details:
 
-### NaSaSakhiFEStg Server
+### SaathiFEStg Server
 ```yaml
 Hostname/IP: ____________________
 SSH Username: ____________________
 SSH Key Path: ____________________ (or password)
-App Directory: ____________________ (e.g., /var/www/nasa_sakhi)
+App Directory: ____________________ (e.g., /var/www/saathi)
 ```
 
-### NaSaSakhiDB Database
+### SaathiDB Database
 ```yaml
 DB Host: ____________________
 DB Port: ____________________ (usually 5432)
@@ -275,14 +275,14 @@ echo $DATABASE_URL
 
 **Option A: Use Password Manager (Recommended)**
 - 1Password, LastPass, Bitwarden, etc.
-- Create shared vault "NASA Sakhi Staging"
+- Create shared vault "Saathi Staging"
 - Add credentials for team
 
 **Option B: Encrypted File**
 ```bash
 # Create credentials file
 cat > docs/team-credentials.txt <<EOF
-NASA Sakhi Staging Credentials
+Saathi Staging Credentials
 
 Server: $STAGING_HOST
 Username: $STAGING_USER
@@ -290,7 +290,7 @@ Database: $DATABASE_URL
 Staging URL: $STAGING_APP_URL
 
 Akarsha's Access:
-- SSH: ssh -i ~/.ssh/nasasakhi_shashi $STAGING_USER@$STAGING_HOST
+- SSH: ssh -i ~/.ssh/saathi_shashi $STAGING_USER@$STAGING_HOST
 - Database: psql "$DATABASE_URL"
 
 Sunitha's Access:
@@ -336,7 +336,7 @@ And I'll replace all placeholders in the documents.
 Before sharing with team, verify:
 
 ### Server Access
-- [ ] Can SSH into NaSaSakhiFEStg without password
+- [ ] Can SSH into SaathiFEStg without password
 - [ ] Server has Node.js 18+ installed (`node --version`)
 - [ ] App directory exists and is writable
 - [ ] PM2 is installed (`pm2 --version`)
@@ -349,7 +349,7 @@ Before sharing with team, verify:
 - [ ] Connection works from your local machine (or via tunnel)
 
 ### Application Deployment
-- [ ] Git repository cloned to `/var/www/nasa_sakhi`
+- [ ] Git repository cloned to `/var/www/saathi`
 - [ ] `.env` file created with correct values
 - [ ] `npm install` completes successfully
 - [ ] `npx prisma generate` works

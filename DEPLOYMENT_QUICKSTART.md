@@ -1,4 +1,4 @@
-# NASA Sakhi - Deployment Quick Start Guide
+# Saathi - Deployment Quick Start Guide
 
 ## Current Status ✅
 
@@ -47,7 +47,7 @@ Your codebase is **deployment-ready** in two modes:
 #### 1. Push to GitHub
 
 ```bash
-cd /Users/tanujsaluja/nasa_sakhi
+cd /Users/tanujsaluja/saathi
 git add .
 git commit -m "Add deployment configuration for DC Deploy"
 git push origin main
@@ -57,7 +57,7 @@ git push origin main
 
 1. Go to DC Deploy dashboard
 2. Click "New Application"
-3. Connect to GitHub repository: `tangy83/NaSaSakhi`
+3. Connect to GitHub repository: `tangy83/Saathi`
 4. Branch: `main`
 5. Name: `nasa-sakhi-mvp`
 
@@ -76,7 +76,7 @@ Copy these values to DC Deploy → Settings → Environment Variables:
 ```bash
 NODE_ENV=production
 PORT=3000
-DATABASE_URL=postgresql://JQZAEG:%2B1h8t3x%7Baa@nasasakhidbstg:5432/nasasakhidbstg-db
+DATABASE_URL=postgresql://JQZAEG:%2B1h8t3x%7Baa@saathidbstg:5432/saathidbstg-db
 NEXT_PUBLIC_APP_URL=https://nasa-sakhi-mvp.dcdeployapp.com
 NEXTAUTH_URL=https://nasa-sakhi-mvp.dcdeployapp.com
 NEXTAUTH_SECRET=<generate-new>
@@ -118,7 +118,7 @@ open https://your-actual-url.dcdeployapp.com
 **Expected responses:**
 - Health check: `{"status":"healthy",...}`
 - Database test: `{"success":true,"message":"Database connection successful!",...}`
-- Homepage: Purple landing page with "NASA Sakhi"
+- Homepage: Purple landing page with "Saathi"
 
 ---
 
@@ -175,7 +175,7 @@ See [DC_DEPLOY_SPLIT_CONFIG.md](./DC_DEPLOY_SPLIT_CONFIG.md) and [DC_DEPLOY_SPLI
 - ✅ Ready to call backend API (same domain or cross-domain)
 
 ### Infrastructure
-- ✅ Git repository: `tangy83/NaSaSakhi`
+- ✅ Git repository: `tangy83/Saathi`
 - ✅ Environment configuration for both deployment modes
 - ✅ Documentation for team (Sunitha, Shashi)
 
@@ -217,7 +217,7 @@ See [DC_DEPLOY_SPLIT_CONFIG.md](./DC_DEPLOY_SPLIT_CONFIG.md) and [DC_DEPLOY_SPLI
 - Check build logs for errors
 
 **Database connection fails:**
-- Use internal DC Deploy URL: `@nasasakhidbstg:5432`
+- Use internal DC Deploy URL: `@saathidbstg:5432`
 - Ensure password is URL-encoded: `%2B1h8t3x%7Baa`
 - Check database service is running in DC Deploy
 

@@ -1,5 +1,5 @@
 /**
- * NASA Sakhi - API Contract & Type Definitions
+ * Saathi - API Contract & Type Definitions
  *
  * This file defines the TypeScript interfaces shared between frontend and backend.
  * Both Sunitha (frontend) and Shashi (backend) MUST follow these exact types.
@@ -126,7 +126,7 @@ export interface ServiceCategory {
 export type TargetGroup = 'CHILDREN' | 'WOMEN';
 
 /**
- * Service Resource (sourced from SQL sakhi_new_service_resource.sql)
+ * Service Resource (sourced from SQL saathi_new_service_resource.sql)
  * IDs use SQL ResourceID format (e.g., CR0011, WR0021)
  * GET /api/reference/resources?categoryId=<id>
  */

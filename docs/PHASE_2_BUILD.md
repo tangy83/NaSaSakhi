@@ -1,6 +1,6 @@
 # Phase 2 Build — Requirements Document
 
-**Project:** NaariSamata (NASA Sakhi) Organization Registration Portal
+**Project:** NaariSamata (Saathi) Organization Registration Portal
 **Phase:** 2
 **Status:** Partially Complete — see Implementation Status below
 **Date:** February 2026

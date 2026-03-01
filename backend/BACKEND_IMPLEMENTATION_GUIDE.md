@@ -1,5 +1,5 @@
 # Backend Implementation Guide for Akarsha
-## NASA Sakhi - Complete Backend Development Roadmap
+## Saathi - Complete Backend Development Roadmap
 
 **Developer:** Akarsha (Backend Lead)  
 **Teammate:** Sunita (Frontend Lead - you don't need to work on frontend)  

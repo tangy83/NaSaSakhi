@@ -315,7 +315,7 @@ async function migrateOrganization(legacyOrg: any, stats: MigrationStats) {
  */
 async function runMigration() {
   console.log('\n' + '='.repeat(70));
-  console.log('NASA SAKHI - LEGACY DATA MIGRATION');
+  console.log('Saathi - LEGACY DATA MIGRATION');
   console.log('='.repeat(70) + '\n');
 
   const stats: MigrationStats = {

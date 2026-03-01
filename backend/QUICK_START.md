@@ -5,7 +5,7 @@
 
 ## 🎯 Your Mission
 
-Build the complete backend API for NASA Sakhi registration portal. Sunita handles all frontend - you only need to focus on backend APIs.
+Build the complete backend API for Saathi registration portal. Sunita handles all frontend - you only need to focus on backend APIs.
 
 ---
 

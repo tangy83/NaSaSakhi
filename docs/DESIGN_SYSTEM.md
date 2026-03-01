@@ -1,4 +1,4 @@
-# NASA Sakhi - Design System
+# Saathi - Design System
 ## UI/UX Guidelines for Frontend Development
 
 **Version:** 1.0
@@ -9,7 +9,7 @@
 
 ## 📋 Overview
 
-This design system defines the visual language and component patterns for the NASA Sakhi organization registration portal. All frontend components must follow these guidelines to ensure consistency and accessibility.
+This design system defines the visual language and component patterns for the Saathi organization registration portal. All frontend components must follow these guidelines to ensure consistency and accessibility.
 
 **Target Users:**
 - NGO administrators with limited tech literacy

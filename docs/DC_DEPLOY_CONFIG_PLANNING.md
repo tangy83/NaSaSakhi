@@ -6,7 +6,7 @@
 
 ---
 
-# DC Deploy Configuration - NASA Sakhi Staging (ORIGINAL PLAN - NOT IMPLEMENTED)
+# DC Deploy Configuration - Saathi Staging (ORIGINAL PLAN - NOT IMPLEMENTED)
 ## Fill in the actual values for your infrastructure
 
 **Date:** February 3, 2026
@@ -21,21 +21,21 @@ Once filled, this becomes your team's reference for all staging access.
 ```bash
 # === COPY THIS SECTION TO SHARE WITH TEAM ===
 
-# NaSaSakhiFEStg Server
-export STAGING_HOST=""  # e.g., "192.168.1.100" or "staging.nasasakhi.com"
+# SaathiFEStg Server
+export STAGING_HOST=""  # e.g., "192.168.1.100" or "staging.saathi.com"
 export STAGING_USER=""  # e.g., "deploy" or "ubuntu"
 export STAGING_PORT="22"
-export APP_DIR="/var/www/nasa_sakhi"  # Confirm actual path
+export APP_DIR="/var/www/saathi"  # Confirm actual path
 
-# NaSaSakhiDB Database
-export DB_HOST=""  # e.g., "192.168.1.101" or "db.nasasakhi.com"
+# SaathiDB Database
+export DB_HOST=""  # e.g., "192.168.1.101" or "db.saathi.com"
 export DB_PORT="5432"
 export DB_NAME="naarisamata_staging"
 export DB_USER="naarisamata_user"
 export DB_PASSWORD=""  # Get from infrastructure team
 
 # Staging URLs
-export STAGING_APP_URL=""  # e.g., "http://192.168.1.100" or "https://staging.nasasakhi.org"
+export STAGING_APP_URL=""  # e.g., "http://192.168.1.100" or "https://staging.saathi.org"
 export STAGING_API_URL="${STAGING_APP_URL}/api"
 
 # === END COPY SECTION ===
@@ -70,7 +70,7 @@ export STAGING_API_URL="${STAGING_APP_URL}/api"
 
 ### Step 2: Gather Server Details
 
-#### NaSaSakhiFEStg (Application Server)
+#### SaathiFEStg (Application Server)
 
 **Find this information from your infrastructure:**
 
@@ -98,7 +98,7 @@ Disk: "___________________________"
 If you have access to DC Deploy dashboard or control panel:
 1. Log into DC Deploy control panel
 2. Look for "Servers" or "Instances" section
-3. Find server named "NaSaSakhiFEStg" or similar
+3. Find server named "SaathiFEStg" or similar
 4. Note down the IP address and credentials
 
 If managed by infrastructure team:
@@ -106,7 +106,7 @@ If managed by infrastructure team:
 # Send this email/message:
 "Hi [Infrastructure Team],
 
-I need access details for the NASA Sakhi staging server (NaSaSakhiFEStg):
+I need access details for the Saathi staging server (SaathiFEStg):
 - Server IP address or hostname
 - SSH username
 - SSH authentication method (key or password)
@@ -132,7 +132,7 @@ pm2 --version   # PM2 installed?
 nginx -v  # Nginx version
 ```
 
-#### NaSaSakhiDB (Database Server)
+#### SaathiDB (Database Server)
 
 **Find this information:**
 
@@ -160,12 +160,12 @@ Version: "15.x" (or: ________)
 
 If database is on separate server:
 1. Check DC Deploy control panel for database instances
-2. Look for PostgreSQL database named similar to "NaSaSakhiDB"
+2. Look for PostgreSQL database named similar to "SaathiDB"
 3. Note connection details
 
 If database is on same server as application:
 ```bash
-# SSH into NaSaSakhiFEStg
+# SSH into SaathiFEStg
 ssh <username>@<ip-address>
 
 # Check if PostgreSQL is running
@@ -203,11 +203,11 @@ psql "postgresql://naarisamata_user:<PASSWORD>@<DB_IP>:5432/naarisamata_staging"
 1. **Can you ping the servers from your local machine?**
 
    ```bash
-   # Test NaSaSakhiFEStg
+   # Test SaathiFEStg
    ping <STAGING_HOST>
    # Example: ping 192.168.1.100
 
-   # Test NaSaSakhiDB (if separate server)
+   # Test SaathiDB (if separate server)
    ping <DB_HOST>
    ```
 
@@ -258,20 +258,20 @@ psql "postgresql://naarisamata_user:<PASSWORD>@<DB_IP>:5432/naarisamata_staging"
 
 ```bash
 # Akarsha's SSH key
-ssh-keygen -t rsa -b 4096 -C "shashi@nasasakhi.org" -f ~/.ssh/nasasakhi_shashi
+ssh-keygen -t rsa -b 4096 -C "shashi@saathi.org" -f ~/.ssh/saathi_shashi
 
 # Sunitha's SSH key (if she needs direct access)
-ssh-keygen -t rsa -b 4096 -C "sunitha@nasasakhi.org" -f ~/.ssh/nasasakhi_sunitha
+ssh-keygen -t rsa -b 4096 -C "sunitha@saathi.org" -f ~/.ssh/saathi_sunitha
 
 # Tanuj's SSH key
-ssh-keygen -t rsa -b 4096 -C "tanuj@nasasakhi.org" -f ~/.ssh/nasasakhi_tanuj
+ssh-keygen -t rsa -b 4096 -C "tanuj@saathi.org" -f ~/.ssh/saathi_tanuj
 ```
 
 #### Collect Public Keys
 
 ```bash
 # Akarsha's public key
-cat ~/.ssh/nasasakhi_shashi.pub
+cat ~/.ssh/saathi_shashi.pub
 
 # Copy the output and save it here:
 ```
@@ -302,7 +302,7 @@ cat ~/.ssh/nasasakhi_shashi.pub
 **Option A: If you have server access already:**
 
 ```bash
-# SSH into NaSaSakhiFEStg
+# SSH into SaathiFEStg
 ssh <current-user>@<STAGING_HOST>
 
 # Add Akarsha's key
@@ -321,7 +321,7 @@ chmod 600 ~/.ssh/authorized_keys
 ```
 Send to infrastructure team:
 
-"Please add these SSH public keys to the NaSaSakhiFEStg server for user '<username>':
+"Please add these SSH public keys to the SaathiFEStg server for user '<username>':
 
 Akarsha's key:
 <paste public key>
@@ -339,7 +339,7 @@ Please confirm once added so we can test connectivity."
 
 ```bash
 # Akarsha tests:
-ssh -i ~/.ssh/nasasakhi_shashi <username>@<STAGING_HOST>
+ssh -i ~/.ssh/saathi_shashi <username>@<STAGING_HOST>
 
 # Should see server prompt without password
 # If successful:
@@ -350,15 +350,15 @@ exit
 # Add to SSH config for easier access
 cat >> ~/.ssh/config <<EOF
 
-Host nasasakhi-staging
+Host saathi-staging
     HostName <STAGING_HOST>
     User <username>
-    IdentityFile ~/.ssh/nasasakhi_shashi
+    IdentityFile ~/.ssh/saathi_shashi
     Port 22
 EOF
 
 # Now can connect simply:
-ssh nasasakhi-staging
+ssh saathi-staging
 ```
 
 ---
@@ -370,7 +370,7 @@ ssh nasasakhi-staging
 **If database doesn't exist yet:**
 
 ```bash
-# SSH into NaSaSakhiDB server (or NaSaSakhiFEStg if same server)
+# SSH into SaathiDB server (or SaathiFEStg if same server)
 ssh <user>@<DB_HOST>
 
 # Access PostgreSQL as postgres user
@@ -400,7 +400,7 @@ listen_addresses = '*'
 # Edit pg_hba.conf
 sudo nano /etc/postgresql/15/main/pg_hba.conf
 
-# Add line (replace <ALLOWED_IP> with Akarsha's IP or NaSaSakhiFEStg IP):
+# Add line (replace <ALLOWED_IP> with Akarsha's IP or SaathiFEStg IP):
 host    naarisamata_staging    naarisamata_user    <ALLOWED_IP>/32    md5
 
 # Or allow from any IP (less secure, for staging only):
@@ -453,17 +453,17 @@ psql "postgresql://naarisamata_user:<PASSWORD>@localhost:5433/naarisamata_stagin
 #### Verify Directory Structure
 
 ```bash
-# SSH into NaSaSakhiFEStg
+# SSH into SaathiFEStg
 ssh <user>@<STAGING_HOST>
 
 # Check if app directory exists
-ls -la /var/www/nasa_sakhi
+ls -la /var/www/saathi
 
 # If doesn't exist, create it
-sudo mkdir -p /var/www/nasa_sakhi
+sudo mkdir -p /var/www/saathi
 
 # Set ownership (replace 'deploy' with actual user)
-sudo chown -R deploy:deploy /var/www/nasa_sakhi
+sudo chown -R deploy:deploy /var/www/saathi
 
 # Verify permissions
 ls -la /var/www/
@@ -473,10 +473,10 @@ ls -la /var/www/
 
 ```bash
 # Navigate to app directory
-cd /var/www/nasa_sakhi
+cd /var/www/saathi
 
 # Clone repository
-git clone https://github.com/tangy83/NaSaSakhi.git .
+git clone https://github.com/tangy83/Saathi.git .
 
 # If private repo, set up SSH key for GitHub
 ssh-keygen -t rsa -b 4096 -C "deploy@server" -f ~/.ssh/github_deploy
@@ -484,7 +484,7 @@ cat ~/.ssh/github_deploy.pub
 # Add this key to GitHub repo: Settings > Deploy keys
 
 # Or use HTTPS with personal access token
-git clone https://<GITHUB_TOKEN>@github.com/tangy83/NaSaSakhi.git .
+git clone https://<GITHUB_TOKEN>@github.com/tangy83/Saathi.git .
 ```
 
 #### Install Dependencies
@@ -508,7 +508,7 @@ sudo npm install -g pm2
 
 ```bash
 # Create .env file
-nano /var/www/nasa_sakhi/.env
+nano /var/www/saathi/.env
 
 # Add configuration (fill in actual values):
 NODE_ENV=staging
@@ -547,7 +547,7 @@ npm run build
 
 ```bash
 # Create PM2 ecosystem file
-nano /var/www/nasa_sakhi/ecosystem.config.js
+nano /var/www/saathi/ecosystem.config.js
 
 # Paste this content:
 ```
@@ -558,15 +558,15 @@ module.exports = {
     name: 'nasa-sakhi',
     script: 'node_modules/next/dist/bin/next',
     args: 'start',
-    cwd: '/var/www/nasa_sakhi',
+    cwd: '/var/www/saathi',
     instances: 2,
     exec_mode: 'cluster',
     env: {
       NODE_ENV: 'staging',
       PORT: 3000
     },
-    error_file: '/var/log/nasa_sakhi/error.log',
-    out_file: '/var/log/nasa_sakhi/out.log',
+    error_file: '/var/log/saathi/error.log',
+    out_file: '/var/log/saathi/out.log',
     log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
     merge_logs: true,
     autorestart: true,
@@ -578,8 +578,8 @@ module.exports = {
 
 ```bash
 # Create log directory
-sudo mkdir -p /var/log/nasa_sakhi
-sudo chown deploy:deploy /var/log/nasa_sakhi
+sudo mkdir -p /var/log/saathi
+sudo chown deploy:deploy /var/log/saathi
 
 # Start application
 pm2 start ecosystem.config.js
@@ -604,7 +604,7 @@ curl http://localhost:3000
 
 ```bash
 # Create Nginx configuration
-sudo nano /etc/nginx/sites-available/nasa_sakhi
+sudo nano /etc/nginx/sites-available/saathi
 
 # Paste this content:
 ```
@@ -647,7 +647,7 @@ server {
 
 ```bash
 # Enable site
-sudo ln -s /etc/nginx/sites-available/nasa_sakhi /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/saathi /etc/nginx/sites-enabled/
 
 # Test Nginx configuration
 sudo nginx -t
@@ -713,13 +713,13 @@ sudo ufw status verbose
 ```bash
 # === FINAL CONFIGURATION ===
 
-# NaSaSakhiFEStg Server
+# SaathiFEStg Server
 STAGING_HOST="___________________________"  # FILL IN
 STAGING_USER="___________________________"  # FILL IN
 STAGING_PORT="22"
-APP_DIR="/var/www/nasa_sakhi"
+APP_DIR="/var/www/saathi"
 
-# NaSaSakhiDB Database
+# SaathiDB Database
 DB_HOST="___________________________"  # FILL IN (could be same as STAGING_HOST)
 DB_PORT="5432"
 DB_NAME="naarisamata_staging"
@@ -731,7 +731,7 @@ STAGING_APP_URL="___________________________"  # FILL IN (e.g., http://192.168.1
 STAGING_API_URL="${STAGING_APP_URL}/api"
 
 # SSH Connection
-# ssh -i ~/.ssh/nasasakhi_<name> ${STAGING_USER}@${STAGING_HOST}
+# ssh -i ~/.ssh/saathi_<name> ${STAGING_USER}@${STAGING_HOST}
 
 # Database Connection String
 DATABASE_URL="postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}"
@@ -746,7 +746,7 @@ DATABASE_URL="postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_
 Before sharing with team, verify:
 
 **Server Access:**
-- [ ] Can SSH into NaSaSakhiFEStg without password (using SSH key)
+- [ ] Can SSH into SaathiFEStg without password (using SSH key)
 - [ ] App directory exists and has correct permissions
 - [ ] Git repository cloned successfully
 - [ ] PM2 is running and application is up

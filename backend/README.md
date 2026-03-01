@@ -1,4 +1,4 @@
-# NASA Sakhi Backend
+# Saathi Backend
 
 This directory contains the monolithic Next.js application (frontend + backend combined) for deployment to DC Deploy.
 
@@ -50,7 +50,7 @@ Required environment variables for DC Deploy:
 ```bash
 NODE_ENV=production
 PORT=3000
-DATABASE_URL=postgresql://JQZAEG:%2B1h8t3x%7Baa@nasasakhidbstg:5432/nasasakhidbstg-db
+DATABASE_URL=postgresql://JQZAEG:%2B1h8t3x%7Baa@saathidbstg:5432/saathidbstg-db
 NEXT_PUBLIC_APP_URL=https://your-app.dcdeployapp.com
 NEXTAUTH_URL=https://your-app.dcdeployapp.com
 NEXTAUTH_SECRET=<generate-with-openssl-rand-base64-32>

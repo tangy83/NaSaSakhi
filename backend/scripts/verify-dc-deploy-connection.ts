@@ -41,13 +41,13 @@ async function verifyDCDeployConnection() {
     // Check if it's DC Deploy database
     const isDCDeploy = 
       host.includes('dcdeploy.cloud') || 
-      host.includes('nasasakhidbstg') ||
+      host.includes('saathidbstg') ||
       port === '30095' ||
-      database.includes('nasasakhidbstg');
+      database.includes('saathidbstg');
 
     if (isDCDeploy) {
       console.log('✅ This appears to be a DC Deploy database connection');
-      console.log('   (Host contains dcdeploy.cloud or nasasakhidbstg)\n');
+      console.log('   (Host contains dcdeploy.cloud or saathidbstg)\n');
     } else {
       console.log('⚠️  This does not appear to be a DC Deploy database');
       console.log('   (Host does not match DC Deploy pattern)\n');
@@ -102,12 +102,12 @@ async function verifyDCDeployConnection() {
     console.log('='.repeat(60) + '\n');
 
     // Verify it's the expected database
-    if (dbName.includes('nasasakhidbstg')) {
+    if (dbName.includes('saathidbstg')) {
       console.log('✅ Confirmed: Connected to DC Deploy staging database');
       console.log(`   Database: ${dbName}\n`);
     } else {
       console.log('⚠️  Warning: Database name does not match expected DC Deploy pattern');
-      console.log(`   Expected: nasasakhidbstg-db`);
+      console.log(`   Expected: saathidbstg-db`);
       console.log(`   Actual: ${dbName}\n`);
     }
 

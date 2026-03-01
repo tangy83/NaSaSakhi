@@ -7,7 +7,7 @@
 Before splitting, verify the current monolithic setup works:
 
 ```bash
-cd /Users/tanujsaluja/nasa_sakhi
+cd /Users/tanujsaluja/saathi
 
 # Install dependencies (if not already done)
 npm install
@@ -46,7 +46,7 @@ Single DC Deploy application with these environment variables:
 ```bash
 NODE_ENV=production
 PORT=3000
-DATABASE_URL=postgresql://JQZAEG:%2B1h8t3x%7Baa@nasasakhidbstg:5432/nasasakhidbstg-db
+DATABASE_URL=postgresql://JQZAEG:%2B1h8t3x%7Baa@saathidbstg:5432/saathidbstg-db
 NEXT_PUBLIC_APP_URL=https://your-app.dcdeployapp.com
 NEXTAUTH_URL=https://your-app.dcdeployapp.com
 NEXTAUTH_SECRET=<generate-with-openssl-rand-base64-32>
@@ -86,7 +86,7 @@ NEXTAUTH_SECRET=<generate-with-openssl-rand-base64-32>
 ```bash
 NODE_ENV=production
 PORT=4000
-DATABASE_URL=postgresql://JQZAEG:%2B1h8t3x%7Baa@nasasakhidbstg:5432/nasasakhidbstg-db
+DATABASE_URL=postgresql://JQZAEG:%2B1h8t3x%7Baa@saathidbstg:5432/saathidbstg-db
 NEXTAUTH_SECRET=<generate-with-openssl-rand-base64-32>
 ALLOWED_ORIGINS=https://your-frontend.dcdeployapp.com,https://your-frontend-staging.dcdeployapp.com
 ```
@@ -116,13 +116,13 @@ NEXTAUTH_URL=https://your-frontend.dcdeployapp.com
 
 **Terminal 1 - Backend:**
 ```bash
-cd /Users/tanujsaluja/nasa_sakhi
+cd /Users/tanujsaluja/saathi
 
 # Create .env.backend with backend variables
 cat > .env.backend << 'EOF'
 NODE_ENV=development
 PORT=4000
-DATABASE_URL="postgresql://JQZAEG:%2B1h8t3x%7Baa@nasasakhidbstg-nmjuxe7e5m.tcp-proxy-2212.dcdeploy.cloud:30095/nasasakhidbstg-db"
+DATABASE_URL="postgresql://JQZAEG:%2B1h8t3x%7Baa@saathidbstg-nmjuxe7e5m.tcp-proxy-2212.dcdeploy.cloud:30095/saathidbstg-db"
 ALLOWED_ORIGINS=http://localhost:3000
 EOF
 
@@ -132,7 +132,7 @@ export $(cat .env.backend | xargs) && npm run dev
 
 **Terminal 2 - Frontend:**
 ```bash
-cd /Users/tanujsaluja/nasa_sakhi
+cd /Users/tanujsaluja/saathi
 
 # Create .env.frontend with frontend variables
 cat > .env.frontend << 'EOF'

@@ -1,4 +1,4 @@
-# NASA Sakhi API Documentation
+# Saathi API Documentation
 
 **Version:** 2.0.0
 **Base URL:** `http://localhost:3000/api` (Development)
@@ -24,7 +24,7 @@
 
 ## Overview
 
-The NASA Sakhi API provides endpoints for:
+The Saathi API provides endpoints for:
 - User authentication and authorization
 - Reference data (categories, resources, states, cities, languages)
 - Organization registration and draft management
@@ -49,7 +49,7 @@ The NASA Sakhi API provides endpoints for:
 
 ```
 Development: http://localhost:3000/api
-Production:  https://nasasakhi-nmjuxe7e5m.dcdeploy.cloud/api
+Production:  https://saathi-nmjuxe7e5m.dcdeploy.cloud/api
 ```
 
 ### Response Format
@@ -908,7 +908,7 @@ Check if the API is running.
 {
   "status": "healthy",
   "timestamp": "2026-02-11T16:29:04.294Z",
-  "service": "NASA Sakhi API",
+  "service": "Saathi API",
   "version": "1.0.0",
   "environment": "development"
 }
@@ -997,14 +997,14 @@ Currently, there is no rate limiting implemented. For production, consider imple
 
 ## Postman Collection
 
-A Postman collection is available at `/backend/postman/NASA_Sakhi_API.postman_collection.json`
+A Postman collection is available at `/backend/postman/Saathi_API.postman_collection.json`
 
 ### Import Instructions
 
 1. Open Postman
 2. Click "Import" button
 3. Select "File" tab
-4. Choose `NASA_Sakhi_API.postman_collection.json`
+4. Choose `Saathi_API.postman_collection.json`
 5. Click "Import"
 
 ### Collection Includes

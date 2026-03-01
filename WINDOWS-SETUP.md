@@ -47,8 +47,8 @@ sudo service postgresql start
 ### 1. Clone Repository
 
 ```powershell
-git clone https://github.com/tangy83/NaSaSakhi.git
-cd NaSaSakhi
+git clone https://github.com/tangy83/Saathi.git
+cd Saathi
 ```
 
 ### 2. Run Setup Script
@@ -255,7 +255,7 @@ Then follow the main Linux/Mac setup instructions inside WSL.
 
 ### Access Files in WSL
 
-Windows: `\\wsl$\Ubuntu\home\<username>\NaSaSakhi`
+Windows: `\\wsl$\Ubuntu\home\<username>\Saathi`
 
 WSL: `/mnt/c/Users/<username>/...` (to access Windows files)
 

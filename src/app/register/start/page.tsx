@@ -105,7 +105,7 @@ export default function RegisterStartPage() {
           />
         </div>
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-gray-900 mb-4">
-          Welcome to NaariSamata Sakhi Registration
+          Welcome to NaariSamata Saathi Registration
         </h1>
         <p className="text-lg sm:text-xl font-body text-gray-700 max-w-2xl mx-auto">
           Join 500+ organizations empowering women and vulnerable children across India
@@ -264,7 +264,7 @@ export default function RegisterStartPage() {
       {/* Key Benefits Section */}
       <section className="mb-12 sm:mb-16">
         <h2 className="text-2xl sm:text-3xl font-heading font-semibold text-gray-900 text-center mb-8">
-          Why Register with NaariSamata Sakhi?
+          Why Register with NaariSamata Saathi?
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Benefit 1 */}
@@ -338,7 +338,7 @@ export default function RegisterStartPage() {
               <div>
                 <h3 className="text-lg font-ui font-semibold text-gray-900 mb-1">New Organization</h3>
                 <p className="text-sm font-body text-gray-600">
-                  Register your organization on NaariSamata Sakhi for the first time
+                  Register your organization on NaariSamata Saathi for the first time
                 </p>
               </div>
             </div>
@@ -361,7 +361,7 @@ export default function RegisterStartPage() {
               <div>
                 <h3 className="text-lg font-ui font-semibold text-gray-900 mb-1">Branch of Existing Organization</h3>
                 <p className="text-sm font-body text-gray-600">
-                  Register a branch of an organization already registered on Sakhi
+                  Register a branch of an organization already registered on Saathi
                 </p>
               </div>
             </div>

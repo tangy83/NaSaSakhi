@@ -1,4 +1,4 @@
-# NASA Sakhi - Split Backend/Frontend Deployment
+# Saathi - Split Backend/Frontend Deployment
 ## Deploy Backend and Frontend as Separate Services on DC Deploy
 
 **Architecture:** Microservices (Backend API + Frontend App)
@@ -30,7 +30,7 @@
 │                         │                              │
 │                         ▼                              │
 │               ┌──────────────────┐                     │
-│               │  NaSaSakhiDB     │                     │
+│               │  SaathiDB     │                     │
 │               │  PostgreSQL 17.5 │                     │
 │               └──────────────────┘                     │
 │                                                         │
@@ -45,8 +45,8 @@
 
 ```yaml
 Service Name: nasa-sakhi-api
-Description: Backend API for NASA Sakhi
-Repository: tangy83/NaSaSakhi
+Description: Backend API for Saathi
+Repository: tangy83/Saathi
 Branch: main
 Runtime: Node.js 18.x
 Port: 4000
@@ -72,7 +72,7 @@ PORT=4000
 # ========================================
 # Database (Internal Connection)
 # ========================================
-DATABASE_URL=postgresql://JQZAEG:%2B1h8t3x%7Baa@nasasakhidbstg:5432/nasasakhidbstg-db
+DATABASE_URL=postgresql://JQZAEG:%2B1h8t3x%7Baa@saathidbstg:5432/saathidbstg-db
 
 # ========================================
 # Authentication
@@ -122,8 +122,8 @@ Database Test: https://nasa-sakhi-api.dcdeployapp.com/api/db-test
 
 ```yaml
 Service Name: nasa-sakhi-frontend
-Description: Frontend web app for NASA Sakhi
-Repository: tangy83/NaSaSakhi
+Description: Frontend web app for Saathi
+Repository: tangy83/Saathi
 Branch: main
 Runtime: Node.js 18.x
 Port: 3000
@@ -188,7 +188,7 @@ Registration: https://nasa-sakhi-frontend.dcdeployapp.com/register/step1
 1. **Go to DC Deploy Dashboard**
 2. **Create New Application:**
    - Name: `nasa-sakhi-api`
-   - Repository: `tangy83/NaSaSakhi`
+   - Repository: `tangy83/Saathi`
    - Branch: `main`
    - Runtime: Node.js 18.x
 
@@ -216,7 +216,7 @@ Registration: https://nasa-sakhi-frontend.dcdeployapp.com/register/step1
 
 1. **Create Another Application:**
    - Name: `nasa-sakhi-frontend`
-   - Repository: `tangy83/NaSaSakhi` (same repo!)
+   - Repository: `tangy83/Saathi` (same repo!)
    - Branch: `main`
    - Runtime: Node.js 18.x
 

@@ -3,7 +3,7 @@
 ##############################################################################
 # NaariSamata Portal - Server Setup Script
 #
-# Initial setup for NaSaSakhiFEStg server
+# Initial setup for SaathiFEStg server
 # Run this ONCE to prepare the server for deployments
 ##############################################################################
 
@@ -14,7 +14,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m'
 
 echo -e "${GREEN}================================================${NC}"
-echo -e "${GREEN}  Server Setup - NaSaSakhiFEStg${NC}"
+echo -e "${GREEN}  Server Setup - SaathiFEStg${NC}"
 echo -e "${GREEN}================================================${NC}\n"
 
 # Update system
@@ -47,7 +47,7 @@ sudo chown $USER:$USER /var/www/naarisamata-portal
 echo -e "${GREEN}[6/8]${NC} Cloning repository..."
 cd /var/www/naarisamata-portal
 if [ ! -d ".git" ]; then
-    git clone https://github.com/tangy83/NaSaSakhi.git .
+    git clone https://github.com/tangy83/Saathi.git .
 else
     echo "Repository already cloned."
 fi

@@ -4,7 +4,7 @@
 
 You have **two DC Deploy services** configured:
 
-### 1. Backend Service: `nasassakhibestg`
+### 1. Backend Service: `saathibestg`
 - **Status:** ✅ Deploying from `/backend` directory
 - **Type:** Monolithic (Frontend + Backend combined)
 - **Port:** 3000
@@ -18,7 +18,7 @@ You have **two DC Deploy services** configured:
   └── package.json      ✅ Present
   ```
 
-### 2. Frontend Service: `nasasakhifestg`
+### 2. Frontend Service: `saathifestg`
 - **Status:** ❌ Failing - looking for `/frontend` directory
 - **Issue:** No `/frontend` directory exists in repository
 - **Error:** `cp: can't stat '/tmp/extracted/.../frontend/*': No such file or directory`
@@ -31,8 +31,8 @@ You have **two DC Deploy services** configured:
 
 Since the backend is **monolithic** (contains both frontend and backend), you only need ONE service:
 
-**Keep:** `nasassakhibestg` (backend service)
-**Disable/Delete:** `nasasakhifestg` (frontend service)
+**Keep:** `saathibestg` (backend service)
+**Disable/Delete:** `saathifestg` (frontend service)
 
 **Why?**
 - The backend service already serves the frontend pages
@@ -42,7 +42,7 @@ Since the backend is **monolithic** (contains both frontend and backend), you on
 
 **How to disable frontend service in DC Deploy:**
 1. Go to DC Deploy dashboard
-2. Find `nasasakhifestg` application
+2. Find `saathifestg` application
 3. Pause or delete the application
 
 ---
@@ -51,12 +51,12 @@ Since the backend is **monolithic** (contains both frontend and backend), you on
 
 If you want separate frontend and backend services:
 
-**Backend Service:** `nasassakhibestg`
+**Backend Service:** `saathibestg`
 - Root Directory: `backend`
 - Serves API only at `/api/*`
 - Port: 4000
 
-**Frontend Service:** `nasasakhifestg`
+**Frontend Service:** `saathifestg`
 - Root Directory: `frontend` (needs to be created)
 - Serves pages only
 - Calls backend API
@@ -113,9 +113,9 @@ If you want separate frontend and backend services:
 4. **Test:** Both pages and API work from one URL
 
 **Result:**
-- Single application at: `https://nasassakhibestg.dcdeployapp.com`
-- Frontend pages: `https://nasassakhibestg.dcdeployapp.com/`
-- Backend API: `https://nasassakhibestg.dcdeployapp.com/api/*`
+- Single application at: `https://saathibestg.dcdeployapp.com`
+- Frontend pages: `https://saathibestg.dcdeployapp.com/`
+- Backend API: `https://saathibestg.dcdeployapp.com/api/*`
 
 ---
 
@@ -126,9 +126,9 @@ If you want separate frontend and backend services:
 ```bash
 NODE_ENV=production
 PORT=3000
-DATABASE_URL=postgresql://JQZAEG:%2B1h8t3x%7Baa@nasasakhidbstg:5432/nasasakhidbstg-db
-NEXT_PUBLIC_APP_URL=https://nasassakhibestg.dcdeployapp.com
-NEXTAUTH_URL=https://nasassakhibestg.dcdeployapp.com
+DATABASE_URL=postgresql://JQZAEG:%2B1h8t3x%7Baa@saathidbstg:5432/saathidbstg-db
+NEXT_PUBLIC_APP_URL=https://saathibestg.dcdeployapp.com
+NEXTAUTH_URL=https://saathibestg.dcdeployapp.com
 NEXTAUTH_SECRET=<generate-with-openssl>
 ```
 

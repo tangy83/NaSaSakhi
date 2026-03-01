@@ -1,7 +1,7 @@
-# NASA Sakhi API Endpoints
+# Saathi API Endpoints
 
 **Base URL:** `http://localhost:3000/api` (Development)
-**Production URL:** `https://nasasakhi-nmjuxe7e5m.dcdeploy.cloud/api`
+**Production URL:** `https://saathi-nmjuxe7e5m.dcdeploy.cloud/api`
 **Last Updated:** February 26, 2026
 
 ---
@@ -29,7 +29,7 @@ Check if the API is running.
 {
   "status": "healthy",
   "timestamp": "2026-02-09T16:29:04.294Z",
-  "service": "NASA Sakhi API",
+  "service": "Saathi API",
   "version": "1.0.0",
   "environment": "development"
 }

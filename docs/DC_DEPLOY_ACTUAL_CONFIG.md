@@ -9,18 +9,18 @@
 
 | Service | URL | App | Dockerfile |
 |---------|-----|-----|------------|
-| `nasasakhi` | https://nasasakhi-nmjuxe7e5m.dcdeploy.cloud | Root app (`src/`) — all API routes, volunteer portal, registration form | `./Dockerfile` |
-| `nasassakhibestg` | https://nasassakhibestg.dcdeployapp.com | Backend app (`backend/`) — legacy backend APIs | `backend/Dockerfile` |
+| `saathi` | https://saathi-nmjuxe7e5m.dcdeploy.cloud | Root app (`src/`) — all API routes, volunteer portal, registration form | `./Dockerfile` |
+| `saathibestg` | https://saathibestg.dcdeployapp.com | Backend app (`backend/`) — legacy backend APIs | `backend/Dockerfile` |
 
-**Primary application URL:** https://nasasakhi-nmjuxe7e5m.dcdeploy.cloud
+**Primary application URL:** https://saathi-nmjuxe7e5m.dcdeploy.cloud
 
 ---
 
-## Service 1: nasasakhi (Root App — Primary)
+## Service 1: saathi (Root App — Primary)
 
-**Application Name:** nasasakhi
+**Application Name:** saathi
 **Platform:** DC Deploy (Docker-based PaaS)
-**Deployment URL:** https://nasasakhi-nmjuxe7e5m.dcdeploy.cloud
+**Deployment URL:** https://saathi-nmjuxe7e5m.dcdeploy.cloud
 **Status:** Active
 
 ### Build Configuration
@@ -37,20 +37,20 @@
 | Variable | Value | Purpose |
 |----------|-------|---------|
 | `NODE_ENV` | `production` | Runtime environment |
-| `DATABASE_URL` | `postgresql://JQZAEG:***@nasasakhidbstg:5432/nasasakhidbstg-db` | Shared database |
-| `NEXTAUTH_URL` | `https://nasasakhi-nmjuxe7e5m.dcdeploy.cloud` | NextAuth base URL |
+| `DATABASE_URL` | `postgresql://JQZAEG:***@saathidbstg:5432/saathidbstg-db` | Shared database |
+| `NEXTAUTH_URL` | `https://saathi-nmjuxe7e5m.dcdeploy.cloud` | NextAuth base URL |
 | `NEXTAUTH_SECRET` | [Securely configured] | NextAuth secret key |
-| `NEXT_PUBLIC_APP_URL` | `https://nasasakhi-nmjuxe7e5m.dcdeploy.cloud` | Public app URL |
-| `NEXT_PUBLIC_API_URL` | `https://nasasakhi-nmjuxe7e5m.dcdeploy.cloud/api` | Public API URL |
+| `NEXT_PUBLIC_APP_URL` | `https://saathi-nmjuxe7e5m.dcdeploy.cloud` | Public app URL |
+| `NEXT_PUBLIC_API_URL` | `https://saathi-nmjuxe7e5m.dcdeploy.cloud/api` | Public API URL |
 | `SKIP_ENV_VALIDATION` | `1` | Skip env validation at build time |
 | `ALLOWED_ORIGINS` | `*` | CORS allowed origins |
 
 ---
 
-## Service 2: nasassakhibestg (Backend — Legacy)
+## Service 2: saathibestg (Backend — Legacy)
 
-**Application Name:** nasassakhibestg
-**Deployment URL:** https://nasassakhibestg.dcdeployapp.com
+**Application Name:** saathibestg
+**Deployment URL:** https://saathibestg.dcdeployapp.com
 **Status:** Active (Build #24)
 
 ### Build Configuration
@@ -64,13 +64,13 @@
 
 ## Database Configuration
 
-**Database Instance:** nasasakhidbstg (shared by both services)
+**Database Instance:** saathidbstg (shared by both services)
 **Type:** PostgreSQL 17.5 (DC Deploy Managed)
 **Port:** 5432
 
 **Connection String:**
 ```
-DATABASE_URL="postgresql://JQZAEG:%2B1h8t3x%7Baa@nasasakhidbstg:5432/nasasakhidbstg-db"
+DATABASE_URL="postgresql://JQZAEG:%2B1h8t3x%7Baa@saathidbstg:5432/saathidbstg-db"
 ```
 
 ---
@@ -88,7 +88,7 @@ Both services auto-deploy on push to `main`:
    git push origin main
    ```
 
-2. **DC Deploy Process (nasasakhi — root app):**
+2. **DC Deploy Process (saathi — root app):**
    - Detects push to main via webhook
    - Builds from `./Dockerfile` (repo root context)
    - Generates Prisma client from `backend/prisma/schema.prisma`
@@ -103,7 +103,7 @@ Both services auto-deploy on push to `main`:
 - **DC Deploy Dashboard:** View build logs and status
 - **Health Check (root app):**
   ```bash
-  curl https://nasasakhi-nmjuxe7e5m.dcdeploy.cloud/api/health
+  curl https://saathi-nmjuxe7e5m.dcdeploy.cloud/api/health
   ```
 
 ---
@@ -112,7 +112,7 @@ Both services auto-deploy on push to `main`:
 
 ### Health Check
 ```bash
-curl https://nasasakhi-nmjuxe7e5m.dcdeploy.cloud/api/health
+curl https://saathi-nmjuxe7e5m.dcdeploy.cloud/api/health
 ```
 
 Expected response:
@@ -120,7 +120,7 @@ Expected response:
 {
   "status": "healthy",
   "timestamp": "2026-02-27T...",
-  "service": "NASA Sakhi API",
+  "service": "Saathi API",
   "version": "1.0.0",
   "environment": "production"
 }
@@ -128,7 +128,7 @@ Expected response:
 
 ### Database Connection Test
 ```bash
-curl https://nasasakhi-nmjuxe7e5m.dcdeploy.cloud/api/db-test
+curl https://saathi-nmjuxe7e5m.dcdeploy.cloud/api/db-test
 ```
 
 Expected response:
@@ -161,8 +161,8 @@ Expected response:
 
 1. **Clone Repository:**
    ```bash
-   git clone https://github.com/tangy83/NaSaSakhi.git
-   cd nasa_sakhi
+   git clone https://github.com/tangy83/Saathi.git
+   cd saathi
    ```
 
 2. **Navigate to Backend:**
@@ -178,7 +178,7 @@ Expected response:
 4. **Configure Environment:**
    Create `backend/.env`:
    ```env
-   DATABASE_URL="postgresql://JQZAEG:%2B1h8t3x%7Baa@nasasakhidbstg:5432/nasasakhidbstg-db"
+   DATABASE_URL="postgresql://JQZAEG:%2B1h8t3x%7Baa@saathidbstg:5432/saathidbstg-db"
    NODE_ENV=development
    ```
 
@@ -248,11 +248,11 @@ Expected response:
 5. **Monitor deployment:**
    - Check DC Deploy dashboard for build logs
    - Wait ~2-3 minutes for build to complete
-   - Test deployed app at https://nasassakhibestg.dcdeployapp.com
+   - Test deployed app at https://saathibestg.dcdeployapp.com
 
 6. **Verify deployment:**
    ```bash
-   curl https://nasassakhibestg.dcdeployapp.com/api/health
+   curl https://saathibestg.dcdeployapp.com/api/health
    ```
 
 ---
@@ -309,7 +309,7 @@ Expected response:
    - Check all required env vars are configured
 
 3. **Check database connection:**
-   - Verify nasasakhidbstg instance is running
+   - Verify saathidbstg instance is running
    - Test DATABASE_URL format
 
 ### Database Connection Issues
@@ -322,12 +322,12 @@ Expected response:
 
 1. **Verify DATABASE_URL format:**
    ```
-   postgresql://[USER]:[PASSWORD]@nasasakhidbstg:5432/nasasakhidbstg-db
+   postgresql://[USER]:[PASSWORD]@saathidbstg:5432/saathidbstg-db
    ```
    Note: Password must be URL-encoded (`%2B` for `+`, `%7B` for `{`, etc.)
 
 2. **Check database instance:**
-   - Verify nasasakhidbstg is running in DC Deploy
+   - Verify saathidbstg is running in DC Deploy
    - Check database credentials
 
 3. **Test locally:**
@@ -388,10 +388,10 @@ Expected response:
                  │ Deploy container
                  ▼
 ┌─────────────────────────────────────────────────┐
-│  Running Container (nasassakhibestg)            │
+│  Running Container (saathibestg)            │
 │  - Port: 3000 (internal)                        │
-│  - URL: https://nasassakhibestg.dcdeployapp.com │
-│  - Connects to: nasasakhidbstg (PostgreSQL)     │
+│  - URL: https://saathibestg.dcdeployapp.com │
+│  - Connects to: saathidbstg (PostgreSQL)     │
 └─────────────────────────────────────────────────┘
 ```
 
@@ -431,7 +431,7 @@ Expected response:
 ## Team Access
 
 ### Repository Access
-- **GitHub Repository:** https://github.com/tangy83/NaSaSakhi.git
+- **GitHub Repository:** https://github.com/tangy83/Saathi.git
 - **Branch Strategy:**
   - `main` - Production (auto-deploys to DC Deploy)
   - Feature branches: `feature/backend-api`, `feature/registration-form`
@@ -513,7 +513,7 @@ curl http://localhost:3000/api/health
 git push origin main
 
 # Check deployed app
-curl https://nasassakhibestg.dcdeployapp.com/api/health
+curl https://saathibestg.dcdeployapp.com/api/health
 
 # Database operations
 npx prisma studio          # Open database browser
@@ -531,7 +531,7 @@ npx prisma generate        # Regenerate client
 | Feb 3, 2026 19:00 IST | Initial production deployment (Build #24) | Tanuj |
 | Feb 3, 2026 18:52 IST | Added public/ directory fix | Tanuj |
 | Feb 3, 2026 18:45 IST | Dynamic Prisma imports | Tanuj |
-| Feb 3, 2026 | Database setup (nasasakhidbstg) | Tanuj |
+| Feb 3, 2026 | Database setup (saathidbstg) | Tanuj |
 | Feb 3, 2026 | Initial DC Deploy configuration | Tanuj |
 
 ---

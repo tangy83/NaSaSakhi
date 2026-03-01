@@ -1,7 +1,7 @@
 # Git Merge Guide - Merging to Main Repository
 
 ## Target Repository
-**Main Repository:** https://github.com/tangy83/NaSaSakhi.git  
+**Main Repository:** https://github.com/tangy83/Saathi.git  
 **Your Fork:** https://github.com/GeedikantiSunitha/NaSa-Sakhi.git
 
 ---
@@ -17,7 +17,7 @@ This is the **recommended approach** as it allows code review before merging.
 Add the main repository as an "upstream" remote:
 
 ```bash
-git remote add upstream https://github.com/tangy83/NaSaSakhi.git
+git remote add upstream https://github.com/tangy83/Saathi.git
 ```
 
 Verify it was added:
@@ -27,7 +27,7 @@ git remote -v
 
 You should see:
 - `origin` - Your fork (GeedikantiSunitha/NaSa-Sakhi)
-- `upstream` - Main repo (tangy83/NaSaSakhi)
+- `upstream` - Main repo (tangy83/Saathi)
 
 #### Step 2: Fetch Latest from Upstream
 
@@ -79,12 +79,12 @@ git push -u origin feature/frontend-registration-form
 
 #### Step 6: Create Pull Request on GitHub
 
-1. Go to: https://github.com/tangy83/NaSaSakhi
+1. Go to: https://github.com/tangy83/Saathi
 2. Click **"Pull requests"** tab
 3. Click **"New pull request"**
 4. Click **"compare across forks"**
 5. Set:
-   - **base repository:** `tangy83/NaSaSakhi`
+   - **base repository:** `tangy83/Saathi`
    - **base branch:** `main` (or `master`)
    - **head repository:** `GeedikantiSunitha/NaSa-Sakhi`
    - **compare branch:** `feature/frontend-registration-form`
@@ -133,7 +133,7 @@ git push -u origin feature/frontend-registration-form
 #### Step 1: Add Upstream Remote
 
 ```bash
-git remote add upstream https://github.com/tangy83/NaSaSakhi.git
+git remote add upstream https://github.com/tangy83/Saathi.git
 ```
 
 #### Step 2: Fetch and Merge Latest Changes
@@ -177,7 +177,7 @@ If you want to ensure your fork is up-to-date before creating PR:
 #### Step 1: Add Upstream
 
 ```bash
-git remote add upstream https://github.com/tangy83/NaSaSakhi.git
+git remote add upstream https://github.com/tangy83/Saathi.git
 ```
 
 #### Step 2: Fetch Upstream
@@ -212,7 +212,7 @@ Follow Option 1 steps 3-7.
 **Solution:**
 ```bash
 git remote remove upstream
-git remote add upstream https://github.com/tangy83/NaSaSakhi.git
+git remote add upstream https://github.com/tangy83/Saathi.git
 ```
 
 ### Issue: Merge Conflicts
@@ -235,7 +235,7 @@ git remote add upstream https://github.com/tangy83/NaSaSakhi.git
 **Solution:**
 - Check repository URL is correct
 - Ensure you have access to the repository
-- Verify repository name: `NaSaSakhi` (case-sensitive)
+- Verify repository name: `Saathi` (case-sensitive)
 
 ---
 
@@ -265,7 +265,7 @@ Before creating PR:
 
 ```bash
 # 1. Add upstream remote
-git remote add upstream https://github.com/tangy83/NaSaSakhi.git
+git remote add upstream https://github.com/tangy83/Saathi.git
 
 # 2. Fetch latest
 git fetch upstream

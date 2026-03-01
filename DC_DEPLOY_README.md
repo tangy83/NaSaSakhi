@@ -1,15 +1,15 @@
-# NASA Sakhi - DC Deploy Deployment Guide
+# Saathi - DC Deploy Deployment Guide
 
 ## 🎯 Quick Deploy to DC Deploy (Bare Minimum)
 
-This guide will help you deploy NASA Sakhi to DC Deploy with minimal configuration.
+This guide will help you deploy Saathi to DC Deploy with minimal configuration.
 
 ---
 
 ## ✅ Prerequisites
 
 1. **DC Deploy Account** - Sign up at DC Deploy
-2. **GitHub Repository** - `tangy83/NaSaSakhi`
+2. **GitHub Repository** - `tangy83/Saathi`
 3. **Database Created** - PostgreSQL database in DC Deploy ✓ (You have this!)
 
 ---
@@ -71,7 +71,7 @@ Copy the output and paste it as the value for `NEXTAUTH_SECRET`.
 ## 🚀 Step 3: Deploy
 
 1. **Connect GitHub**
-   - In DC Deploy, connect to repository: `tangy83/NaSaSakhi`
+   - In DC Deploy, connect to repository: `tangy83/Saathi`
    - Select branch: `main`
 
 2. **Deploy**
@@ -100,7 +100,7 @@ https://your-app.dcdeployapp.com/api/health
 # Database Test (should return JSON with success: true)
 https://your-app.dcdeployapp.com/api/db-test
 
-# Homepage (should show NASA Sakhi landing page)
+# Homepage (should show Saathi landing page)
 https://your-app.dcdeployapp.com/
 ```
 
@@ -111,7 +111,7 @@ https://your-app.dcdeployapp.com/
 {
   "status": "healthy",
   "timestamp": "2026-02-03T...",
-  "service": "NASA Sakhi API",
+  "service": "Saathi API",
   "version": "1.0.0",
   "environment": "production"
 }
@@ -134,7 +134,7 @@ https://your-app.dcdeployapp.com/
 ```
 
 **✅ Homepage**
-Should show colorful landing page with "NASA Sakhi" title and system status.
+Should show colorful landing page with "Saathi" title and system status.
 
 ---
 

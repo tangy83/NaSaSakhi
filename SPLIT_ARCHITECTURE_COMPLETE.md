@@ -7,7 +7,7 @@
 
 ## What Was Built
 
-Your NASA Sakhi codebase now supports **two deployment architectures**:
+Your Saathi codebase now supports **two deployment architectures**:
 
 1. **Monolithic** (Recommended for MVP)
    - Single application
@@ -303,7 +303,7 @@ NEXTAUTH_URL=https://frontend.dcdeployapp.com
 ## File Structure Summary
 
 ```
-nasa_sakhi/
+saathi/
 ├── src/
 │   ├── app/
 │   │   ├── api/              # Backend API routes

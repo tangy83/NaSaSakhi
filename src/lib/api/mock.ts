@@ -51,7 +51,7 @@ const mockCategories: ServiceCategory[] = [
   { id: 'W009', name: 'Mental Health & Counseling', targetGroup: 'WOMEN', displayOrder: 19 },
 ];
 
-// Mock Service Resources — sourced from SQL sakhi_new_service_resource.sql
+// Mock Service Resources — sourced from SQL saathi_new_service_resource.sql
 const mockResources: ServiceResource[] = [
   // C001: Health & Well-being (Children)
   { id: 'CR0011', categoryId: 'C001', name: 'Mental Health & Emotional Support', description: 'Counseling, trauma therapy, play therapy' },
@@ -234,7 +234,7 @@ const mockCities: City[] = [
   // Add more cities...
 ];
 
-// Mock Faith options — IDs aligned with SQL sakhi_faith.sql (4-char codes)
+// Mock Faith options — IDs aligned with SQL saathi_faith.sql (4-char codes)
 const mockFaiths: Faith[] = [
   { id: 'hind', name: 'Hinduism' },
   { id: 'isla', name: 'Islam' },
@@ -246,7 +246,7 @@ const mockFaiths: Faith[] = [
   { id: 'nopf', name: 'No Preference' },
 ];
 
-// Mock Social Categories — IDs aligned with SQL sakhi_social_category.sql
+// Mock Social Categories — IDs aligned with SQL saathi_social_category.sql
 const mockSocialCategories: SocialCategory[] = [
   { id: 'SC', name: 'Scheduled Caste (SC)' },
   { id: 'ST', name: 'Scheduled Tribe (ST)' },
@@ -374,7 +374,7 @@ export async function fetchSocialCategoriesMock(): Promise<ApiResponse<SocialCat
 
 // In-memory storage for drafts (in real app, this would be in database)
 // Also persists to localStorage for testing purposes
-const MOCK_DRAFT_STORAGE_KEY = 'nasa_sakhi_mock_drafts';
+const MOCK_DRAFT_STORAGE_KEY = 'saathi_mock_drafts';
 
 // Initialize mock storage from localStorage if available
 function getMockDraftStorage(): Map<string, { data: any; createdAt: string; updatedAt: string }> {

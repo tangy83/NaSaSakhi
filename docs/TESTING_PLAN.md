@@ -1,4 +1,4 @@
-# NASA Sakhi — Comprehensive Testing Plan (TDD)
+# Saathi — Comprehensive Testing Plan (TDD)
 
 > **Approach:** Test-Driven Development. Every feature's test suite is written *before* its implementation. Red → Green → Refactor.
 
@@ -197,7 +197,7 @@ export const handlers = [
 Integration tests run against a dedicated PostgreSQL test database:
 
 ```
-DATABASE_URL=postgresql://user:pass@localhost:5432/nasa_sakhi_test
+DATABASE_URL=postgresql://user:pass@localhost:5432/saathi_test
 ```
 
 - Database is reset before each integration test suite using `prisma migrate reset --force`.
@@ -1505,7 +1505,7 @@ jobs:
       postgres:
         image: postgres:15
         env:
-          POSTGRES_DB: nasa_sakhi_test
+          POSTGRES_DB: saathi_test
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         ports: ['5432:5432']
@@ -1516,10 +1516,10 @@ jobs:
       - run: npm ci
       - run: npx prisma migrate deploy
         env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/nasa_sakhi_test
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/saathi_test
       - run: npm run test:coverage
         env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/nasa_sakhi_test
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/saathi_test
       - uses: actions/upload-artifact@v4
         if: always()
         with:

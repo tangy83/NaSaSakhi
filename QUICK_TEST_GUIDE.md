@@ -1,4 +1,4 @@
-# Quick Test Guide - NASA Sakhi Registration Form
+# Quick Test Guide - Saathi Registration Form
 
 ## 🚀 Quick Start Testing
 
@@ -86,7 +86,7 @@ Open browser: http://localhost:3000/register/step1
 #### 💾 Draft Save Tests (2 minutes)
 
 1. **Auto-Save:**
-   - Fill Step 1 → Wait 2 seconds → Check DevTools → Application → Local Storage → ✅ Should see `nasa_sakhi_registration_draft`
+   - Fill Step 1 → Wait 2 seconds → Check DevTools → Application → Local Storage → ✅ Should see `saathi_registration_draft`
 
 2. **Manual Save:**
    - Click "Save Draft" button → ✅ Should save (check localStorage)
@@ -179,7 +179,7 @@ Open browser: http://localhost:3000/register/step1
 ### Check Browser Console
 ```javascript
 // Check if draft is saved
-localStorage.getItem('nasa_sakhi_registration_draft')
+localStorage.getItem('saathi_registration_draft')
 
 // Check current step
 // Look for useFormState hook state in React DevTools

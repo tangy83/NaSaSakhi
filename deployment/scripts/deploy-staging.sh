@@ -3,7 +3,7 @@
 ##############################################################################
 # NaariSamata Portal - Staging Deployment Script
 #
-# This script automates deployment to NaSaSakhiFEStg server
+# This script automates deployment to SaathiFEStg server
 ##############################################################################
 
 set -e  # Exit on error
@@ -16,7 +16,7 @@ NC='\033[0m' # No Color
 
 # Configuration
 SERVER_USER="${DEPLOY_USER:-ubuntu}"
-SERVER_HOST="${DEPLOY_HOST:-NaSaSakhiFEStg}"
+SERVER_HOST="${DEPLOY_HOST:-SaathiFEStg}"
 APP_DIR="/var/www/naarisamata-portal"
 BRANCH="main"
 
@@ -39,7 +39,7 @@ log_error() {
 
 # Check if required environment variables are set
 if [ -z "$DEPLOY_HOST" ]; then
-    log_warn "DEPLOY_HOST not set. Using default: NaSaSakhiFEStg"
+    log_warn "DEPLOY_HOST not set. Using default: SaathiFEStg"
 fi
 
 # Step 1: Test SSH connection

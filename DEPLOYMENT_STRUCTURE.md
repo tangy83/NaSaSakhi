@@ -1,4 +1,4 @@
-# NASA Sakhi - Repository Structure
+# Saathi - Repository Structure
 
 ## Date: February 3, 2026
 
@@ -9,7 +9,7 @@ This repository supports both **monolithic** and **split** deployment architectu
 ## Directory Structure
 
 ```
-nasa_sakhi/
+saathi/
 ├── backend/                    # ← DC Deploy deploys from here
 │   ├── src/                    # Source code
 │   │   ├── app/               # Next.js pages + API routes
@@ -60,7 +60,7 @@ Port: 3000
 ```bash
 NODE_ENV=production
 PORT=3000
-DATABASE_URL=postgresql://JQZAEG:%2B1h8t3x%7Baa@nasasakhidbstg:5432/nasasakhidbstg-db
+DATABASE_URL=postgresql://JQZAEG:%2B1h8t3x%7Baa@saathidbstg:5432/saathidbstg-db
 NEXT_PUBLIC_APP_URL=https://your-app.dcdeployapp.com
 NEXTAUTH_URL=https://your-app.dcdeployapp.com
 NEXTAUTH_SECRET=<generate-with-openssl-rand-base64-32>

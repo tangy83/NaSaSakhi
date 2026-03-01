@@ -406,7 +406,7 @@ function AccordionFormPage() {
                 {isBranchRegistration ? 'Branch Registration' : 'Organization Registration'}
               </h1>
               <p className="text-gray-600">
-                Complete all required sections to register your {isBranchRegistration ? 'branch' : 'organization'} with NaariSamata Sakhi
+                Complete all required sections to register your {isBranchRegistration ? 'branch' : 'organization'} with NaariSamata Saathi
               </p>
             </div>
 

@@ -7,8 +7,8 @@ test.describe('Registration Form E2E Tests', () => {
   });
 
   test('should load the registration start page', async ({ page }) => {
-    await expect(page).toHaveTitle(/NaariSamata Sakhi/);
-    await expect(page.getByRole('heading', { name: /Welcome to NaariSamata Sakhi Registration/i })).toBeVisible();
+    await expect(page).toHaveTitle(/NaariSamata Saathi/);
+    await expect(page.getByRole('heading', { name: /Welcome to NaariSamata Saathi Registration/i })).toBeVisible();
   });
 
   test('should navigate to registration form', async ({ page }) => {
@@ -171,11 +171,11 @@ test.describe('Registration Form E2E Tests', () => {
     // This test validates the key updated sections work correctly
   });
 
-  test('should have correct branding (NaariSamata Sakhi)', async ({ page }) => {
+  test('should have correct branding (NaariSamata Saathi)', async ({ page }) => {
     await page.goto('/');
 
     // Check homepage has correct branding
-    await expect(page.getByText(/NaariSamata Sakhi/i)).toBeVisible();
+    await expect(page.getByText(/NaariSamata Saathi/i)).toBeVisible();
 
     // Check footer has correct email
     await expect(page.getByRole('link', { name: /support@naarisamata.org/i })).toBeVisible();

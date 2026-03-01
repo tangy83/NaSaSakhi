@@ -41,7 +41,7 @@ function SuccessPageContent() {
               Registration Submitted Successfully!
             </h1>
             <p className="text-lg text-gray-600">
-              Thank you for registering your organization with NaariSamata Sakhi
+              Thank you for registering your organization with NaariSamata Saathi
             </p>
           </div>
 
@@ -64,7 +64,7 @@ function SuccessPageContent() {
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="mt-0.5">•</span>
-                    <span>Once approved, your organization will be visible in the NaariSamata Sakhi directory.</span>
+                    <span>Once approved, your organization will be visible in the NaariSamata Saathi directory.</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="mt-0.5">•</span>
@@ -137,7 +137,7 @@ function SuccessPageContent() {
             <button
               onClick={() => {
                 // Clear form data and start new registration
-                localStorage.removeItem('nasa_sakhi_registration_draft');
+                localStorage.removeItem('saathi_registration_draft');
                 window.location.href = '/register/start';
               }}
               className="flex-1 px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-md

@@ -1,4 +1,4 @@
-# NASA Sakhi - Manual Testing Checklist
+# Saathi - Manual Testing Checklist
 ## Organization Registration Portal
 
 **Version:** 1.0  

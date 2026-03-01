@@ -8,7 +8,7 @@ Copy `.env.example` to `.env` and fill in the values below:
 
 ## 🗄️ Database Configuration
 
-### PostgreSQL (NaSaSakhiDB)
+### PostgreSQL (SaathiDB)
 
 ```bash
 DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DATABASE"
@@ -16,7 +16,7 @@ DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DATABASE"
 
 **Example for Staging:**
 ```bash
-DATABASE_URL="postgresql://naarisamata_user:your-secure-password@NaSaSakhiDB_IP:5432/naarisamata_staging"
+DATABASE_URL="postgresql://naarisamata_user:your-secure-password@SaathiDB_IP:5432/naarisamata_staging"
 ```
 
 **Local Development:**
@@ -43,7 +43,7 @@ The canonical URL of your site.
 
 **Staging:**
 ```bash
-NEXTAUTH_URL="http://NaSaSakhiFEStg_IP:3000"
+NEXTAUTH_URL="http://SaathiFEStg_IP:3000"
 # or with domain:
 NEXTAUTH_URL="https://staging.naarisamata.org"
 ```
@@ -182,7 +182,7 @@ DEBUG=*
 # ============================================
 # Database Configuration
 # ============================================
-DATABASE_URL="postgresql://naarisamata_user:PASSWORD@NaSaSakhiDB_IP:5432/naarisamata_staging"
+DATABASE_URL="postgresql://naarisamata_user:PASSWORD@SaathiDB_IP:5432/naarisamata_staging"
 
 # Existing MySQL (for data migration)
 MYSQL_HOST="your-mysql-host"

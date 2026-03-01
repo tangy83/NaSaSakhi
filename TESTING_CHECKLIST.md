@@ -1,4 +1,4 @@
-# NASA Sakhi Registration Form - Manual Testing Checklist
+# Saathi Registration Form - Manual Testing Checklist
 
 **Date:** _______________  
 **Tester:** _______________  

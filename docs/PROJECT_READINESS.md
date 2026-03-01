@@ -1,4 +1,4 @@
-# NASA Sakhi MVP - Project Readiness Report
+# Saathi MVP - Project Readiness Report
 
 **Date:** February 3, 2026
 **Status:** ✅ READY TO START
@@ -36,7 +36,7 @@ All planning and foundational files are complete. The team can begin development
 |-------|----------|--------|----------|
 | Cross-Platform Guide | `/CROSS-PLATFORM.md` | ✅ Exists | Windows/macOS/Linux setup |
 | Windows Setup | `/WINDOWS-SETUP.md` | ✅ Exists | WSL2 and native Windows |
-| Deployment Guide | `/deployment/DEPLOYMENT-GUIDE.md` | ✅ Exists | Staging infrastructure (NaSaSakhiDB, NaSaSakhiFEStg) |
+| Deployment Guide | `/deployment/DEPLOYMENT-GUIDE.md` | ✅ Exists | Staging infrastructure (SaathiDB, SaathiFEStg) |
 | Main README | `/README.md` | ✅ Exists | Project overview, quick start |
 
 ---
@@ -50,13 +50,13 @@ All planning and foundational files are complete. The team can begin development
 1. **Share Work Plans with Team**
    ```bash
    # Email Akarsha with:
-   - Subject: "NASA Sakhi Backend Work Plan - MVP by Feb 7"
+   - Subject: "Saathi Backend Work Plan - MVP by Feb 7"
    - Attachment: docs/AKARSHA_WORKPLAN.md
    - Attachment: docs/MASTER_PROJECT_PLAN.md
    - Message: "Please review your 16-stage work plan. We'll have daily 10 AM standups."
 
    # Email Sunitha with:
-   - Subject: "NASA Sakhi Frontend Work Plan - MVP by Feb 7"
+   - Subject: "Saathi Frontend Work Plan - MVP by Feb 7"
    - Attachment: docs/SUNITHA_WORKPLAN.md
    - Attachment: docs/MASTER_PROJECT_PLAN.md
    - Message: "Please review your 16-stage work plan. Mock data is ready for you."
@@ -64,7 +64,7 @@ All planning and foundational files are complete. The team can begin development
 
 2. **Commit Foundational Files to Main Branch**
    ```bash
-   cd /Users/tanujsaluja/nasa_sakhi
+   cd /Users/tanujsaluja/saathi
    git checkout main
    git pull origin main
    git add src/types/api.ts src/mocks/api.json docs/DESIGN_SYSTEM.md
@@ -98,8 +98,8 @@ All planning and foundational files are complete. The team can begin development
 1. **Clone Repository & Install Dependencies**
    ```bash
    cd ~/projects  # or your preferred location
-   git clone https://github.com/tangy83/NaSaSakhi.git nasa_sakhi
-   cd nasa_sakhi
+   git clone https://github.com/tangy83/Saathi.git saathi
+   cd saathi
    git checkout main
    git pull origin main
 
@@ -127,12 +127,12 @@ All planning and foundational files are complete. The team can begin development
    # Follow WINDOWS-SETUP.md for detailed instructions
 
    # Create local database
-   createdb nasa_sakhi_dev
+   createdb saathi_dev
    ```
 
    **Option B: Staging Database** (For integration on Feb 6)
    ```
-   DATABASE_URL="postgresql://naarisamata_user:PASSWORD@NaSaSakhiDB_IP:5432/naarisamata_staging"
+   DATABASE_URL="postgresql://naarisamata_user:PASSWORD@SaathiDB_IP:5432/naarisamata_staging"
    ```
 
 3. **Configure Environment**
@@ -141,7 +141,7 @@ All planning and foundational files are complete. The team can begin development
    nano .env
 
    # For local development, add:
-   DATABASE_URL="postgresql://postgres:password@localhost:5432/nasa_sakhi_dev"
+   DATABASE_URL="postgresql://postgres:password@localhost:5432/saathi_dev"
    NODE_ENV="development"
    ```
 
@@ -178,8 +178,8 @@ All planning and foundational files are complete. The team can begin development
 1. **Clone Repository & Install Dependencies**
    ```bash
    cd ~/projects  # or your preferred location
-   git clone https://github.com/tangy83/NaSaSakhi.git nasa_sakhi
-   cd nasa_sakhi
+   git clone https://github.com/tangy83/Saathi.git saathi
+   cd saathi
    git checkout main
    git pull origin main
 
@@ -399,7 +399,7 @@ All planning is complete. All foundational files are in place. The team can begi
 
 **Next Action:** Each team member should complete their Stage 1 (Environment Setup) today (Feb 3) and be ready to start Stage 2 tomorrow morning (Feb 4).
 
-**Good luck building the NASA Sakhi MVP! 🚀**
+**Good luck building the Saathi MVP! 🚀**
 
 ---
 

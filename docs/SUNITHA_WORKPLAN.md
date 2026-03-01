@@ -1,4 +1,4 @@
-# NASA Sakhi MVP - Frontend Development Plan
+# Saathi MVP - Frontend Development Plan
 ## Developer: Sunitha (Frontend Lead - 45% of Work)
 ## Timeline: February 3-7, 2026
 
@@ -21,9 +21,9 @@
 
 ## 🌟 Project Background
 
-### What is NASA Sakhi?
+### What is Saathi?
 
-NASA Sakhi is a comprehensive web-based organization registration portal designed to empower women and vulnerable children across India through accessible support services. The platform enables NGOs, support organizations, and service providers to self-register their services, undergo admin vetting, and make their offerings discoverable through a mobile app ecosystem.
+Saathi is a comprehensive web-based organization registration portal designed to empower women and vulnerable children across India through accessible support services. The platform enables NGOs, support organizations, and service providers to self-register their services, undergo admin vetting, and make their offerings discoverable through a mobile app ecosystem.
 
 **Mission:** Democratize access to support services for women and children across India by creating a centralized, multilingual, and accessible registry of organizations.
 
@@ -64,7 +64,7 @@ Your form will be judged on:
 
 ### Frontend Lead (45% of Total Effort)
 
-You are responsible for building the complete user-facing registration experience. Your work is what users see and interact with - it's the face of NASA Sakhi.
+You are responsible for building the complete user-facing registration experience. Your work is what users see and interact with - it's the face of Saathi.
 
 **Your Core Responsibilities:**
 
@@ -105,7 +105,7 @@ You are responsible for building the complete user-facing registration experienc
 
 ### Why Your Work is Critical
 
-- **First Impression:** Your form is the first interaction organizations have with NASA Sakhi
+- **First Impression:** Your form is the first interaction organizations have with Saathi
 - **Completion Rate:** If the form is confusing, users will abandon it
 - **Data Quality:** Good validation prevents bad data from reaching the backend
 - **User Trust:** Professional UI builds confidence in the platform
@@ -118,7 +118,7 @@ You are responsible for building the complete user-facing registration experienc
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│                  NASA Sakhi MVP                      │
+│                  Saathi MVP                      │
 ├─────────────────────────────────────────────────────┤
 │                                                      │
 │  ┌──────────────────┐         ┌──────────────────┐ │
@@ -210,7 +210,7 @@ You are responsible for building the complete user-facing registration experienc
 ### Project Structure
 
 ```
-nasa_sakhi/
+saathi/
 ├── src/
 │   ├── app/
 │   │   ├── register/
@@ -283,8 +283,8 @@ nasa_sakhi/
 #### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/tangy83/NaSaSakhi.git
-cd nasa_sakhi
+git clone https://github.com/tangy83/Saathi.git
+cd saathi
 ```
 
 #### 2. Navigate to Backend Directory
@@ -365,8 +365,8 @@ backend/                          ← Your workspace
 - API: http://localhost:3000/api/db-test
 
 **Deployed (after push to main):**
-- App: https://nasassakhibestg.dcdeployapp.com
-- API: https://nasassakhibestg.dcdeployapp.com/api/health
+- App: https://saathibestg.dcdeployapp.com
+- API: https://saathibestg.dcdeployapp.com/api/health
 
 **How to call APIs in your code:**
 
@@ -406,7 +406,7 @@ Since Akarsha is building the backend in parallel, you have options:
 
 **Option C: Use Deployed API**
 - Akarsha will deploy APIs to staging as he builds them
-- Call `https://nasassakhibestg.dcdeployapp.com/api/...` from your local dev
+- Call `https://saathibestg.dcdeployapp.com/api/...` from your local dev
 - Requires CORS to be configured (should already be done)
 
 ---
@@ -453,11 +453,11 @@ Since Akarsha is building the backend in parallel, you have options:
    DC Deploy automatically:
    - Detects the push
    - Builds Docker container
-   - Deploys to https://nasassakhibestg.dcdeployapp.com
+   - Deploys to https://saathibestg.dcdeployapp.com
    - Takes ~2-3 minutes
 
 7. **Test deployed app:**
-   - Open https://nasassakhibestg.dcdeployapp.com/register/step1
+   - Open https://saathibestg.dcdeployapp.com/register/step1
    - Verify your page works in production
 
 ---
@@ -488,7 +488,7 @@ Tanuj will provide design guidelines in `/docs/DESIGN_SYSTEM.md`:
 2. **Can see homepage:**
    ```bash
    # Open http://localhost:3000
-   # Should see the NASA Sakhi homepage
+   # Should see the Saathi homepage
    ```
 
 3. **Can create pages:**

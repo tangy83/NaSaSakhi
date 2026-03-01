@@ -1,5 +1,5 @@
 # PRD Segment: Data Entry & Validation
-## NASA Sakhi - Organization Registration Portal
+## Saathi - Organization Registration Portal
 
 **Version:** 1.0
 **Date:** February 2, 2026
@@ -24,7 +24,7 @@
 
 ## 1. Overview
 
-This document segments the data entry and validation requirements for the NASA Sakhi organization registration portal. It focuses on the user-facing data collection process, validation rules, error handling, and data quality measures.
+This document segments the data entry and validation requirements for the Saathi organization registration portal. It focuses on the user-facing data collection process, validation rules, error handling, and data quality measures.
 
 **Key Objectives:**
 - Enable organizations to complete registration in <20 minutes

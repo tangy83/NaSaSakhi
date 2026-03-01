@@ -1,5 +1,5 @@
 /**
- * NASA Sakhi - API Contract & Type Definitions
+ * Saathi - API Contract & Type Definitions
  *
  * This file defines the TypeScript interfaces shared between frontend and backend.
  * Both Sunitha (frontend) and Shashi (backend) MUST follow these exact types.

@@ -12,7 +12,7 @@ import { documentsSchema } from '@/lib/validation/documentsSchema';
 import { saveDraft as saveDraftApi } from '@/lib/api';
 
 // LocalStorage key for draft data
-const DRAFT_STORAGE_KEY = 'nasa_sakhi_registration_draft';
+const DRAFT_STORAGE_KEY = 'saathi_registration_draft';
 
 // Initial empty form data
 const initialFormData: Partial<RegistrationFormData> = {
