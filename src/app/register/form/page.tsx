@@ -316,7 +316,7 @@ function AccordionFormPage() {
         languageIds: data.languageIds,
         // Documents
         documents: {
-          registrationCertificateUrl: data.registrationCertificateUrl,
+          registrationCertificateUrl: data.registrationCertificateUrl || undefined,
           logoUrl: data.logoUrl || undefined,
           additionalCertificateUrls:
             data.additionalCertificateUrls?.filter((url) => url.trim().length > 0) || [],

@@ -102,7 +102,7 @@ export interface BranchTiming {
 export type DayOfWeek = 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
 
 export interface DocumentInfo {
-  registrationCertificateUrl: string;
+  registrationCertificateUrl?: string;
   logoUrl?: string;
   additionalCertificateUrls?: string[];
 }
