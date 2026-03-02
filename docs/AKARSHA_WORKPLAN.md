@@ -2454,8 +2454,61 @@ By **Feb 7 evening**, you must have:
 
 ---
 
-**Last Updated:** Feb 26, 2026
+**Last Updated:** March 2, 2026
 **Status:** ✅ ALL 16 STAGES COMPLETE — Backend fully delivered, all API routes live, database seeded, 121 orgs migrated, deployed to DC Deploy (Build #24). Integrated with frontend, customer demo delivered Feb 7. E2E testing (Playwright) added post-MVP. Volunteer portal and admin data management panels added post-MVP (Phase 2 partial). Translation pipeline parked pending Bhashini credentials — see Phase 2 Backlog below.
+
+**Post-Feb 26 builds shipped (all merged to `main`):**
+- `02b0d88` — Vercel Blob for file uploads; registration certificate made optional
+- `5488478` — Fix TypeScript: `registrationCertificateUrl` optional in DocumentInfo
+- `94e3489` — Org queue table rows clickable to open review page
+- `dcb4691` — Inline edit mode on org review page for volunteers/admins
+- `574e378` — App-wide rename: **Sakhi → Saathi** throughout codebase (localStorage key is now `saathi_registration_draft`)
+
+---
+
+## Translation Sprint Handover — March 2026
+
+**Handed over to:** Akarsha (Backend Lead)
+**Date:** March 2, 2026
+**Goal:** Fully enable the per-organisation per-language translation approval workflow (Tasks B1–B5 below).
+
+### What's Changed Since Your Last Session
+
+The core volunteer portal is complete and live. Since Feb 26 the following were added:
+
+| Build | What Changed |
+|-------|-------------|
+| Vercel Blob uploads | File uploads now go to Vercel Blob, not local storage. Registration certificate is optional. |
+| Inline edit mode | Volunteers and admins can edit org fields directly from the review page without leaving it. |
+| Clickable queue rows | The org queue dashboard rows are now clickable — no separate button needed to open a record. |
+| App rename | The app is now called **Saathi** (not Sakhi) everywhere — UI text, localStorage keys, API responses, docs. |
+
+### Parked Translation Files — Quick Reference
+
+| Component | File | What It Needs |
+|-----------|------|---------------|
+| Bhashini worker | `backend/src/app/api/internal/translation-worker/route.ts` | Env vars + cron re-enabled (Task B1) |
+| Job creation on approval | `src/app/api/volunteer/organizations/[id]/status/route.ts` | Restore commented `translationJob.createMany()` call (Task B1) |
+| Translation APIs (root app) | `src/app/api/volunteer/organizations/[id]/translations/` | Mirror from `backend/` equivalent (Task B2) |
+| Translation review UI | `src/app/volunteer/organizations/[id]/translate/page.tsx` | Replace "Feature Unavailable" placeholder (Task B3) |
+| Language coverage dashboard | `src/app/volunteer/languages/page.tsx` | Replace "Feature Unavailable" placeholder (Task B4) |
+
+### Environment Variables Needed (get from Tanuj)
+
+```
+BHASHINI_USER_ID        — from bhashini.gov.in / MeitY API portal
+BHASHINI_API_KEY        — Bhashini ULCA API key
+INTERNAL_API_KEY        — any secret string to secure the internal worker endpoint
+```
+
+Add to: Vercel project settings + `.env.local` (for local testing).
+
+### Task Priority Order
+
+```
+B1 (Bhashini pipeline) → B2 (translation APIs in root app) → B3 (review UI) / B5 (status panel)
+B4 (language coverage dashboard) — independent, can do in any order
+```
 
 ---
 

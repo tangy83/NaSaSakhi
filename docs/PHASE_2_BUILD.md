@@ -4,7 +4,7 @@
 **Phase:** 2
 **Status:** Partially Complete — see Implementation Status below
 **Date:** February 2026
-**Last Updated:** February 26, 2026
+**Last Updated:** March 2, 2026
 
 ---
 
@@ -16,19 +16,23 @@ Phase 2 introduces the **Volunteer** — a new user persona who acts as a field-
 
 ---
 
-## Implementation Status (as of February 26, 2026)
+## Implementation Status (as of March 2, 2026)
 
 | Feature | What Was Built | Status |
 |---------|----------------|--------|
 | Feature 1: Volunteer Authentication | Login page, NextAuth session, VOLUNTEER role, 8-hr inactivity timeout | ✅ Complete |
 | Feature 2: Record Integrity Validation | Dashboard, org detail review, 3-action approval (Approve / Request Clarification / Reject), review notes, status history | ✅ Complete |
-| Feature 3: Translation Review Interface | UI page scaffold exists at `/volunteer/organizations/[id]/translate` (parked). Backend review APIs exist in `backend/`. Not linked from UI. | ⏸ Pending |
+| Feature 3: Translation Review Interface | UI page scaffold at `/volunteer/organizations/[id]/translate` (parked — shows "Feature Unavailable"). Backend review APIs exist in `backend/` but not mirrored to root app yet (Task B2). E2E tests written. | ⏸ Pending (B2 → B3) |
 | Feature 4: Multi-Language Data Storage | `OrganizationTranslation`, `BranchTranslation` models complete. Public API reads `VOLUNTEER_REVIEWED` translations with English fallback. | ✅ Schema done · ⏸ Pipeline pending |
-| Feature 5: Language Coverage Dashboard | Page scaffold at `/volunteer/languages` exists but parked. Dashboard tile missing. | ⏸ Pending |
-| Feature 6: Automated Translation Pipeline | Bhashini worker exists at `backend/src/app/api/internal/translation-worker/route.ts` but parked — cron disabled, job creation on approval disabled, env vars missing. | ⏸ Pending |
+| Feature 5: Language Coverage Dashboard | Page scaffold at `/volunteer/languages` exists but parked. Dashboard tile missing. | ⏸ Pending (B4) |
+| Feature 6: Automated Translation Pipeline | Bhashini worker exists at `backend/src/app/api/internal/translation-worker/route.ts` but parked — cron disabled, job creation on approval disabled, env vars missing. | ⏸ Pending (B1) |
 | Feature 7: Language Lifecycle Management | Admin panel — activate/deactivate languages, auto-cancels PENDING jobs on deactivation. Complete. | ✅ Complete |
 | Feature 8: Font & Typeface Management | Language model extended (scriptFamily, isRTL, fontFamily, googleFontName). Admin UI complete. | ✅ Complete |
 | Additional: Admin Data Management Panels | 6 CRUD panels added beyond original scope: service-categories, service-resources, faiths, social-categories, regions, languages | ✅ Complete |
+| Additional: Vercel Blob file uploads | File uploads migrated to Vercel Blob (`src/app/api/upload/route.ts`). Registration certificate made optional. | ✅ Complete |
+| Additional: Inline edit mode on org review | Volunteers and admins can edit org fields directly from the review page (`src/app/volunteer/organizations/[id]/review/page.tsx`). | ✅ Complete |
+| Additional: Org queue rows clickable | Dashboard org queue rows navigate to review page on click (`src/app/volunteer/dashboard/page.tsx`). | ✅ Complete |
+| Additional: App-wide rename — Saathi | All "Sakhi" references replaced with "Saathi" throughout codebase, docs, and config. localStorage key: `saathi_registration_draft`. | ✅ Complete |
 
 ---
 
