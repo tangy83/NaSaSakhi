@@ -50,6 +50,7 @@ function AccordionFormPage() {
   const parentOrgId = searchParams.get('parentOrgId') || undefined;
   const parentOrgName = searchParams.get('parentOrgName') || undefined;
   const isBranchRegistration = entityType === 'branch' && !!parentOrgId;
+  const volunteerMode = searchParams.get('volunteerMode') === 'true';
 
   // Section state management
   const [openSection, setOpenSection] = useState(1);
@@ -337,7 +338,8 @@ function AccordionFormPage() {
 
         // Redirect to success page
         setTimeout(() => {
-          router.push(`/register/success?id=${response.data.registrationId}`);
+          const successUrl = `/register/success?id=${response.data.registrationId}${volunteerMode ? '&volunteerMode=true' : ''}`;
+          router.push(successUrl);
         }, 1500);
       } else {
         throw new Error(response.error || 'Submission failed');
@@ -375,6 +377,19 @@ function AccordionFormPage() {
         {/* Main Content */}
         <main className="flex-1 p-4 sm:p-6 lg:p-8">
           <div className="max-w-4xl mx-auto">
+            {/* Volunteer mode banner */}
+            {volunteerMode && (
+              <div className="mb-4 flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-body text-amber-800">
+                <svg className="mt-0.5 h-4 w-4 flex-shrink-0 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                </svg>
+                <span>
+                  <strong>Volunteer Mode</strong> — You are registering this organization on behalf of a field visit.
+                  This record will be automatically approved upon submission.
+                </span>
+              </div>
+            )}
+
             {/* Branch registration banner */}
             {isBranchRegistration && parentOrgName && (
               <div className="mb-6 flex items-center gap-3 bg-primary-50 border border-primary-200 rounded-lg px-4 py-3 text-sm font-body text-primary-800">

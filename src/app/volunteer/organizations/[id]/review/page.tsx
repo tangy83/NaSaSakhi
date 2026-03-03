@@ -56,6 +56,7 @@ interface OrgDetail {
     createdAt: string;
     reviewer: { name?: string; email: string };
   }>;
+  submittedByUser?: { name?: string; email: string; role: string } | null;
 }
 
 // Editable form state mirrors the subset of fields we allow editing
@@ -240,6 +241,11 @@ export default function OrgReviewPage({
           <p className="font-body text-sm text-gray-500 mt-1">
             {org.registrationType} · Reg #{org.registrationNumber} · Est. {org.yearEstablished}
           </p>
+          {org.submittedByUser && (
+            <p className="font-body text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-md px-2 py-1 mt-2 inline-block">
+              Field created by {org.submittedByUser.name || org.submittedByUser.email} ({org.submittedByUser.role.toLowerCase().replace('_', ' ')})
+            </p>
+          )}
         </div>
         <div className="flex flex-col items-end gap-2">
           <StatusBadge status={org.status} />

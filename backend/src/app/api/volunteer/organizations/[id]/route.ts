@@ -48,6 +48,7 @@ export async function GET(
         include: { reviewer: { select: { id: true, name: true, email: true } } },
         orderBy: { createdAt: 'desc' },
       },
+      submittedByUser: { select: { id: true, name: true, email: true, role: true } },
     },
   });
 

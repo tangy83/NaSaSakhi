@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface OrgSearchResult {
   id: string;
@@ -13,6 +13,8 @@ interface OrgSearchResult {
 
 export default function RegisterStartPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const volunteerMode = searchParams.get('volunteerMode') === 'true';
 
   // Registration type selection
   const [registrationType, setRegistrationType] = useState<'organization' | 'branch' | null>(null);
@@ -76,21 +78,38 @@ export default function RegisterStartPage() {
       parentOrgId: selectedParentOrg.id,
       parentOrgName: selectedParentOrg.name,
       ...(selectedParentOrg.customId ? { parentOrgCustomId: selectedParentOrg.customId } : {}),
+      ...(volunteerMode ? { volunteerMode: 'true' } : {}),
     });
     router.push(`/register/form?${params.toString()}`);
   }
 
   return (
     <div className="max-w-4xl mx-auto">
-      {/* Home link */}
+      {/* Home / Dashboard link */}
       <div className="pt-6 pb-2 px-4">
-        <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-primary-600 transition-colors">
+        <Link
+          href={volunteerMode ? '/volunteer/dashboard' : '/'}
+          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-primary-600 transition-colors"
+        >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          Back to Home
+          {volunteerMode ? 'Back to Dashboard' : 'Back to Home'}
         </Link>
       </div>
+
+      {/* Volunteer mode banner */}
+      {volunteerMode && (
+        <div className="mx-4 mb-2 flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          <svg className="mt-0.5 h-4 w-4 flex-shrink-0 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+          </svg>
+          <span>
+            <strong>Volunteer Mode</strong> — You are registering this organization on behalf of a field visit.
+            The record will be automatically approved upon submission.
+          </span>
+        </div>
+      )}
 
       {/* Welcome Hero */}
       <section className="text-center mb-12 sm:mb-16">
@@ -437,7 +456,7 @@ export default function RegisterStartPage() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
           {registrationType === 'organization' && (
             <Link
-              href="/register/form"
+              href={volunteerMode ? '/register/form?volunteerMode=true' : '/register/form'}
               className="inline-flex items-center justify-center min-h-[56px] px-8 py-4 bg-primary-600 text-white rounded-lg font-ui font-semibold text-lg
                          shadow-lg hover:shadow-xl hover:bg-primary-700 hover:-translate-y-0.5
                          active:bg-primary-800 active:translate-y-0 active:shadow-md

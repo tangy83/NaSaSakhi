@@ -11,6 +11,7 @@ export const dynamic = 'force-dynamic';
 function SuccessPageContent() {
   const searchParams = useSearchParams();
   const [registrationId, setRegistrationId] = useState<string | null>(null);
+  const volunteerMode = searchParams.get('volunteerMode') === 'true';
 
   useEffect(() => {
     // Try to get registration ID from URL params
@@ -38,10 +39,14 @@ function SuccessPageContent() {
               <span className="text-success-500 text-5xl">✓</span>
             </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Registration Submitted Successfully!
+              {volunteerMode
+                ? 'Organization Registered & Approved!'
+                : 'Registration Submitted Successfully!'}
             </h1>
             <p className="text-lg text-gray-600">
-              Thank you for registering your organization with NaariSamata Saathi
+              {volunteerMode
+                ? 'The organization has been registered and is now live in the directory'
+                : 'Thank you for registering your organization with NaariSamata Saathi'}
             </p>
           </div>
 
@@ -51,26 +56,39 @@ function SuccessPageContent() {
               <span className="text-success-500 text-xl">✓</span>
               <div className="flex-1">
                 <h3 className="text-sm font-medium text-success-800 mb-2">
-                  What happens next?
+                  {volunteerMode ? 'Registration complete' : 'What happens next?'}
                 </h3>
-                <ul className="space-y-2 text-sm text-success-700">
-                  <li className="flex items-start gap-2">
-                    <span className="mt-0.5">•</span>
-                    <span>Your registration will be reviewed by our team within 48 hours.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="mt-0.5">•</span>
-                    <span>You will receive an email confirmation at your registered email address.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="mt-0.5">•</span>
-                    <span>Once approved, your organization will be visible in the NaariSamata Saathi directory.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="mt-0.5">•</span>
-                    <span>You can track your registration status using the registration ID below.</span>
-                  </li>
-                </ul>
+                {volunteerMode ? (
+                  <ul className="space-y-2 text-sm text-success-700">
+                    <li className="flex items-start gap-2">
+                      <span className="mt-0.5">•</span>
+                      <span>This organization is now approved and visible in the NaariSamata Saathi directory.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="mt-0.5">•</span>
+                      <span>The registration ID below has been assigned. Share it with the organization for their records.</span>
+                    </li>
+                  </ul>
+                ) : (
+                  <ul className="space-y-2 text-sm text-success-700">
+                    <li className="flex items-start gap-2">
+                      <span className="mt-0.5">•</span>
+                      <span>Your registration will be reviewed by our team within 48 hours.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="mt-0.5">•</span>
+                      <span>You will receive an email confirmation at your registered email address.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="mt-0.5">•</span>
+                      <span>Once approved, your organization will be visible in the NaariSamata Saathi directory.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="mt-0.5">•</span>
+                      <span>You can track your registration status using the registration ID below.</span>
+                    </li>
+                  </ul>
+                )}
               </div>
             </div>
           </div>
@@ -125,28 +143,56 @@ function SuccessPageContent() {
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4">
-            <Link
-              href="/"
-              className="flex-1 px-6 py-3 bg-primary-500 text-white rounded-md
-                         hover:bg-primary-600 active:bg-primary-700
-                         focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
-                         transition-colors duration-150 text-center font-medium"
-            >
-              Return to Homepage
-            </Link>
-            <button
-              onClick={() => {
-                // Clear form data and start new registration
-                localStorage.removeItem('saathi_registration_draft');
-                window.location.href = '/register/start';
-              }}
-              className="flex-1 px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-md
-                         hover:bg-gray-50 active:bg-gray-100
-                         focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
-                         transition-colors duration-150 font-medium"
-            >
-              Register Another Organization
-            </button>
+            {volunteerMode ? (
+              <>
+                <Link
+                  href="/volunteer/dashboard"
+                  className="flex-1 px-6 py-3 bg-primary-500 text-white rounded-md
+                             hover:bg-primary-600 active:bg-primary-700
+                             focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
+                             transition-colors duration-150 text-center font-medium"
+                >
+                  Return to Volunteer Portal
+                </Link>
+                <button
+                  onClick={() => {
+                    localStorage.removeItem('saathi_registration_draft');
+                    window.location.href = '/register/start?volunteerMode=true';
+                  }}
+                  className="flex-1 px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-md
+                             hover:bg-gray-50 active:bg-gray-100
+                             focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
+                             transition-colors duration-150 font-medium"
+                >
+                  Register Another Organization
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/"
+                  className="flex-1 px-6 py-3 bg-primary-500 text-white rounded-md
+                             hover:bg-primary-600 active:bg-primary-700
+                             focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
+                             transition-colors duration-150 text-center font-medium"
+                >
+                  Return to Homepage
+                </Link>
+                <button
+                  onClick={() => {
+                    // Clear form data and start new registration
+                    localStorage.removeItem('saathi_registration_draft');
+                    window.location.href = '/register/start';
+                  }}
+                  className="flex-1 px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-md
+                             hover:bg-gray-50 active:bg-gray-100
+                             focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
+                             transition-colors duration-150 font-medium"
+                >
+                  Register Another Organization
+                </button>
+              </>
+            )}
           </div>
 
           {/* Support Contact */}

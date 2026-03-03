@@ -32,6 +32,10 @@ model Organization {
   parentOrganization Organization?  @relation("OrgBranches", fields: [parentOrganizationId], references: [id])
   childBranches      Organization[] @relation("OrgBranches")
 
+  // Who created this record (set when a volunteer/admin submits on behalf of an org)
+  submittedByUserId String? @map("submitted_by_user_id")
+  submittedByUser   User?   @relation("SubmittedOrganizations", fields: [submittedByUserId], references: [id])
+
   // Relationships
   branches                 OrganizationBranch[]
   contacts                 ContactInformation[]
@@ -294,10 +298,11 @@ model User {
   volunteerId   String?   @unique // Used for volunteer login (in place of email)
 
   // Relationships
-  accounts    Account[]
-  sessions    Session[]
-  reviewNotes ReviewNote[]
-  auditLogs   AuditLog[]
+  accounts               Account[]
+  sessions               Session[]
+  reviewNotes            ReviewNote[]
+  auditLogs              AuditLog[]
+  submittedOrganizations Organization[] @relation("SubmittedOrganizations")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

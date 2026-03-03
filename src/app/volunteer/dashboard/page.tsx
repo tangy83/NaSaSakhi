@@ -104,14 +104,22 @@ export default function VolunteerDashboardPage() {
             Manage organization registrations and reviews
           </p>
         </div>
-        {isAdmin && (
+        <div className="flex flex-col items-end gap-2">
           <button
-            onClick={() => router.push('/volunteer/admin/create-user')}
-            className="font-body text-sm font-medium text-primary-600 hover:text-primary-700 border border-primary-200 hover:border-primary-400 px-3 py-1.5 rounded-lg transition-colors"
+            onClick={() => router.push('/register/start?volunteerMode=true')}
+            className="font-body text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 px-3 py-1.5 rounded-lg transition-colors"
           >
-            + Create User
+            + Register Organization
           </button>
-        )}
+          {isAdmin && (
+            <button
+              onClick={() => router.push('/volunteer/admin/create-user')}
+              className="font-body text-sm font-medium text-primary-600 hover:text-primary-700 border border-primary-200 hover:border-primary-400 px-3 py-1.5 rounded-lg transition-colors"
+            >
+              + Create User
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Stats cards */}

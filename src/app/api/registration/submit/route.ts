@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { generateOrgCustomId, generateBranchCustomId } from '@/lib/organizationId';
+import { getCurrentUser, isAdminOrVolunteer } from '@/lib/auth';
 
 /**
  * POST /api/registration/submit
@@ -16,6 +17,10 @@ import { generateOrgCustomId, generateBranchCustomId } from '@/lib/organizationI
  */
 export async function POST(request: NextRequest) {
   try {
+    // Detect if a trusted volunteer or admin is submitting on behalf of an org
+    const submitter = await getCurrentUser();
+    const isVolunteerSubmission = submitter ? await isAdminOrVolunteer() : false;
+
     const body = await request.json();
     const {
       // Entity type (ORGANIZATION or BRANCH)
@@ -152,7 +157,9 @@ export async function POST(request: NextRequest) {
           yearEstablished: yearEstablished ? parseInt(yearEstablished, 10) : 2000,
           faithId: faithId || null,
           websiteUrl: website || null,
-          status: 'PENDING', // Default status, admin will approve
+          // Volunteer/admin submissions are auto-approved; public submissions are PENDING
+          status: isVolunteerSubmission ? 'APPROVED' : 'PENDING',
+          submittedByUserId: isVolunteerSubmission ? submitter!.id : null,
         },
       });
 
@@ -306,12 +313,16 @@ export async function POST(request: NextRequest) {
       success: true,
       data: {
         organizationId: result.id,
+        registrationId: result.customId,
         customId: result.customId,
         entityType: result.entityType,
         organizationName: result.name,
         status: result.status,
+        submittedByVolunteer: isVolunteerSubmission,
       },
-      message: 'Registration submitted successfully! Your application is pending admin approval.',
+      message: isVolunteerSubmission
+        ? 'Organization registered and approved.'
+        : 'Registration submitted successfully! Your application is pending admin approval.',
     });
   } catch (error) {
     console.error('Error submitting registration:', error);
