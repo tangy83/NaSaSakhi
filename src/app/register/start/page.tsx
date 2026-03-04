@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -11,7 +11,7 @@ interface OrgSearchResult {
   customId: string | null;
 }
 
-export default function RegisterStartPage() {
+function RegisterStartContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const volunteerMode = searchParams.get('volunteerMode') === 'true';
@@ -503,5 +503,13 @@ export default function RegisterStartPage() {
         </p>
       </section>
     </div>
+  );
+}
+
+export default function RegisterStartPage() {
+  return (
+    <Suspense fallback={<div className="max-w-4xl mx-auto pt-6 px-4">Loading…</div>}>
+      <RegisterStartContent />
+    </Suspense>
   );
 }
