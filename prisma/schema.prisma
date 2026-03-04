@@ -87,7 +87,7 @@ model OrganizationBranch {
   addressLine2   String?
   cityId         String
   stateId        String
-  pinCode        String   @db.VarChar(6)
+  pinCode        String?  @db.VarChar(6) // nullable to support legacy-imported orgs without postcode
   latitude       Decimal? @db.Decimal(10, 8)
   longitude      Decimal? @db.Decimal(11, 8)
 

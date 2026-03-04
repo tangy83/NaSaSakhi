@@ -24,7 +24,8 @@
     "db:audit": "tsx scripts/audit-mysql-data.ts",
     "db:migrate-services": "tsx scripts/migrate-services.ts",
     "db:migrate-languages": "tsx scripts/migrate-languages.ts",
-    "db:migrate-organizations": "tsx scripts/migrate-organizations.ts"
+    "db:migrate-organizations": "tsx scripts/migrate-organizations.ts",
+    "db:migrate-sathi": "tsx scripts/migrate-sathi-data.ts"
   },
   "dependencies": {
     "@google-cloud/translate": "^9.3.0",
