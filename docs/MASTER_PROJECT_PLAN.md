@@ -4,6 +4,40 @@
 
 ---
 
+## 🟢 STATUS UPDATE — March 4, 2026
+
+**Phase 1 (MVP Registration Portal): ✅ COMPLETE & DEPLOYED**
+**Phase 2 (Volunteer Portal): ✅ Mostly Complete — Translation pipeline pending (B1–B5)**
+
+### Completed Since Original Plan
+
+| Item | Status | Date |
+|---|---|---|
+| 7-step registration form, draft save, submission | ✅ Done | Feb 2026 |
+| Volunteer authentication + dashboard | ✅ Done | Feb 2026 |
+| 3-action org review (Approve / Reject / Request Clarification) | ✅ Done | Feb 2026 |
+| 6 admin data management panels | ✅ Done | Feb 2026 |
+| App-wide rename: Sakhi → Saathi | ✅ Done | Mar 2026 |
+| Inline edit mode on org review page | ✅ Done | Mar 2026 |
+| Clickable org queue rows (dashboard → review page) | ✅ Done | Mar 2026 |
+| Branch registration (New Org vs Branch entity type selection) | ✅ Done | Mar 2026 |
+| Volunteer/admin org registration with auto-approval | ✅ Done | Mar 2026 |
+| **Sathi legacy data migration — 121 NGOs imported** | ✅ Done | Mar 4, 2026 |
+| Next.js 15 Suspense boundary fix on `/register/start` | ✅ Done | Mar 4, 2026 |
+| Deployed to production (Vercel + DC Deploy backend) | ✅ Done | Mar 2026 |
+
+### Remaining Phase 2 Work (Translation Sprint — Owner: Akarsha)
+
+| Task | Description | Status |
+|---|---|---|
+| B1 | Re-enable Bhashini translation pipeline (env vars, cron, approval trigger) | ⏸ Pending |
+| B2 | Mirror translation review APIs into root Vercel app | ⏸ Pending |
+| B3 | Un-park translation review frontend (`/volunteer/organizations/[id]/translate`) | ⏸ Pending |
+| B4 | Un-park language coverage dashboard (`/volunteer/languages`) | ⏸ Pending |
+| B5 | Translation status panel on org review page | ⏸ Pending |
+
+---
+
 ## 📋 Quick Links
 
 - **Akarsha's Work Plan:** [AKARSHA_WORKPLAN.md](./AKARSHA_WORKPLAN.md) (Backend - 45%)

@@ -4,7 +4,7 @@
 **Phase:** 2
 **Status:** Partially Complete — see Implementation Status below
 **Date:** February 2026
-**Last Updated:** March 2, 2026
+**Last Updated:** March 4, 2026
 
 ---
 
@@ -33,6 +33,10 @@ Phase 2 introduces the **Volunteer** — a new user persona who acts as a field-
 | Additional: Inline edit mode on org review | Volunteers and admins can edit org fields directly from the review page (`src/app/volunteer/organizations/[id]/review/page.tsx`). | ✅ Complete |
 | Additional: Org queue rows clickable | Dashboard org queue rows navigate to review page on click (`src/app/volunteer/dashboard/page.tsx`). | ✅ Complete |
 | Additional: App-wide rename — Saathi | All "Sakhi" references replaced with "Saathi" throughout codebase, docs, and config. localStorage key: `saathi_registration_draft`. | ✅ Complete |
+| Additional: Branch registration | `/register/start` two-card selector (New Org / Branch). Branch flow includes debounced parent-org search, parent params forwarded to form. Org IDs: `ORG00001`, branch IDs: `BR00001a`. `OrgIdCounter` table manages sequencing. | ✅ Complete |
+| Additional: Volunteer/admin org registration with auto-approval | Volunteer mode (`?volunteerMode=true`) activates a volunteer banner and causes orgs submitted by volunteers/admins to be auto-approved on submission (bypass review queue). | ✅ Complete |
+| Additional: Sathi legacy data migration | 121 legacy NGOs (Gujarat, Jharkhand, Telangana, Karnataka) imported as APPROVED. 121 branches with contacts, 594 branch-category links, 402 branch-resource links. `OrgIdCounter` set to 122. Script: `backend/scripts/migrate-sathi-data.ts`. | ✅ Complete |
+| Additional: Next.js 15 Suspense boundary fix | `useSearchParams()` on `/register/start` wrapped in `<Suspense>` per Next.js 15 App Router static generation requirements. Fixes Vercel build failure. | ✅ Complete |
 
 ---
 

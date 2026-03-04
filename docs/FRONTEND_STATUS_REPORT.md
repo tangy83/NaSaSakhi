@@ -1,8 +1,8 @@
 # Saathi - Frontend Application Status Report
 
-**Date:** February 2026
-**Version:** 2.0
-**Last Updated:** February 26, 2026
+**Date:** March 2026
+**Version:** 3.0
+**Last Updated:** March 4, 2026
 
 ---
 
@@ -22,7 +22,10 @@
 | **Mobile Responsiveness** | ✅ Complete | 100% | Fully responsive 375px+ |
 | **Error Handling** | ✅ Complete | 100% | Comprehensive error handling across all pages |
 | **Documentation** | ✅ Complete | 100% | All API docs and README updated |
-| **Overall** | ✅ **Production Ready** | **100%** | All phases complete, deployed to staging |
+| **Branch Registration** | ✅ Complete | 100% | Org type selection, parent org search on /register/start |
+| **Volunteer Org Registration** | ✅ Complete | 100% | Auto-approval, volunteer mode banner, context-aware nav |
+| **Legacy Data Migration** | ✅ Complete | 100% | 121 NGOs, 121 branches, 594 category links, 402 resource links |
+| **Overall** | ✅ **Production Ready** | **100%** | All phases complete, deployed to production |
 
 ---
 
@@ -365,6 +368,7 @@
 ### 11. Pages - 100% Complete
 
 #### Registration Pages ✅
+- [x] `/register/start` - Entity type selection (New Org vs Branch) + parent org search; wrapped in Suspense for Next.js 15
 - [x] `/register/step1` - Organization Details
 - [x] `/register/step2` - Contact Information
 - [x] `/register/step3` - Service Categories & Resources
@@ -393,16 +397,27 @@
 - [x] `/volunteer/dashboard` - Organization review queue
 - [x] Pending/approved/rejected org counts
 - [x] Sortable, filterable org list
+- [x] Org queue table rows are clickable (navigate to review page on click)
 - [x] Admin data management tile grid (visible to ADMIN+)
 - [x] Mobile responsive
 
 #### Organization Review ✅
 - [x] `/volunteer/organizations/[id]/review` - Full org detail
 - [x] View all org fields, branches, categories, resources, documents
+- [x] **Inline edit mode** — volunteers/admins can edit org fields directly from the review page without leaving it
 - [x] Approve button with confirmation
 - [x] Reject button with reason input
+- [x] Request Clarification action
 - [x] Loading and error states
 - [x] Back to dashboard navigation
+
+#### Volunteer/Admin Org Registration ✅
+- [x] Volunteer can register a new organization on behalf of a field visit
+- [x] `?volunteerMode=true` query param activates volunteer mode on `/register/start`
+- [x] Volunteer mode banner shown throughout registration flow
+- [x] Organizations registered by volunteers are **auto-approved** on submission (no review queue)
+- [x] Admins share same auto-approval shortcut
+- [x] Back link changes to "Back to Dashboard" in volunteer mode
 
 ---
 
@@ -458,11 +473,29 @@ Six admin pages, each with table view + inline create form. All require ADMIN or
 
 ---
 
+### 14. Branch Registration - 100% Complete
+
+#### Entity Type Selection ✅
+- [x] `/register/start` - Two-card selector: "New Organization" vs "Branch of Existing Organization"
+- [x] Branch flow: debounced search input with dropdown of approved orgs
+- [x] Parent org selection stored; passed via URL params to form (`entityType=branch&parentOrgId=...&parentOrgName=...`)
+- [x] `useSearchParams()` wrapped in `<Suspense>` for Next.js 15 static generation compatibility
+- [x] Volunteer mode propagated through branch registration flow
+
+#### Org ID System ✅
+- [x] New orgs get IDs: `ORG00001` … `ORG99999` (5-digit zero-padded)
+- [x] Branch orgs get IDs: `BR00001a` … `BR00001z` (parent num + letter suffix, 26 max per parent)
+- [x] `OrgIdCounter` table tracks next org num; upsert-safe for resilience
+- [x] ID generation: `src/lib/organizationId.ts` (frontend), `backend/src/lib/organizationId.ts` (backend)
+- [x] Parent org search API: `GET /api/organizations/search?q=...` (APPROVED only)
+
+---
+
 ## 🐛 Known Issues
 
 ### None Currently
 - All critical issues have been resolved
-- Build errors fixed
+- Build errors fixed (including Next.js 15 Suspense boundary requirement on `/register/start`)
 - Import errors fixed
 - Validation errors fixed
 
@@ -471,12 +504,12 @@ Six admin pages, each with table view + inline create form. All require ADMIN or
 ## 📈 Metrics & Statistics
 
 ### Code Statistics
-- **Total Files Created:** 39+ files
-- **Lines of Code:** ~6,500+ lines
-- **Components:** 15+ reusable components
+- **Total Files Created:** 50+ files
+- **Lines of Code:** ~9,000+ lines
+- **Components:** 20+ reusable components
 - **Hooks:** 4 custom hooks
 - **Validation Schemas:** 6 Zod schemas
-- **Pages:** 10 pages
+- **Pages:** 14 pages (including volunteer portal + admin panels)
 
 ### Feature Coverage
 - **Form Steps:** 7/7 (100%)
@@ -512,38 +545,18 @@ Six admin pages, each with table view + inline create form. All require ADMIN or
 
 ## 📝 Next Steps
 
-### Immediate (Before Staging)
-1. **Execute Manual Testing**
-   - Run through all 101 test cases
-   - Document any issues found
-   - Fix critical bugs
+### Phase 2 Translation Sprint (Owner: Akarsha)
+1. **B1** — Re-enable Bhashini translation pipeline (env vars + cron)
+2. **B2** — Mirror translation review APIs into root Vercel app
+3. **B3** — Un-park translation review frontend (`/volunteer/organizations/[id]/translate`)
+4. **B4** — Un-park language coverage dashboard (`/volunteer/languages`)
+5. **B5** — Add translation status panel on org review page
 
-2. **Cross-Browser Testing**
-   - Chrome/Edge (Chromium)
-   - Firefox
-   - Safari (if possible)
-   - Mobile browsers
-
-3. **Performance Check**
-   - Page load times
-   - Form interaction responsiveness
-   - File upload performance
-
-### Short-term (Post-Staging)
-1. **User Acceptance Testing**
-   - Get feedback from stakeholders
-   - Make UX improvements based on feedback
-
-2. **Documentation Completion**
-   - API integration guide
-   - Deployment guide
-   - User guide
-
-3. **Optional Enhancements**
-   - Tooltips for form fields
-   - Character counters
-   - Auto-focus improvements
-   - Analytics integration
+### Optional Enhancements
+- Tooltips for form fields
+- Character counters on long text inputs
+- Analytics integration
+- Bundle size analysis / performance profiling
 
 ---
 
@@ -603,5 +616,5 @@ The Saathi frontend application is **95% complete** and **production-ready** for
 
 ---
 
-**Report Generated:** February 2026  
-**Next Review:** After manual testing completion
+**Report Generated:** February 2026 (v1.0), updated March 4, 2026 (v3.0)
+**Next Review:** After Phase 2 translation sprint (B1–B5) completion
