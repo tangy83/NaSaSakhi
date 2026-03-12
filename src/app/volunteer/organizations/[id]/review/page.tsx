@@ -43,10 +43,13 @@ interface OrgDetail {
   yearEstablished: number;
   description?: string;
   websiteUrl?: string;
+  isBPLFriendly: boolean;
   status: string;
+  faith?: { id: string; name: string } | null;
   contacts: Contact[];
   branches: Branch[];
   languages: Array<{ language: { name: string } }>;
+  socialCategories: Array<{ socialCategory: { name: string } }>;
   documents: Array<{ type: string; fileUrl: string; filename: string }>;
   reviewNotes: Array<{
     id: string;
@@ -85,9 +88,13 @@ export default function OrgReviewPage({
   const [org, setOrg] = useState<OrgDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const isTranslator = userRole === 'TRANSLATOR';
+  const isAdminRole = userRole === 'ADMIN' || userRole === 'SUPER_ADMIN';
+  const isVolunteer = userRole === 'VOLUNTEER';
+
   const [submitting, setSubmitting] = useState(false);
   const [actionStatus, setActionStatus] = useState<
-    'APPROVED' | 'REJECTED' | 'CLARIFICATION_REQUESTED' | ''
+    'VOLUNTEER_APPROVED' | 'APPROVED' | 'REJECTED' | 'CLARIFICATION_REQUESTED' | 'ARCHIVED' | ''
   >('');
   const [note, setNote] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
@@ -172,7 +179,7 @@ export default function OrgReviewPage({
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!actionStatus) { setError('Please select an action'); return; }
-    if ((actionStatus === 'REJECTED' || actionStatus === 'CLARIFICATION_REQUESTED') && !note.trim()) {
+    if ((actionStatus === 'REJECTED' || actionStatus === 'CLARIFICATION_REQUESTED' || actionStatus === 'ARCHIVED') && !note.trim()) {
       setError('A note is required for this action');
       return;
     }
@@ -192,11 +199,15 @@ export default function OrgReviewPage({
         throw new Error(json.error || `HTTP ${res.status}`);
       }
       setSuccessMsg(
-        actionStatus === 'APPROVED'
-          ? 'Organization approved.'
+        actionStatus === 'VOLUNTEER_APPROVED'
+          ? 'Organisation passed to Stage 2 — awaiting Translator review.'
+          : actionStatus === 'APPROVED'
+          ? 'Organisation approved and now visible in the directory.'
           : actionStatus === 'REJECTED'
-          ? 'Organization rejected.'
-          : 'Clarification requested. Organization will be notified.'
+          ? 'Organisation rejected.'
+          : actionStatus === 'ARCHIVED'
+          ? 'Organisation archived and hidden from public directory.'
+          : 'Clarification requested. Organisation will be notified.'
       );
       setTimeout(() => router.push('/volunteer/dashboard'), 2000);
     } catch (err: any) {
@@ -484,6 +495,28 @@ export default function OrgReviewPage({
             </p>
           </Section>
 
+          <Section title="Additional Details">
+            <div className="grid grid-cols-2 gap-3 text-sm font-body">
+              {org.faith && <Field label="Faith Affiliation" value={org.faith.name} />}
+              {(org.socialCategories ?? []).length > 0 && (
+                <Field
+                  label="Social Categories"
+                  value={org.socialCategories.map((s) => s.socialCategory.name).join(', ')}
+                />
+              )}
+              <div>
+                <p className="font-body text-xs text-gray-400 mb-0.5">BPL Friendly</p>
+                {org.isBPLFriendly ? (
+                  <span className="inline-flex items-center font-body text-xs font-semibold border rounded-full px-2.5 py-0.5 bg-teal-50 text-teal-700 border-teal-300">
+                    Yes — BPL households eligible
+                  </span>
+                ) : (
+                  <p className="font-body text-sm text-gray-800">No</p>
+                )}
+              </div>
+            </div>
+          </Section>
+
           <Section title="Documents">
             {org.documents.length === 0 ? (
               <p className="font-body text-sm text-gray-400">No documents uploaded.</p>
@@ -530,22 +563,69 @@ export default function OrgReviewPage({
         </div>
       )}
 
-      {/* Review action panel — only when not editing and status is actionable */}
-      {!editMode && (org.status === 'PENDING' || org.status === 'CLARIFICATION_REQUESTED') && (
+      {/* Review action panel — role-based, only when not editing and status is actionable */}
+      {!editMode && org.status !== 'ARCHIVED' && (() => {
+        // Determine if this user can act on the current org status
+        const canAct =
+          isAdminRole ||
+          (isVolunteer && org.status === 'PENDING') ||
+          (isTranslator && org.status === 'VOLUNTEER_APPROVED');
+        if (!canAct) return null;
+
+        // Build action buttons based on role + current status
+        type ActionBtn = { value: 'VOLUNTEER_APPROVED' | 'APPROVED' | 'REJECTED' | 'CLARIFICATION_REQUESTED' | 'ARCHIVED'; label: string; color: string };
+        const stage1Actions: ActionBtn[] = [
+          { value: 'VOLUNTEER_APPROVED', label: 'Pass to Stage 2', color: 'success' },
+          { value: 'CLARIFICATION_REQUESTED', label: 'Request Clarification', color: 'warning' },
+          { value: 'REJECTED', label: 'Reject', color: 'error' },
+          { value: 'ARCHIVED', label: 'Archive', color: 'archive' },
+        ];
+        const stage2Actions: ActionBtn[] = [
+          { value: 'APPROVED', label: 'Approve & Publish', color: 'success' },
+          { value: 'CLARIFICATION_REQUESTED', label: 'Request Clarification', color: 'warning' },
+          { value: 'REJECTED', label: 'Reject', color: 'error' },
+          { value: 'ARCHIVED', label: 'Archive', color: 'archive' },
+        ];
+        const adminAllActions: ActionBtn[] = [
+          { value: 'VOLUNTEER_APPROVED', label: 'Move to Stage 2', color: 'success' },
+          { value: 'APPROVED', label: 'Approve & Publish', color: 'success' },
+          { value: 'CLARIFICATION_REQUESTED', label: 'Request Clarification', color: 'warning' },
+          { value: 'REJECTED', label: 'Reject', color: 'error' },
+          { value: 'ARCHIVED', label: 'Archive', color: 'archive' },
+        ];
+
+        const actions = isAdminRole ? adminAllActions : (isTranslator ? stage2Actions : stage1Actions);
+        const stageLabel = isTranslator ? 'Stage 2 Review — Translation Approval'
+          : isVolunteer ? 'Stage 1 Review'
+          : 'Admin Review';
+
+        return (
         <form
           onSubmit={handleSubmit}
           className="bg-white border border-gray-200 rounded-xl p-6 space-y-5"
         >
-          <h2 className="font-heading text-lg text-gray-800 font-medium">Review Action</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="font-heading text-lg text-gray-800 font-medium">Review Action</h2>
+            <span className="font-body text-xs text-gray-500 bg-gray-100 rounded-full px-3 py-1">{stageLabel}</span>
+          </div>
+
+          {/* Stage indicator */}
+          <div className="flex gap-3 items-center text-sm font-body text-gray-500">
+            <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${org.status === 'PENDING' ? 'bg-warning-100 text-warning-700' : 'bg-gray-100 text-gray-500'}`}>
+              Stage 1: Volunteer Review
+            </span>
+            <span className="text-gray-300">→</span>
+            <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${org.status === 'VOLUNTEER_APPROVED' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-500'}`}>
+              Stage 2: Translator Review
+            </span>
+            <span className="text-gray-300">→</span>
+            <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${org.status === 'APPROVED' ? 'bg-success-100 text-success-700' : 'bg-gray-100 text-gray-500'}`}>
+              Approved
+            </span>
+          </div>
 
           <div className="flex flex-wrap gap-3">
-            {(
-              [
-                { value: 'APPROVED', label: 'Approve', color: 'success' },
-                { value: 'CLARIFICATION_REQUESTED', label: 'Request Clarification', color: 'warning' },
-                { value: 'REJECTED', label: 'Reject', color: 'error' },
-              ] as const
-            ).map(({ value, label, color }) => (
+            {actions.map(({ value, label, color }) => (
               <button
                 key={value}
                 type="button"
@@ -557,6 +637,8 @@ export default function OrgReviewPage({
                       ? 'bg-success-500 border-success-500 text-white'
                       : color === 'warning'
                       ? 'bg-warning-500 border-warning-500 text-white'
+                      : color === 'archive'
+                      ? 'bg-gray-500 border-gray-500 text-white'
                       : 'bg-error-500 border-error-500 text-white'
                     : 'bg-white border-gray-300 text-gray-700 hover:border-gray-400'
                   }
@@ -569,7 +651,7 @@ export default function OrgReviewPage({
 
           <div className="space-y-1">
             <label className="block font-body text-sm font-medium text-gray-700">
-              Note{actionStatus === 'REJECTED' || actionStatus === 'CLARIFICATION_REQUESTED'
+              Note{actionStatus === 'REJECTED' || actionStatus === 'CLARIFICATION_REQUESTED' || actionStatus === 'ARCHIVED'
                 ? ' (required)'
                 : ' (optional)'}
             </label>
@@ -605,7 +687,8 @@ export default function OrgReviewPage({
             {submitting ? 'Submitting...' : 'Submit Review'}
           </button>
         </form>
-      )}
+        );
+      })()}
     </div>
   );
 }
@@ -663,9 +746,11 @@ function EditField({
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, string> = {
     PENDING: 'bg-warning-50 text-warning-600 border-warning-500',
+    VOLUNTEER_APPROVED: 'bg-blue-50 text-blue-700 border-blue-400',
     APPROVED: 'bg-success-50 text-success-600 border-success-500',
     REJECTED: 'bg-error-50 text-error-600 border-error-500',
     CLARIFICATION_REQUESTED: 'bg-info-50 text-info-600 border-info-500',
+    ARCHIVED: 'bg-gray-100 text-gray-600 border-gray-400',
   };
   return (
     <span

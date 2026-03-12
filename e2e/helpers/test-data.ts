@@ -1,25 +1,27 @@
 // Test data helpers — seed and clean up test users via direct API calls
 
-const BASE_URL = process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://localhost:3000';
+const BASE_URL = process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://localhost:3002';
 
-/** Creates a test volunteer user via the internal seed API */
+/** Creates a test volunteer user via the internal seed API (retries up to 3x on 5xx) */
 export async function createTestVolunteer(opts: {
   volunteerId: string;
   password: string;
   name?: string;
 }): Promise<{ id: string }> {
-  const res = await fetch(`${BASE_URL}/api/test/seed-volunteer`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(opts),
-  });
-
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`Failed to seed test volunteer: ${res.status} ${text}`);
+  const body = JSON.stringify(opts);
+  let lastError = '';
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    if (attempt > 1) await new Promise((r) => setTimeout(r, 1000 * attempt));
+    const res = await fetch(`${BASE_URL}/api/test/seed-volunteer`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body,
+    });
+    if (res.ok) return res.json();
+    lastError = `${res.status} ${await res.text()}`;
+    if (res.status < 500) break; // don't retry client errors
   }
-
-  return res.json();
+  throw new Error(`Failed to seed test volunteer: ${lastError}`);
 }
 
 /** Deletes a test user by volunteerId */

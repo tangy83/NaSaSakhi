@@ -3,7 +3,7 @@
 import 'next-auth';
 import 'next-auth/jwt';
 
-export type UserRole = 'ORGANIZATION' | 'ADMIN' | 'SUPER_ADMIN' | 'VOLUNTEER';
+export type UserRole = 'ORGANIZATION' | 'ADMIN' | 'SUPER_ADMIN' | 'VOLUNTEER' | 'TRANSLATOR';
 
 declare module 'next-auth' {
   interface Session {

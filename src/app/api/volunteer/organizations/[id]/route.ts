@@ -47,6 +47,8 @@ export async function GET(
       contacts: true,
       languages: { include: { language: true } },
       documents: true,
+      faith: true,
+      socialCategories: { include: { socialCategory: true } },
       reviewNotes: {
         include: { reviewer: { select: { id: true, name: true, email: true } } },
         orderBy: { createdAt: 'desc' },

@@ -1,0 +1,79 @@
+{
+  "nav": {
+    "home": "होम",
+    "register": "संस्था पंजीकरण",
+    "login": "लॉगिन",
+    "dashboard": "डैशबोर्ड",
+    "logout": "साइन आउट"
+  },
+  "common": {
+    "loading": "लोड हो रहा है…",
+    "save": "सहेजें",
+    "cancel": "रद्द करें",
+    "submit": "जमा करें",
+    "back": "वापस",
+    "next": "अगला",
+    "search": "खोजें",
+    "required": "आवश्यक",
+    "optional": "वैकल्पिक",
+    "yes": "हाँ",
+    "no": "नहीं",
+    "edit": "संपादित करें",
+    "delete": "हटाएं",
+    "approve": "अनुमोदित करें",
+    "reject": "अस्वीकार करें",
+    "status": "स्थिति"
+  },
+  "org": {
+    "name": "संस्था का नाम",
+    "registrationType": "पंजीकरण प्रकार",
+    "registrationNumber": "पंजीकरण संख्या",
+    "yearEstablished": "स्थापना वर्ष",
+    "description": "विवरण",
+    "country": "देश",
+    "faith": "धार्मिक संबद्धता",
+    "socialCategories": "सामाजिक श्रेणियाँ",
+    "bplFriendly": "बीपीएल अनुकूल",
+    "bplFriendlyHint": "गरीबी रेखा से नीचे के परिवारों के लिए उपलब्ध सेवाएं",
+    "website": "वेबसाइट",
+    "contact": "संपर्क जानकारी",
+    "primaryContact": "प्राथमिक संपर्क",
+    "secondaryContact": "द्वितीयक संपर्क",
+    "services": "सेवाएं",
+    "branches": "शाखा स्थान",
+    "languages": "समर्थित भाषाएं",
+    "documents": "दस्तावेज़"
+  },
+  "status": {
+    "PENDING": "समीक्षा प्रतीक्षित",
+    "VOLUNTEER_APPROVED": "अनुवाद समीक्षा प्रतीक्षित",
+    "APPROVED": "अनुमोदित",
+    "REJECTED": "अस्वीकृत",
+    "CLARIFICATION_REQUESTED": "स्पष्टीकरण अनुरोधित",
+    "ARCHIVED": "संग्रहीत"
+  },
+  "register": {
+    "title": "अपनी संस्था पंजीकृत करें",
+    "subtitle": "NaariSamata के सहायता सेवाओं के नेटवर्क से जुड़ें",
+    "newOrg": "नई संस्था",
+    "branch": "मौजूदा संस्था की शाखा",
+    "startRegistration": "पंजीकरण शुरू करें",
+    "saveDraft": "ड्राफ्ट सहेजें",
+    "resumeDraft": "ड्राफ्ट जारी रखें",
+    "checkDuplicates": "डुप्लीकेट जांचें",
+    "noMatch": "कोई मिलान नहीं मिला",
+    "matchFound": "मिलान संस्थाएं मिलीं"
+  },
+  "volunteer": {
+    "dashboard": "स्वयंसेवक डैशबोर्ड",
+    "pendingReview": "स्वयंसेवक समीक्षा आवश्यक",
+    "translationReview": "अनुवाद समीक्षा आवश्यक",
+    "approved": "अनुमोदित",
+    "rejected": "अस्वीकृत",
+    "clarification": "स्पष्टीकरण",
+    "reviewOrg": "संस्था की समीक्षा",
+    "passToStage2": "चरण 2 में भेजें",
+    "approvePublish": "अनुमोदित करें और प्रकाशित करें",
+    "requestClarification": "स्पष्टीकरण अनुरोध करें"
+  }
+}

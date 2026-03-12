@@ -16,7 +16,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
     const { id } = await params;
     const body = await req.json();
-    const { name, scriptFamily, isRTL, fontFamily } = body;
+    const { name, nativeScriptName, scriptFamily, isRTL, fontFamily } = body;
 
     if (!name?.trim()) {
       return NextResponse.json({ success: false, error: 'name is required' }, { status: 400 });
@@ -26,6 +26,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       where: { id },
       data: {
         name: name.trim(),
+        ...(nativeScriptName !== undefined && { nativeScriptName: nativeScriptName?.trim() || null }),
         ...(scriptFamily !== undefined && { scriptFamily: scriptFamily.trim() }),
         ...(isRTL !== undefined && { isRTL }),
         ...(fontFamily !== undefined && { fontFamily: fontFamily.trim() }),

@@ -1,0 +1,79 @@
+{
+  "nav": {
+    "home": "Home",
+    "register": "Register Organization",
+    "login": "Login",
+    "dashboard": "Dashboard",
+    "logout": "Sign Out"
+  },
+  "common": {
+    "loading": "Loading…",
+    "save": "Save",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "search": "Search",
+    "required": "Required",
+    "optional": "Optional",
+    "yes": "Yes",
+    "no": "No",
+    "edit": "Edit",
+    "delete": "Delete",
+    "approve": "Approve",
+    "reject": "Reject",
+    "status": "Status"
+  },
+  "org": {
+    "name": "Organization Name",
+    "registrationType": "Registration Type",
+    "registrationNumber": "Registration Number",
+    "yearEstablished": "Year Established",
+    "description": "Description",
+    "country": "Country",
+    "faith": "Religious Affiliation",
+    "socialCategories": "Social Categories",
+    "bplFriendly": "BPL Friendly",
+    "bplFriendlyHint": "Services available to Below Poverty Line households",
+    "website": "Website",
+    "contact": "Contact Information",
+    "primaryContact": "Primary Contact",
+    "secondaryContact": "Secondary Contact",
+    "services": "Services",
+    "branches": "Branch Locations",
+    "languages": "Languages Supported",
+    "documents": "Documents"
+  },
+  "status": {
+    "PENDING": "Pending Review",
+    "VOLUNTEER_APPROVED": "Awaiting Translation Review",
+    "APPROVED": "Approved",
+    "REJECTED": "Rejected",
+    "CLARIFICATION_REQUESTED": "Clarification Requested",
+    "ARCHIVED": "Archived"
+  },
+  "register": {
+    "title": "Register Your Organization",
+    "subtitle": "Join NaariSamata's network of support services",
+    "newOrg": "New Organization",
+    "branch": "Branch of Existing Organization",
+    "startRegistration": "Start Registration",
+    "saveDraft": "Save Draft",
+    "resumeDraft": "Resume Draft",
+    "checkDuplicates": "Check for Duplicates",
+    "noMatch": "No matching organizations found",
+    "matchFound": "Matching organizations found"
+  },
+  "volunteer": {
+    "dashboard": "Volunteer Dashboard",
+    "pendingReview": "Needs Vol. Review",
+    "translationReview": "Needs Translation Review",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "clarification": "Clarification",
+    "reviewOrg": "Review Organization",
+    "passToStage2": "Pass to Stage 2",
+    "approvePublish": "Approve & Publish",
+    "requestClarification": "Request Clarification"
+  }
+}

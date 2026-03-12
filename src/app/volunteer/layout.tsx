@@ -15,7 +15,7 @@ export default async function VolunteerLayout({
   // Allow access to the login page even without a session
   // (the login page itself handles the unauthenticated state)
 
-  const allowedRoles = ['VOLUNTEER', 'ADMIN', 'SUPER_ADMIN'];
+  const allowedRoles = ['VOLUNTEER', 'ADMIN', 'SUPER_ADMIN', 'TRANSLATOR'];
   const userRole = (session?.user as any)?.role;
 
   // If there is a session but wrong role, deny access

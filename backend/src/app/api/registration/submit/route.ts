@@ -28,7 +28,10 @@ const registrationSchema = z.object({
   yearEstablished: z.number().int().min(1800).max(new Date().getFullYear()),
   description: z.string().max(500).optional(),
   faithId: z.string().optional(),
+  socialCategoryIds: z.array(z.string()).optional(),
+  isBPLFriendly: z.boolean().optional().default(false),
   websiteUrl: z.string().url().optional().or(z.literal('')),
+  countryId: z.string().optional().default('IN'),
 
   primaryContact: z.object({
     name: z.string().min(2).max(100),
@@ -201,12 +204,24 @@ export async function POST(request: NextRequest) {
           yearEstablished: data.yearEstablished,
           description: data.description || null,
           faithId: data.faithId || null,
+          isBPLFriendly: data.isBPLFriendly ?? false,
           websiteUrl: data.websiteUrl || null,
+          countryId: data.countryId || 'IN',
           status: 'PENDING',
         },
       });
 
-      // 3. Create contacts
+      // 3. Link social categories to organization
+      if (data.socialCategoryIds && data.socialCategoryIds.length > 0) {
+        await tx.organizationSocialCategory.createMany({
+          data: data.socialCategoryIds.map((socialCategoryId) => ({
+            organizationId: org.id,
+            socialCategoryId,
+          })),
+        });
+      }
+
+      // 4. Create contacts
       await tx.contactInformation.create({
         data: {
           organizationId: org.id,

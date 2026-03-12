@@ -11,6 +11,16 @@ interface OrgSearchResult {
   customId: string | null;
 }
 
+interface DuplicateResult {
+  id: string;
+  customId: string | null;
+  name: string;
+  status: string;
+  city: string | null;
+  state: string | null;
+  submittedAt: string;
+}
+
 function RegisterStartContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -27,6 +37,13 @@ function RegisterStartContent() {
   const [showDropdown, setShowDropdown] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Duplicate check state (volunteer mode only, for new org registrations)
+  const [dupQuery, setDupQuery] = useState('');
+  const [dupResults, setDupResults] = useState<DuplicateResult[] | null>(null);
+  const [isDupSearching, setIsDupSearching] = useState(false);
+  const [dupCheckDone, setDupCheckDone] = useState(false);
+  const [dupError, setDupError] = useState('');
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -83,6 +100,29 @@ function RegisterStartContent() {
     router.push(`/register/form?${params.toString()}`);
   }
 
+  async function handleCheckDuplicates() {
+    if (!dupQuery.trim() || dupQuery.trim().length < 2) {
+      setDupError('Please enter at least 2 characters to search');
+      return;
+    }
+    setIsDupSearching(true);
+    setDupError('');
+    setDupResults(null);
+    try {
+      const res = await fetch(`/api/organizations/check-duplicate?q=${encodeURIComponent(dupQuery.trim())}`, {
+        credentials: 'include',
+      });
+      const json = await res.json();
+      if (!res.ok || !json.success) throw new Error(json.error || 'Search failed');
+      setDupResults(json.data);
+      setDupCheckDone(true);
+    } catch (err: any) {
+      setDupError(err.message || 'Search failed. Please try again.');
+    } finally {
+      setIsDupSearching(false);
+    }
+  }
+
   return (
     <div className="max-w-4xl mx-auto">
       {/* Home / Dashboard link */}
@@ -106,7 +146,7 @@ function RegisterStartContent() {
           </svg>
           <span>
             <strong>Volunteer Mode</strong> — You are registering this organization on behalf of a field visit.
-            The record will be automatically approved upon submission.
+            The record will skip Stage 1 review and go directly to the Translator queue for Stage 2 approval.
           </span>
         </div>
       )}
@@ -452,19 +492,111 @@ function RegisterStartContent() {
           </div>
         )}
 
+        {/* Volunteer mode: duplicate check gate for new org registrations */}
+        {volunteerMode && registrationType === 'organization' && (
+          <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6 shadow-sm">
+            <h3 className="text-base font-ui font-semibold text-gray-900 mb-1">
+              Check for Duplicate Organisations
+            </h3>
+            <p className="text-sm font-body text-gray-500 mb-4">
+              Search by name to confirm this organisation is not already registered before proceeding.
+            </p>
+
+            <div className="flex gap-2 mb-4">
+              <input
+                type="text"
+                value={dupQuery}
+                onChange={(e) => { setDupQuery(e.target.value); setDupCheckDone(false); setDupResults(null); }}
+                onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleCheckDuplicates(); } }}
+                placeholder="Enter organisation name to search…"
+                className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-body focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent"
+              />
+              <button
+                type="button"
+                onClick={handleCheckDuplicates}
+                disabled={isDupSearching || dupQuery.trim().length < 2}
+                className="px-4 py-2.5 bg-gray-700 text-white rounded-lg text-sm font-ui font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {isDupSearching ? 'Searching…' : 'Check'}
+              </button>
+            </div>
+
+            {dupError && (
+              <p className="text-sm font-body text-error-600 mb-3">{dupError}</p>
+            )}
+
+            {dupResults !== null && dupResults.length === 0 && (
+              <div className="flex items-center gap-2 text-sm font-body text-success-700 bg-success-50 border border-success-200 rounded-lg px-4 py-2">
+                <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                No duplicates found — you can proceed to register.
+              </div>
+            )}
+
+            {dupResults !== null && dupResults.length > 0 && (
+              <div>
+                <div className="flex items-center gap-2 text-sm font-body text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-4 py-2 mb-3">
+                  <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                  </svg>
+                  <span><strong>{dupResults.length} possible match{dupResults.length > 1 ? 'es' : ''} found.</strong> Review before registering a new record.</span>
+                </div>
+                <div className="space-y-2">
+                  {dupResults.map((org) => (
+                    <div key={org.id} className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-4 py-3">
+                      <div>
+                        <p className="font-body text-sm font-medium text-gray-800">{org.name}</p>
+                        <p className="font-body text-xs text-gray-500">
+                          {org.customId && <span>{org.customId} · </span>}
+                          {[org.city, org.state].filter(Boolean).join(', ') || 'Location unknown'}
+                          {' · '}
+                          <span className={`font-semibold ${org.status === 'APPROVED' ? 'text-success-600' : org.status === 'PENDING' ? 'text-warning-600' : 'text-blue-600'}`}>
+                            {org.status.replace('_', ' ')}
+                          </span>
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => router.push(`/volunteer/organizations/${org.id}/review`)}
+                        className="font-body text-xs font-medium text-primary-600 hover:text-primary-700 border border-primary-200 hover:border-primary-400 px-3 py-1.5 rounded-lg transition-colors ml-3 flex-shrink-0"
+                      >
+                        View Record
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Action buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
           {registrationType === 'organization' && (
-            <Link
-              href={volunteerMode ? '/register/form?volunteerMode=true' : '/register/form'}
-              className="inline-flex items-center justify-center min-h-[56px] px-8 py-4 bg-primary-600 text-white rounded-lg font-ui font-semibold text-lg
-                         shadow-lg hover:shadow-xl hover:bg-primary-700 hover:-translate-y-0.5
-                         active:bg-primary-800 active:translate-y-0 active:shadow-md
-                         focus:outline-none focus:ring-4 focus:ring-primary-100 focus:ring-offset-2
-                         transition-all duration-200"
-            >
-              Start Registration →
-            </Link>
+            (() => {
+              // In volunteer mode, require duplicate check before proceeding
+              const canProceed = !volunteerMode || dupCheckDone;
+              return (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!canProceed) return;
+                    router.push(volunteerMode ? '/register/form?volunteerMode=true' : '/register/form');
+                  }}
+                  disabled={!canProceed}
+                  title={!canProceed ? 'Please complete the duplicate check above first' : undefined}
+                  className="inline-flex items-center justify-center min-h-[56px] px-8 py-4 bg-primary-600 text-white rounded-lg font-ui font-semibold text-lg
+                             shadow-lg hover:shadow-xl hover:bg-primary-700 hover:-translate-y-0.5
+                             active:bg-primary-800 active:translate-y-0 active:shadow-md
+                             focus:outline-none focus:ring-4 focus:ring-primary-100 focus:ring-offset-2
+                             transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed
+                             disabled:hover:shadow-lg disabled:hover:translate-y-0"
+                >
+                  Start Registration →
+                </button>
+              );
+            })()
           )}
 
           {registrationType === 'branch' && (

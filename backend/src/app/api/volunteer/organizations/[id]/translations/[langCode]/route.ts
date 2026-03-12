@@ -21,6 +21,7 @@ async function getAuth() {
 // Human-readable labels for each translatable field
 const FIELD_LABELS: Record<string, string> = {
   name: 'Organization Name',
+  description: 'Description',
 };
 
 export async function GET(
@@ -28,7 +29,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string; langCode: string }> }
 ) {
   const auth = await getAuth();
-  const allowed = await auth.isAdminOrVolunteer();
+  const allowed = await auth.isAdminOrVolunteerOrTranslator();
   if (!allowed) {
     return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
   }
@@ -44,7 +45,7 @@ export async function GET(
 
   const org = await prisma.organization.findUnique({
     where: { id: organizationId },
-    select: { name: true },
+    select: { name: true, description: true },
   });
   if (!org) {
     return NextResponse.json({ success: false, error: 'Organization not found' }, { status: 404 });
@@ -95,7 +96,7 @@ export async function PATCH(
     return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
   }
 
-  const allowed = await auth.isAdminOrVolunteer();
+  const allowed = await auth.isAdminOrVolunteerOrTranslator();
   if (!allowed) {
     return NextResponse.json({ success: false, error: 'Forbidden' }, { status: 403 });
   }

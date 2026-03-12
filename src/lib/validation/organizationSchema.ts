@@ -29,6 +29,10 @@ export const organizationSchema = z.object({
   faithId: z.string().optional(),
 
   socialCategoryIds: z.array(z.string()).optional(),
+
+  isBPLFriendly: z.boolean().default(false),
+
+  countryId: z.string().default('IN'),
 });
 
 export type OrganizationFormData = z.infer<typeof organizationSchema>;

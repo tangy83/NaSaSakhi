@@ -43,6 +43,8 @@ export async function GET(
       },
       contacts: true,
       languages: { include: { language: true } },
+      socialCategories: { include: { socialCategory: true } },
+      faith: { select: { id: true, name: true } },
       documents: true,
       reviewNotes: {
         include: { reviewer: { select: { id: true, name: true, email: true } } },

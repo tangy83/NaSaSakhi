@@ -38,6 +38,7 @@ export async function GET() {
       return {
         languageId: lang.id,
         languageName: lang.name,
+        nativeScriptName: lang.nativeScriptName,
         languageCode: lang.code,
         scriptFamily: lang.scriptFamily,
         fontFamily: lang.fontFamily,
@@ -65,7 +66,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { name, code, scriptFamily, isRTL, fontFamily, googleFontName } = body;
+    const { name, code, nativeScriptName, scriptFamily, isRTL, fontFamily, googleFontName } = body;
 
     if (!name || !code || !scriptFamily || !fontFamily || !googleFontName) {
       return NextResponse.json(
@@ -75,7 +76,7 @@ export async function POST(req: NextRequest) {
     }
 
     const language = await prisma.language.create({
-      data: { name, code, scriptFamily, isRTL: isRTL ?? false, fontFamily, googleFontName, isActive: true },
+      data: { name, code, nativeScriptName: nativeScriptName?.trim() || null, scriptFamily, isRTL: isRTL ?? false, fontFamily, googleFontName, isActive: true },
     });
 
     return NextResponse.json({ success: true, data: language }, { status: 201 });

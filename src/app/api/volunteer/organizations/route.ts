@@ -26,9 +26,11 @@ export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
   const status = (searchParams.get('status') || 'PENDING') as
     | 'PENDING'
+    | 'VOLUNTEER_APPROVED'
     | 'APPROVED'
     | 'REJECTED'
-    | 'CLARIFICATION_REQUESTED';
+    | 'CLARIFICATION_REQUESTED'
+    | 'ARCHIVED';
   const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
   const limit = Math.min(50, Math.max(1, parseInt(searchParams.get('limit') || '20', 10)));
   const skip = (page - 1) * limit;

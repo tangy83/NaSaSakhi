@@ -10,6 +10,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || '/api';
 interface Language {
   languageId: string;
   languageName: string;
+  nativeScriptName?: string | null;
   languageCode: string;
   scriptFamily: string;
   fontFamily: string;
@@ -29,6 +30,7 @@ export default function LanguagesPage() {
   const [error, setError] = useState('');
   const [form, setForm] = useState({
     name: '',
+    nativeScriptName: '',
     code: '',
     scriptFamily: 'Devanagari',
     isRTL: false,
@@ -39,7 +41,7 @@ export default function LanguagesPage() {
   const [successMsg, setSuccessMsg] = useState('');
 
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editForm, setEditForm] = useState({ name: '', scriptFamily: '', isRTL: false, fontFamily: '' });
+  const [editForm, setEditForm] = useState({ name: '', nativeScriptName: '', scriptFamily: '', isRTL: false, fontFamily: '' });
   const [savingId, setSavingId] = useState<string | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -73,6 +75,7 @@ export default function LanguagesPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: form.name.trim(),
+          nativeScriptName: form.nativeScriptName.trim() || null,
           code: form.code.trim().toLowerCase(),
           scriptFamily: form.scriptFamily.trim(),
           isRTL: form.isRTL,
@@ -87,6 +90,7 @@ export default function LanguagesPage() {
         {
           languageId: json.data.id,
           languageName: json.data.name,
+          nativeScriptName: json.data.nativeScriptName,
           languageCode: json.data.code,
           scriptFamily: json.data.scriptFamily,
           fontFamily: json.data.fontFamily,
@@ -95,7 +99,7 @@ export default function LanguagesPage() {
           coveragePercent: 0,
         },
       ]);
-      setForm({ name: '', code: '', scriptFamily: 'Devanagari', isRTL: false, fontFamily: 'Noto Sans Devanagari', googleFontName: 'Noto+Sans+Devanagari' });
+      setForm({ name: '', nativeScriptName: '', code: '', scriptFamily: 'Devanagari', isRTL: false, fontFamily: 'Noto Sans Devanagari', googleFontName: 'Noto+Sans+Devanagari' });
       setSuccessMsg(`Language "${json.data.name}" added.`);
       setTimeout(() => setSuccessMsg(''), 3000);
     } catch (err: any) {
@@ -107,7 +111,7 @@ export default function LanguagesPage() {
 
   function startEdit(lang: Language) {
     setEditingId(lang.languageId);
-    setEditForm({ name: lang.languageName, scriptFamily: lang.scriptFamily, isRTL: lang.isRTL, fontFamily: lang.fontFamily });
+    setEditForm({ name: lang.languageName, nativeScriptName: lang.nativeScriptName || '', scriptFamily: lang.scriptFamily, isRTL: lang.isRTL, fontFamily: lang.fontFamily });
     setConfirmDeleteId(null);
   }
 
@@ -122,6 +126,7 @@ export default function LanguagesPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: editForm.name.trim(),
+          nativeScriptName: editForm.nativeScriptName.trim() || null,
           scriptFamily: editForm.scriptFamily.trim(),
           isRTL: editForm.isRTL,
           fontFamily: editForm.fontFamily.trim(),
@@ -132,7 +137,7 @@ export default function LanguagesPage() {
       setLanguages((prev) =>
         prev.map((l) =>
           l.languageId === id
-            ? { ...l, languageName: json.data.name, scriptFamily: json.data.scriptFamily, isRTL: json.data.isRTL, fontFamily: json.data.fontFamily }
+            ? { ...l, languageName: json.data.name, nativeScriptName: json.data.nativeScriptName, scriptFamily: json.data.scriptFamily, isRTL: json.data.isRTL, fontFamily: json.data.fontFamily }
             : l
         )
       );
@@ -219,7 +224,8 @@ export default function LanguagesPage() {
                   {editingId === lang.languageId ? (
                     <>
                       <td className="px-4 py-2">
-                        <input type="text" value={editForm.name} onChange={(e) => setEditForm((f) => ({ ...f, name: e.target.value }))} onKeyDown={(e) => { if (e.key === 'Escape') setEditingId(null); }} autoFocus className="w-full px-2 py-1 border border-primary-400 rounded font-body text-sm focus:outline-none" />
+                        <input type="text" value={editForm.name} onChange={(e) => setEditForm((f) => ({ ...f, name: e.target.value }))} onKeyDown={(e) => { if (e.key === 'Escape') setEditingId(null); }} autoFocus className="w-full px-2 py-1 border border-primary-400 rounded font-body text-sm focus:outline-none mb-1" />
+                        <input type="text" value={editForm.nativeScriptName} onChange={(e) => setEditForm((f) => ({ ...f, nativeScriptName: e.target.value }))} placeholder="Native script (e.g. हिन्दी)" className="w-full px-2 py-1 border border-gray-300 rounded font-body text-xs focus:outline-none text-gray-500" />
                       </td>
                       <td className="px-4 py-2 font-body text-sm text-gray-400 font-mono">{lang.languageCode}</td>
                       <td className="px-4 py-2 hidden sm:table-cell">
@@ -243,7 +249,10 @@ export default function LanguagesPage() {
                     </>
                   ) : confirmDeleteId === lang.languageId ? (
                     <>
-                      <td className="px-4 py-3 font-body text-sm text-gray-800">{lang.languageName}</td>
+                      <td className="px-4 py-3">
+                        <p className="font-body text-sm text-gray-800">{lang.languageName}</p>
+                        {lang.nativeScriptName && <p className="font-body text-xs text-gray-400">{lang.nativeScriptName}</p>}
+                      </td>
                       <td className="px-4 py-3 font-body text-sm text-gray-500 font-mono">{lang.languageCode}</td>
                       <td className="px-4 py-3 font-body text-sm text-gray-500 hidden sm:table-cell">{lang.scriptFamily}</td>
                       <td className="px-4 py-3 font-body text-sm text-gray-500 hidden md:table-cell">{lang.fontFamily}</td>
@@ -261,7 +270,10 @@ export default function LanguagesPage() {
                     </>
                   ) : (
                     <>
-                      <td className="px-4 py-3 font-body text-sm text-gray-800">{lang.languageName}</td>
+                      <td className="px-4 py-3">
+                        <p className="font-body text-sm text-gray-800">{lang.languageName}</p>
+                        {lang.nativeScriptName && <p className="font-body text-xs text-gray-400">{lang.nativeScriptName}</p>}
+                      </td>
                       <td className="px-4 py-3 font-body text-sm text-gray-500 font-mono">{lang.languageCode}</td>
                       <td className="px-4 py-3 font-body text-sm text-gray-500 hidden sm:table-cell">{lang.scriptFamily}</td>
                       <td className="px-4 py-3 font-body text-sm text-gray-500 hidden md:table-cell">{lang.fontFamily}</td>
@@ -292,6 +304,7 @@ export default function LanguagesPage() {
         <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[
             { label: 'Name *', key: 'name', placeholder: 'e.g. Tamil' },
+            { label: 'Native Script Name', key: 'nativeScriptName', placeholder: 'e.g. தமிழ்' },
             { label: 'Code *', key: 'code', placeholder: 'e.g. ta' },
             { label: 'Script Family', key: 'scriptFamily', placeholder: 'e.g. Tamil' },
             { label: 'Font Family', key: 'fontFamily', placeholder: 'e.g. Noto Sans Tamil' },

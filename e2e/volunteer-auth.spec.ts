@@ -21,7 +21,7 @@ test.describe('Volunteer Authentication', () => {
   test('volunteer login page loads', async ({ page }) => {
     await page.goto('/volunteer/login');
     await expect(page).toHaveURL('/volunteer/login');
-    await expect(page.getByRole('heading', { name: /Sign in/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /NaariSamata/i })).toBeVisible();
     await expect(page.getByLabel(/Volunteer ID/i)).toBeVisible();
     await expect(page.getByLabel(/Password/i)).toBeVisible();
     await expect(page.getByRole('button', { name: /Sign in/i })).toBeVisible();
@@ -30,7 +30,7 @@ test.describe('Volunteer Authentication', () => {
   test('shows NaariSamata branding on login page', async ({ page }) => {
     await page.goto('/volunteer/login');
     await expect(page.getByText('NaariSamata')).toBeVisible();
-    await expect(page.getByText('Volunteer Portal')).toBeVisible();
+    await expect(page.getByText('Staff Portal')).toBeVisible();
   });
 
   test('login with valid volunteer ID and password succeeds', async ({ page }) => {

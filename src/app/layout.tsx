@@ -2,6 +2,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { SessionProvider } from '@/components/providers/SessionProvider';
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale, getMessages } from 'next-intl/server';
 import {
   Cormorant_Garamond,
   Open_Sans,
@@ -38,27 +40,28 @@ const technical = Roboto({
   display: 'swap',
 });
 
-// Note: Indian-script fonts (Noto Sans Devanagari, Tamil, etc.) are not loaded
-// globally. The translation feature is currently parked — see PARKED comments
-// in volunteer/languages/page.tsx and volunteer/organizations/[id]/translate/page.tsx.
-
 export const metadata: Metadata = {
   title: 'NaariSamata Saathi - Organization Registration Portal',
   description: 'Empowering women and vulnerable children across India',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
     <html
-      lang="en"
+      lang={locale}
       className={`${heading.variable} ${body.variable} ${ui.variable} ${technical.variable}`}
     >
       <body>
-        <SessionProvider>{children}</SessionProvider>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <SessionProvider>{children}</SessionProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

@@ -11,8 +11,8 @@ export async function loginAsVolunteer(
   await page.getByLabel(/Volunteer ID/i).fill(opts.volunteerId);
   await page.getByLabel(/Password/i).fill(opts.password);
   await page.getByRole('button', { name: /Sign in/i }).click();
-  // Wait for redirect to dashboard
-  await page.waitForURL('/volunteer/dashboard', { timeout: 15000 });
+  // Wait for redirect to dashboard (30s to handle parallel test load)
+  await page.waitForURL('/volunteer/dashboard', { timeout: 30000 });
 }
 
 /** Logs out and verifies redirect to login */

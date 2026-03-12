@@ -12,13 +12,13 @@ test.describe('Registration Form E2E Tests', () => {
   });
 
   test('should navigate to registration form', async ({ page }) => {
-    // Select "New Organization" card to reveal the Start Registration link
+    // Select "New Organization" card
     await page.getByRole('button', { name: /New Organization/i }).click();
 
-    // Wait for the link to be visible and clickable
-    const startLink = page.getByRole('link', { name: /Start Registration/i });
-    await expect(startLink).toBeVisible();
-    await startLink.click();
+    // Start Registration is now a button (not a link) since duplicate-check gate was added
+    const startBtn = page.getByRole('button', { name: /Start Registration/i });
+    await expect(startBtn).toBeVisible();
+    await startBtn.click();
 
     // Wait for navigation to complete
     await page.waitForURL('/register/form');

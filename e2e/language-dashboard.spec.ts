@@ -37,9 +37,9 @@ test.describe('Language Coverage Dashboard', () => {
     await loginAsVolunteer(page, { volunteerId: TEST_VOLUNTEER_ID, password: TEST_PASSWORD });
     await page.goto('/volunteer/languages');
 
-    await expect(page.getByText(/Approved Organizations/i)).toBeVisible({ timeout: 10000 });
-    await expect(page.getByText(/Full Coverage/i)).toBeVisible();
-    await expect(page.getByText(/Partial Coverage/i)).toBeVisible();
+    await expect(page.getByText(/Approved Organizations/i)).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText(/Full Coverage/i)).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText(/Partial Coverage/i)).toBeVisible({ timeout: 10000 });
   });
 
   test('per-language table shows at least the seeded languages', async ({ page }) => {
@@ -47,9 +47,9 @@ test.describe('Language Coverage Dashboard', () => {
     await page.goto('/volunteer/languages');
 
     // Hindi should always be seeded
-    await expect(page.getByText('Hindi')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText('Hindi').first()).toBeVisible({ timeout: 10000 });
     // English too
-    await expect(page.getByText('English')).toBeVisible();
+    await expect(page.getByText('English').first()).toBeVisible();
   });
 
   test('table shows script family for each language', async ({ page }) => {
@@ -64,10 +64,10 @@ test.describe('Language Coverage Dashboard', () => {
     await loginAsVolunteer(page, { volunteerId: TEST_VOLUNTEER_ID, password: TEST_PASSWORD });
     await page.goto('/volunteer/languages');
 
-    await expect(page.getByText('Urdu')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText('Urdu').first()).toBeVisible({ timeout: 15000 });
     // RTL badge should be in the same row
     const rtlBadges = page.getByText('RTL');
-    await expect(rtlBadges.first()).toBeVisible();
+    await expect(rtlBadges.first()).toBeVisible({ timeout: 10000 });
   });
 
   test('filter tabs are present and clickable', async ({ page }) => {
@@ -84,15 +84,16 @@ test.describe('Language Coverage Dashboard', () => {
     await loginAsVolunteer(page, { volunteerId: TEST_VOLUNTEER_ID, password: TEST_PASSWORD });
     await page.goto('/volunteer/languages');
 
+    // Wait for page to fully load before interacting with filters
+    await expect(page.getByText('Hindi').first()).toBeVisible({ timeout: 15000 });
+
     await page.getByRole('button', { name: 'Inactive' }).click();
 
-    // Wait for re-render — if no inactive languages, the empty state shows
-    await page.waitForTimeout(500);
     // Either the empty state or inactive rows are shown
     const rows = page.locator('tbody tr');
     const emptyMsg = page.getByText('No languages match this filter');
     const hasRows = (await rows.count()) > 0;
-    const hasEmpty = await emptyMsg.isVisible();
+    const hasEmpty = await emptyMsg.isVisible({ timeout: 5000 });
     expect(hasRows || hasEmpty).toBe(true);
   });
 

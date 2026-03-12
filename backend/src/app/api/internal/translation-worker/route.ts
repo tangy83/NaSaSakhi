@@ -24,6 +24,7 @@ async function getPrisma() {
 // ─── Fields to translate ──────────────────────────────────────────────────────
 const ORG_TRANSLATABLE_FIELDS: Array<{ field: string }> = [
   { field: 'name' },
+  { field: 'description' },
 ];
 
 // ─── Bhashini pipeline config cache ──────────────────────────────────────────
@@ -194,7 +195,7 @@ export async function POST(req: NextRequest) {
     orderBy: { createdAt: 'asc' },
     take: 20,
     include: {
-      organization: { select: { id: true, name: true } },
+      organization: { select: { id: true, name: true, description: true } },
       language: { select: { id: true, code: true, name: true } },
     },
   });

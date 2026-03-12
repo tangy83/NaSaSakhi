@@ -23,27 +23,22 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
   }
 
-  const allowed = await auth.isAdminOrVolunteer();
+  const allowed = await auth.isAdminOrVolunteerOrTranslator();
   if (!allowed) {
     return NextResponse.json({ success: false, error: 'Forbidden' }, { status: 403 });
   }
 
   const prisma = await getPrisma();
 
-  const [pending, approvedByMe, clarificationRequested, totalApproved] = await Promise.all([
+  const [pending, volunteerApproved, clarificationRequested, totalApproved] = await Promise.all([
     prisma.organization.count({ where: { status: 'PENDING' } }),
-    prisma.reviewNote.count({
-      where: {
-        reviewerId: (user as any).id,
-        statusAfter: 'APPROVED',
-      },
-    }),
+    prisma.organization.count({ where: { status: 'VOLUNTEER_APPROVED' } }),
     prisma.organization.count({ where: { status: 'CLARIFICATION_REQUESTED' } }),
     prisma.organization.count({ where: { status: 'APPROVED' } }),
   ]);
 
   return NextResponse.json({
     success: true,
-    data: { pending, approvedByMe, clarificationRequested, totalApproved },
+    data: { pending, volunteerApproved, approvedByMe: 0, clarificationRequested, totalApproved },
   });
 }

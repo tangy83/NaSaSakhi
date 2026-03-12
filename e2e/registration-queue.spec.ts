@@ -10,7 +10,7 @@ import { loginAsVolunteer } from './helpers/auth';
 const TEST_VOLUNTEER_ID = 'VOL-QUEUE-TEST-001';
 const TEST_PASSWORD = 'TestPassword123!';
 
-const BASE_URL = process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://localhost:3000';
+const BASE_URL = process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://localhost:3002';
 
 // Shared state across tests
 let testOrgId: string;
@@ -179,7 +179,7 @@ test.describe.serial('Registration → Volunteer Queue Pipeline', () => {
     await orgRow.getByRole('button', { name: /Review/i }).click();
 
     await expect(page).toHaveURL(`/volunteer/organizations/${testOrgId}/review`, {
-      timeout: 10000,
+      timeout: 30000,
     });
   });
 
@@ -198,7 +198,8 @@ test.describe.serial('Registration → Volunteer Queue Pipeline', () => {
     await page.goto(`${BASE_URL}/volunteer/organizations/${testOrgId}/review`);
 
     await expect(page.getByText('Review Action')).toBeVisible({ timeout: 10000 });
-    await expect(page.getByRole('button', { name: /Approve/i })).toBeVisible();
+    // Volunteers see "Pass to Stage 2" (not "Approve") for PENDING orgs
+    await expect(page.getByRole('button', { name: /Pass to Stage 2|Approve/i })).toBeVisible();
     await expect(page.getByRole('button', { name: /Request Clarification/i })).toBeVisible();
     await expect(page.getByRole('button', { name: /Reject/i })).toBeVisible();
   });

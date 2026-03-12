@@ -34,6 +34,7 @@ export async function POST(request: NextRequest) {
       yearEstablished,
       faithId,
       socialCategoryIds,
+      countryId = 'IN',
 
       // Step 2: Contact Information
       primaryContact,
@@ -156,14 +157,26 @@ export async function POST(request: NextRequest) {
           registrationNumber,
           yearEstablished: yearEstablished ? parseInt(yearEstablished, 10) : 2000,
           faithId: faithId || null,
+          isBPLFriendly: body.isBPLFriendly === true,
           websiteUrl: website || null,
-          // Volunteer/admin submissions are auto-approved; public submissions are PENDING
-          status: isVolunteerSubmission ? 'APPROVED' : 'PENDING',
+          countryId: countryId || 'IN',
+          // Volunteer submissions skip Stage 1 (go to VOLUNTEER_APPROVED); public submissions are PENDING
+          status: isVolunteerSubmission ? 'VOLUNTEER_APPROVED' : 'PENDING',
           submittedByUserId: isVolunteerSubmission ? submitter!.id : null,
         },
       });
 
-      // 3. Create Primary Contact Information
+      // 3. Link social categories to organization
+      if (socialCategoryIds && socialCategoryIds.length > 0) {
+        await tx.organizationSocialCategory.createMany({
+          data: socialCategoryIds.map((socialCategoryId: string) => ({
+            organizationId: organization.id,
+            socialCategoryId,
+          })),
+        });
+      }
+
+      // 4. Create Primary Contact Information
       await tx.contactInformation.create({
         data: {
           organizationId: organization.id,
@@ -177,7 +190,7 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      // 4. Create Secondary Contact Information (if provided)
+      // 5. Create Secondary Contact Information (if provided)
       if (secondaryContact && secondaryContact.name) {
         await tx.contactInformation.create({
           data: {

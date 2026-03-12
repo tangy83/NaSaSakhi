@@ -1,6 +1,6 @@
 'use client';
 
-// Volunteer / Admin Login Page
+// Volunteer / Admin / Translator Login Page
 // Toggle selects the login mode; each mode shows the correct credential field.
 
 import { useState, FormEvent } from 'react';
@@ -8,11 +8,12 @@ import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { TextInput } from '@/components/form/TextInput';
 
-type Mode = 'volunteer' | 'admin';
+type Mode = 'volunteer' | 'translator' | 'admin';
 
 const DEMO_CREDENTIALS: Record<Mode, { label: string; identifier: string; password: string }> = {
-  volunteer: { label: 'Volunteer ID', identifier: 'VOL-DEMO-001', password: 'Demo@Volunteer2026' },
-  admin:     { label: 'Email',        identifier: 'admin@naarisamata.org', password: 'Admin@NaariSamata2026' },
+  volunteer:  { label: 'Volunteer ID', identifier: 'VOL-DEMO-001',             password: 'Demo@Volunteer2026' },
+  translator: { label: 'Email',        identifier: 'translator@naarisamata.org', password: 'Trans@NaariSamata2026' },
+  admin:      { label: 'Email',        identifier: 'admin@naarisamata.org',      password: 'Admin@NaariSamata2026' },
 };
 
 export default function VolunteerLoginPage() {
@@ -87,7 +88,7 @@ export default function VolunteerLoginPage() {
         <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-8">
           {/* Mode toggle */}
           <div className="flex bg-gray-100 rounded-lg p-1 mb-6">
-            {(['volunteer', 'admin'] as Mode[]).map((m) => (
+            {(['volunteer', 'translator', 'admin'] as Mode[]).map((m) => (
               <button
                 key={m}
                 type="button"
@@ -100,7 +101,7 @@ export default function VolunteerLoginPage() {
                   }
                 `}
               >
-                {m === 'volunteer' ? 'Volunteer' : 'Admin'}
+                {m === 'volunteer' ? 'Volunteer' : m === 'translator' ? 'Translator' : 'Admin'}
               </button>
             ))}
           </div>
@@ -125,7 +126,7 @@ export default function VolunteerLoginPage() {
                 type="email"
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
-                placeholder="e.g. admin@naarisamata.org"
+                placeholder={mode === 'translator' ? 'e.g. translator@naarisamata.org' : 'e.g. admin@naarisamata.org'}
                 autoComplete="email"
                 required
                 disabled={isLoading}

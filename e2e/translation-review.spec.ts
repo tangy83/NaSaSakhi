@@ -21,9 +21,10 @@ test.describe('Translation Review', () => {
   /** Navigate to the translation review page for the first APPROVED org */
   async function goToFirstApprovedOrgTranslatePage(page: any) {
     await loginAsVolunteer(page, { volunteerId: TEST_VOLUNTEER_ID, password: TEST_PASSWORD });
-    await page.getByRole('button', { name: 'APPROVED' }).click();
+    await page.getByRole('button', { name: 'Approved', exact: true }).click();
 
-    const reviewButtons = page.getByRole('button', { name: /Review/i });
+    // Use table-scoped locator to avoid matching tab buttons like "Stage 1 Review"
+    const reviewButtons = page.locator('table').getByRole('button', { name: 'Review', exact: true });
     const count = await reviewButtons.count();
     if (count === 0) return false;
 
