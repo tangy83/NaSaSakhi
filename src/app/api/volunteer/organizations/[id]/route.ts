@@ -23,7 +23,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const auth = await getAuth();
-  const allowed = await auth.isAdminOrVolunteer();
+  const allowed = await auth.isAdminOrVolunteerOrTranslator();
 
   if (!allowed) {
     return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });

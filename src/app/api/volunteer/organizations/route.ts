@@ -17,7 +17,7 @@ async function getAuth() {
 
 export async function GET(req: NextRequest) {
   const auth = await getAuth();
-  const allowed = await auth.isAdminOrVolunteer();
+  const allowed = await auth.isAdminOrVolunteerOrTranslator();
 
   if (!allowed) {
     return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
