@@ -10,6 +10,7 @@ import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 interface DashboardStats {
   pending: number;
+  volunteerApproved: number;
   approvedByMe: number;
   clarificationRequested: number;
   totalApproved: number;
@@ -47,10 +48,13 @@ export default function VolunteerDashboardPage() {
   const userRole = (session?.user as any)?.role;
   const isAdmin = userRole === 'ADMIN' || userRole === 'SUPER_ADMIN';
 
+  const isTranslator = userRole === 'TRANSLATOR';
+
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [orgs, setOrgs] = useState<OrgQueueItem[]>([]);
   const [pagination, setPagination] = useState<Pagination | null>(null);
-  const [statusFilter, setStatusFilter] = useState<string>('PENDING');
+  // Translators default to the Stage 2 queue; everyone else defaults to Stage 1
+  const [statusFilter, setStatusFilter] = useState<string>(isTranslator ? 'VOLUNTEER_APPROVED' : 'PENDING');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -125,8 +129,8 @@ export default function VolunteerDashboardPage() {
       {/* Stats cards */}
       {stats && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <StatCard label="Awaiting Review" value={stats.pending} highlight />
-          <StatCard label="Approved by Me" value={stats.approvedByMe} />
+          <StatCard label="Needs Vol. Review" value={stats.pending} highlight={!isTranslator} />
+          <StatCard label="Needs Translation Review" value={stats.volunteerApproved} highlight={isTranslator} />
           <StatCard label="Needs Clarification" value={stats.clarificationRequested} />
           <StatCard label="Total Approved" value={stats.totalApproved} />
         </div>
@@ -218,28 +222,6 @@ export default function VolunteerDashboardPage() {
         </section>
       )}
 
-      {/* Coming Soon — Translation features */}
-      <section>
-        <h2 className="font-heading text-xl text-gray-800 font-medium mb-4">Coming Soon</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 text-left opacity-60 cursor-not-allowed">
-            <div className="text-gray-400 mb-3">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
-              </svg>
-            </div>
-            <div className="flex items-center gap-2 mb-1">
-              <h3 className="font-body text-sm font-semibold text-gray-500">Language Coverage</h3>
-              <span className="font-body text-xs font-semibold text-gray-400 bg-gray-200 rounded-full px-2 py-0.5">
-                Coming Soon
-              </span>
-            </div>
-            <p className="font-body text-xs text-gray-400 leading-snug">
-              Translation progress across all approved organizations and languages
-            </p>
-          </div>
-        </div>
-      </section>
 
       {/* Organization queue */}
       <section>
@@ -247,20 +229,26 @@ export default function VolunteerDashboardPage() {
           <h2 className="font-heading text-xl text-gray-800 font-medium">Organizations</h2>
 
           {/* Status filter tabs */}
-          <div className="flex gap-1 bg-gray-100 rounded-lg p-1">
-            {['PENDING', 'CLARIFICATION_REQUESTED', 'APPROVED', 'REJECTED'].map((s) => (
+          <div className="flex gap-1 bg-gray-100 rounded-lg p-1 flex-wrap">
+            {[
+              { value: 'PENDING', label: 'Stage 1 Review' },
+              { value: 'VOLUNTEER_APPROVED', label: 'Stage 2 Review' },
+              { value: 'CLARIFICATION_REQUESTED', label: 'Clarification' },
+              { value: 'APPROVED', label: 'Approved' },
+              { value: 'REJECTED', label: 'Rejected' },
+            ].map(({ value, label }) => (
               <button
-                key={s}
-                onClick={() => setStatusFilter(s)}
+                key={value}
+                onClick={() => setStatusFilter(value)}
                 className={`
                   font-body text-xs font-medium px-3 py-1.5 rounded-md transition-colors
-                  ${statusFilter === s
+                  ${statusFilter === value
                     ? 'bg-white text-primary-600 shadow-sm'
                     : 'text-gray-500 hover:text-gray-700'
                   }
                 `}
               >
-                {s.replace('_', ' ')}
+                {label}
               </button>
             ))}
           </div>

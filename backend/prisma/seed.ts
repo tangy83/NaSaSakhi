@@ -575,20 +575,139 @@ async function main() {
   await prisma.serviceResource.createMany({ data: resources, skipDuplicates: true });
   console.log(`✅ Seeded ${resources.length} service resources`);
 
-  // 6. Seed Faith options — aligned with SQL sakhi_faith.sql naming
-  const faiths = [
-    { name: 'Hinduism' },
-    { name: 'Islam' },
-    { name: 'Christianity' },
-    { name: 'Sikhism' },
-    { name: 'Buddhism' },
-    { name: 'Jainism' },
-    { name: 'Other' },
-    { name: 'No Preference' },
+  // 6. Seed Faith options — global canonical list (Pew Research based)
+  const faithNames = [
+    "Bahá'í Faith",
+    'Buddhism',
+    'Cao Dai',
+    'Christianity',
+    'Confucianism',
+    'Hinduism',
+    'Indigenous / Traditional',
+    'Islam',
+    'Jainism',
+    'Judaism',
+    'Rastafari',
+    'Shinto',
+    'Sikhism',
+    'Taoism',
+    'Tenrikyo',
+    'Zoroastrianism',
+    'Other',
+    'No Preference',
+    'Prefer not to say',
   ];
 
-  await prisma.faith.createMany({ data: faiths, skipDuplicates: true });
-  console.log('✅ Seeded faith options');
+  for (const name of faithNames) {
+    await prisma.faith.upsert({
+      where: { name },
+      update: {},
+      create: { name },
+    });
+  }
+  console.log(`✅ Seeded ${faithNames.length} faith options`);
+
+  // Clean up legacy duplicate entries from Sathi SQL migration
+  const legacyDuplicates: Record<string, string> = {
+    Buddhist: 'Buddhism',
+    Christian: 'Christianity',
+    Hindu: 'Hinduism',
+    Muslim: 'Islam',
+    Jain: 'Jainism',
+    Sikh: 'Sikhism',
+  };
+  for (const [oldName, canonicalName] of Object.entries(legacyDuplicates)) {
+    const old = await prisma.faith.findUnique({ where: { name: oldName } });
+    if (!old) continue;
+    const canonical = await prisma.faith.findUnique({ where: { name: canonicalName } });
+    if (canonical) {
+      await prisma.organization.updateMany({ where: { faithId: old.id }, data: { faithId: canonical.id } });
+    }
+    await prisma.faith.delete({ where: { id: old.id } });
+    console.log(`  ↳ Merged legacy "${oldName}" → "${canonicalName}"`);
+  }
+
+  // 6b. Seed CountryFaith mappings (Pew Research 2012 global data)
+  // Build a name→id lookup for faiths
+  const allFaiths = await prisma.faith.findMany({ select: { id: true, name: true } });
+  const faithByName = Object.fromEntries(allFaiths.map((f) => [f.name, f.id]));
+
+  // Helper: converts faith names to { countryId, faithId } rows
+  const cf = (countryId: string, names: string[]) =>
+    names
+      .filter((n) => faithByName[n])
+      .map((n) => ({ countryId, faithId: faithByName[n] }));
+
+  const globalOptOuts = ['Other', 'No Preference', 'Prefer not to say'];
+
+  const countryFaithRows = [
+    ...cf('AE', ['Islam', 'Christianity', 'Hinduism', ...globalOptOuts]),
+    ...cf('AR', ['Christianity', ...globalOptOuts]),
+    ...cf('AT', ['Christianity', 'Islam', ...globalOptOuts]),
+    ...cf('AU', ['Christianity', 'Buddhism', 'Hinduism', 'Islam', 'Judaism', 'Sikhism', ...globalOptOuts]),
+    ...cf('BD', ['Islam', 'Hinduism', 'Buddhism', 'Christianity', ...globalOptOuts]),
+    ...cf('BE', ['Christianity', 'Islam', ...globalOptOuts]),
+    ...cf('BR', ['Christianity', ...globalOptOuts]),
+    ...cf('CA', ['Christianity', 'Islam', 'Hinduism', 'Sikhism', 'Buddhism', 'Judaism', ...globalOptOuts]),
+    ...cf('CH', ['Christianity', 'Islam', ...globalOptOuts]),
+    ...cf('CL', ['Christianity', ...globalOptOuts]),
+    ...cf('CN', ['Buddhism', 'Taoism', 'Confucianism', 'Christianity', 'Islam', ...globalOptOuts]),
+    ...cf('CO', ['Christianity', ...globalOptOuts]),
+    ...cf('CU', ['Christianity', ...globalOptOuts]),
+    ...cf('DE', ['Christianity', 'Islam', ...globalOptOuts]),
+    ...cf('DK', ['Christianity', ...globalOptOuts]),
+    ...cf('DZ', ['Islam', 'Christianity', ...globalOptOuts]),
+    ...cf('EG', ['Islam', 'Christianity', ...globalOptOuts]),
+    ...cf('ES', ['Christianity', 'Islam', ...globalOptOuts]),
+    ...cf('ET', ['Christianity', 'Islam', 'Indigenous / Traditional', ...globalOptOuts]),
+    ...cf('FI', ['Christianity', ...globalOptOuts]),
+    ...cf('FJ', ['Christianity', 'Hinduism', 'Islam', ...globalOptOuts]),
+    ...cf('FR', ['Christianity', 'Islam', 'Judaism', 'Buddhism', ...globalOptOuts]),
+    ...cf('GB', ['Christianity', 'Islam', 'Hinduism', 'Sikhism', 'Judaism', 'Buddhism', ...globalOptOuts]),
+    ...cf('GH', ['Christianity', 'Islam', 'Indigenous / Traditional', ...globalOptOuts]),
+    ...cf('GR', ['Christianity', 'Islam', ...globalOptOuts]),
+    ...cf('GT', ['Christianity', ...globalOptOuts]),
+    ...cf('ID', ['Islam', 'Christianity', 'Hinduism', 'Buddhism', ...globalOptOuts]),
+    ...cf('IE', ['Christianity', ...globalOptOuts]),
+    ...cf('IN', ['Hinduism', 'Islam', 'Christianity', 'Sikhism', 'Buddhism', 'Jainism', 'Zoroastrianism', 'Judaism', "Bahá'í Faith", 'Indigenous / Traditional', ...globalOptOuts]),
+    ...cf('IR', ['Islam', 'Zoroastrianism', 'Christianity', 'Judaism', "Bahá'í Faith", ...globalOptOuts]),
+    ...cf('IT', ['Christianity', 'Islam', ...globalOptOuts]),
+    ...cf('JP', ['Shinto', 'Buddhism', 'Christianity', 'Tenrikyo', ...globalOptOuts]),
+    ...cf('KE', ['Christianity', 'Islam', 'Indigenous / Traditional', ...globalOptOuts]),
+    ...cf('KR', ['Buddhism', 'Christianity', 'Confucianism', ...globalOptOuts]),
+    ...cf('LK', ['Buddhism', 'Hinduism', 'Islam', 'Christianity', ...globalOptOuts]),
+    ...cf('MA', ['Islam', 'Christianity', 'Judaism', ...globalOptOuts]),
+    ...cf('MX', ['Christianity', ...globalOptOuts]),
+    ...cf('MY', ['Islam', 'Buddhism', 'Christianity', 'Hinduism', 'Taoism', 'Sikhism', ...globalOptOuts]),
+    ...cf('NG', ['Christianity', 'Islam', 'Indigenous / Traditional', ...globalOptOuts]),
+    ...cf('NL', ['Christianity', 'Islam', ...globalOptOuts]),
+    ...cf('NO', ['Christianity', 'Islam', ...globalOptOuts]),
+    ...cf('NP', ['Hinduism', 'Buddhism', 'Islam', 'Christianity', ...globalOptOuts]),
+    ...cf('NZ', ['Christianity', 'Buddhism', 'Hinduism', 'Islam', ...globalOptOuts]),
+    ...cf('PA', ['Christianity', ...globalOptOuts]),
+    ...cf('PE', ['Christianity', ...globalOptOuts]),
+    ...cf('PG', ['Christianity', 'Indigenous / Traditional', ...globalOptOuts]),
+    ...cf('PK', ['Islam', 'Hinduism', 'Christianity', 'Sikhism', ...globalOptOuts]),
+    ...cf('PL', ['Christianity', ...globalOptOuts]),
+    ...cf('PT', ['Christianity', 'Islam', ...globalOptOuts]),
+    ...cf('RO', ['Christianity', ...globalOptOuts]),
+    ...cf('RU', ['Christianity', 'Islam', 'Buddhism', 'Judaism', ...globalOptOuts]),
+    ...cf('SA', ['Islam', ...globalOptOuts]),
+    ...cf('SE', ['Christianity', 'Islam', ...globalOptOuts]),
+    ...cf('SG', ['Buddhism', 'Christianity', 'Islam', 'Hinduism', 'Taoism', 'Sikhism', ...globalOptOuts]),
+    ...cf('SN', ['Islam', 'Christianity', 'Indigenous / Traditional', ...globalOptOuts]),
+    ...cf('TH', ['Buddhism', 'Islam', 'Christianity', ...globalOptOuts]),
+    ...cf('TR', ['Islam', 'Christianity', ...globalOptOuts]),
+    ...cf('TZ', ['Christianity', 'Islam', 'Indigenous / Traditional', ...globalOptOuts]),
+    ...cf('UA', ['Christianity', 'Islam', 'Judaism', ...globalOptOuts]),
+    ...cf('US', ['Christianity', 'Judaism', 'Islam', 'Buddhism', 'Hinduism', 'Sikhism', "Bahá'í Faith", 'Rastafari', ...globalOptOuts]),
+    ...cf('VE', ['Christianity', ...globalOptOuts]),
+    ...cf('VN', ['Buddhism', 'Cao Dai', 'Christianity', 'Confucianism', 'Taoism', ...globalOptOuts]),
+    ...cf('ZA', ['Christianity', 'Islam', 'Hinduism', 'Indigenous / Traditional', 'Judaism', ...globalOptOuts]),
+  ];
+
+  await prisma.countryFaith.createMany({ data: countryFaithRows, skipDuplicates: true });
+  console.log(`✅ Seeded ${countryFaithRows.length} country-faith associations across 63 countries`);
 
   // 7. Seed Social Categories — aligned with SQL sakhi_social_category.sql
   const socialCategories = [
@@ -653,6 +772,219 @@ async function main() {
     create: { id: 1, nextOrgNum: 1 },
   });
   console.log('✅ Seeded OrgIdCounter');
+
+  // ── Phase 2: Countries, Language native names, Country-Language mappings, Category translations ──
+
+  // 10. Seed all countries (63 from sathi legacy data)
+  const countries = [
+    { id: 'AE', name: 'United Arab Emirates' },
+    { id: 'AR', name: 'Argentina' },
+    { id: 'AT', name: 'Austria' },
+    { id: 'AU', name: 'Australia' },
+    { id: 'BD', name: 'Bangladesh' },
+    { id: 'BE', name: 'Belgium' },
+    { id: 'BR', name: 'Brazil' },
+    { id: 'CA', name: 'Canada' },
+    { id: 'CH', name: 'Switzerland' },
+    { id: 'CL', name: 'Chile' },
+    { id: 'CN', name: 'China' },
+    { id: 'CO', name: 'Colombia' },
+    { id: 'CU', name: 'Cuba' },
+    { id: 'DE', name: 'Germany' },
+    { id: 'DK', name: 'Denmark' },
+    { id: 'DZ', name: 'Algeria' },
+    { id: 'EG', name: 'Egypt' },
+    { id: 'ES', name: 'Spain' },
+    { id: 'ET', name: 'Ethiopia' },
+    { id: 'FI', name: 'Finland' },
+    { id: 'FJ', name: 'Fiji' },
+    { id: 'FR', name: 'France' },
+    { id: 'GB', name: 'United Kingdom' },
+    { id: 'GH', name: 'Ghana' },
+    { id: 'GR', name: 'Greece' },
+    { id: 'GT', name: 'Guatemala' },
+    { id: 'ID', name: 'Indonesia' },
+    { id: 'IE', name: 'Ireland' },
+    { id: 'IN', name: 'India' },
+    { id: 'IR', name: 'Iran' },
+    { id: 'IT', name: 'Italy' },
+    { id: 'JP', name: 'Japan' },
+    { id: 'KE', name: 'Kenya' },
+    { id: 'KR', name: 'South Korea' },
+    { id: 'LK', name: 'Sri Lanka' },
+    { id: 'MA', name: 'Morocco' },
+    { id: 'MX', name: 'Mexico' },
+    { id: 'MY', name: 'Malaysia' },
+    { id: 'NG', name: 'Nigeria' },
+    { id: 'NL', name: 'Netherlands' },
+    { id: 'NO', name: 'Norway' },
+    { id: 'NP', name: 'Nepal' },
+    { id: 'NZ', name: 'New Zealand' },
+    { id: 'PA', name: 'Panama' },
+    { id: 'PE', name: 'Peru' },
+    { id: 'PG', name: 'Papua New Guinea' },
+    { id: 'PK', name: 'Pakistan' },
+    { id: 'PL', name: 'Poland' },
+    { id: 'PT', name: 'Portugal' },
+    { id: 'RO', name: 'Romania' },
+    { id: 'RU', name: 'Russia' },
+    { id: 'SA', name: 'Saudi Arabia' },
+    { id: 'SE', name: 'Sweden' },
+    { id: 'SG', name: 'Singapore' },
+    { id: 'SN', name: 'Senegal' },
+    { id: 'TH', name: 'Thailand' },
+    { id: 'TR', name: 'Turkey' },
+    { id: 'TZ', name: 'Tanzania' },
+    { id: 'UA', name: 'Ukraine' },
+    { id: 'US', name: 'United States' },
+    { id: 'VE', name: 'Venezuela' },
+    { id: 'VN', name: 'Vietnam' },
+    { id: 'ZA', name: 'South Africa' },
+  ];
+  await prisma.country.createMany({ data: countries, skipDuplicates: true });
+  console.log(`✅ Seeded ${countries.length} countries`);
+
+  // 11. Update nativeScriptName on existing languages from sathi_language.sql
+  const nativeNames: Record<string, string> = {
+    en:  'English',
+    hi:  'हिंदी',
+    mr:  'मराठी',
+    sa:  'संस्कृतम्',
+    ne:  'नेपाली',
+    mai: 'मैथिली',
+    doi: 'डोगरी',
+    kok: 'कोंकणी',
+    bn:  'বাংলা',
+    as:  'অসমীয়া',
+    ta:  'தமிழ்',
+    te:  'తెలుగు',
+    kn:  'ಕನ್ನಡ',
+    ml:  'മലയാളം',
+    gu:  'ગુજરાતી',
+    pa:  'ਪੰਜਾਬੀ',
+    or:  'ଓଡ଼ିଆ',
+    sat: 'ᱥᱟᱱᱛᱟᱲᱤ',
+    mni: 'ꯃꯩꯇꯩꯂꯣꯟ',
+    ur:  'اردو',
+    sd:  'سنڌي',
+    ks:  'کٲشُر',
+  };
+  for (const [code, nativeName] of Object.entries(nativeNames)) {
+    await prisma.language.updateMany({
+      where: { code },
+      data: { nativeScriptName: nativeName },
+    });
+  }
+  console.log(`✅ Updated nativeScriptName for ${Object.keys(nativeNames).length} languages`);
+
+  // 12. Seed Country-Language mappings (India: 22 languages from sathi_country_language.sql)
+  // Legacy code → ISO code mapping
+  const legacyToIso: Record<string, string> = {
+    asin: 'as', bnin: 'bn', doin: 'doi', enuk: 'en', guin: 'gu',
+    hini: 'hi', knin: 'kn', koin: 'kok', ksin: 'ks', main: 'mai',
+    mein: 'mni', mlin: 'ml', mrin: 'mr', nein: 'ne', orin: 'or',
+    pain: 'pa', sain: 'sa', sant: 'sat', siin: 'sd', tata: 'ta',
+    tete: 'te', urin: 'ur',
+  };
+  // India's 22 languages from sathi_country_language.sql
+  const indiaLegacyCodes = ['asin','bnin','doin','enuk','guin','hini','knin','koin','ksin','main','mein','mlin','mrin','nein','orin','pain','sain','sant','siin','tata','tete','urin'];
+
+  const allLangs = await prisma.language.findMany({ select: { id: true, code: true } });
+  const langByCode = new Map(allLangs.map(l => [l.code, l.id]));
+
+  const countryLangData = indiaLegacyCodes
+    .map(legacyCode => {
+      const isoCode = legacyToIso[legacyCode];
+      const languageId = isoCode ? langByCode.get(isoCode) : undefined;
+      return languageId ? { countryId: 'IN', languageId } : null;
+    })
+    .filter((x): x is { countryId: string; languageId: string } => x !== null);
+
+  await prisma.countryLanguage.createMany({ data: countryLangData, skipDuplicates: true });
+  console.log(`✅ Seeded ${countryLangData.length} India country-language mappings`);
+
+  // 13. Seed Service Category Translations (Layer 2) from sathi_service_category.sql
+  // Map legacy category codes to our category names + targetGroups
+  const legacyCategoryMap: Record<string, { name: string; targetGroup: 'CHILDREN' | 'WOMEN' }> = {
+    C001: { name: 'Health & Well-being',              targetGroup: 'CHILDREN' },
+    C002: { name: 'Education & Skill Development',    targetGroup: 'CHILDREN' },
+    C003: { name: 'Child Protection & Rights',        targetGroup: 'CHILDREN' },
+    C004: { name: 'Shelter & Basic Needs',            targetGroup: 'CHILDREN' },
+    C005: { name: 'Economic & Social Empowerment',    targetGroup: 'CHILDREN' },
+    C006: { name: 'Gender & Inclusion',               targetGroup: 'CHILDREN' },
+    C007: { name: 'Safety & Emergency Response',      targetGroup: 'CHILDREN' },
+    C008: { name: 'Environment & Sustainability',     targetGroup: 'CHILDREN' },
+    W001: { name: 'Health & Well-being',              targetGroup: 'WOMEN' },
+    W002: { name: 'Education & Skills Development',   targetGroup: 'WOMEN' },
+    W003: { name: 'Economic Empowerment',             targetGroup: 'WOMEN' },
+    W004: { name: 'Legal & Human Rights',             targetGroup: 'WOMEN' },
+    W005: { name: 'Safety & Shelter',                 targetGroup: 'WOMEN' },
+    W006: { name: 'Social Support & Community Building', targetGroup: 'WOMEN' },
+    W007: { name: 'Environmental & Rural Development', targetGroup: 'WOMEN' },
+  };
+
+  // Raw translation data from sathi_service_category.sql (non-English entries only)
+  const rawCategoryTranslations: Array<{ legacyCatId: string; legacyLangCode: string; translatedName: string }> = [
+    // C003 — Child Protection & Rights
+    { legacyCatId: 'C003', legacyLangCode: 'bnin', translatedName: 'শিশু সুরক্ষা ও অধিকার' },
+    { legacyCatId: 'C003', legacyLangCode: 'guin', translatedName: 'બાળ સુરક્ષા અને અધિકાર' },
+    { legacyCatId: 'C003', legacyLangCode: 'hini', translatedName: 'बाल सुरक्षा और अधिकार' },
+    { legacyCatId: 'C003', legacyLangCode: 'knin', translatedName: 'ಮಕ್ಕಳ ರಕ್ಷಣೆ ಮತ್ತು ಹಕ್ಕುಗಳು' },
+    { legacyCatId: 'C003', legacyLangCode: 'mlin', translatedName: 'ബാല സംരക്ഷണംയും അവകാശങ്ങളും' },
+    { legacyCatId: 'C003', legacyLangCode: 'mrin', translatedName: 'बाल सुरक्षा आणि हक्क' },
+    { legacyCatId: 'C003', legacyLangCode: 'orin', translatedName: 'ଶିଶୁ ସୁରକ୍ଷା ଏବଂ ଅଧିକାର' },
+    { legacyCatId: 'C003', legacyLangCode: 'pain', translatedName: 'ਬੱਚਿਆਂ ਦੀ ਸੁਰੱਖਿਆ ਅਤੇ ਅਧਿਕਾਰ' },
+    { legacyCatId: 'C003', legacyLangCode: 'sant', translatedName: 'ᱪᱤᱞᱟ ᱨᱟᱠᱷᱟ ᱟᱨ ᱟᱫᱤᱠᱟᱨ' },
+    { legacyCatId: 'C003', legacyLangCode: 'tata', translatedName: 'குழந்தைகள் பாதுகாப்பு மற்றும் உரிமைகள்' },
+    { legacyCatId: 'C003', legacyLangCode: 'tete', translatedName: 'బాలల రక్షణ మరియు హక్కులు' },
+    { legacyCatId: 'C003', legacyLangCode: 'urin', translatedName: 'بچوں کی حفاظت اور حقوق' },
+    // C005 — Economic & Social Empowerment
+    { legacyCatId: 'C005', legacyLangCode: 'bnin', translatedName: 'অর্থনৈতিক ও সামাজিক ক্ষমতায়ন' },
+    { legacyCatId: 'C005', legacyLangCode: 'guin', translatedName: 'આર્થિક અને સામાજિક સશક્તિકરણ' },
+    { legacyCatId: 'C005', legacyLangCode: 'hini', translatedName: 'आर्थिक और सामाजिक सशक्तिकरण' },
+    { legacyCatId: 'C005', legacyLangCode: 'knin', translatedName: 'ಆರ್ಥಿಕ ಮತ್ತು ಸಾಮಾಜಿಕ ಸಬಲೀಕರಣ' },
+    { legacyCatId: 'C005', legacyLangCode: 'mlin', translatedName: 'സാമ്പത്തികവും സാമൂഹികവും സശക്തീകരണം' },
+    { legacyCatId: 'C005', legacyLangCode: 'mrin', translatedName: 'आर्थिक आणि सामाजिक सशक्तीकरण' },
+    { legacyCatId: 'C005', legacyLangCode: 'orin', translatedName: 'ଆର୍ଥିକ ଏବଂ ସାମାଜିକ ସଶକ୍ତିକରଣ' },
+    { legacyCatId: 'C005', legacyLangCode: 'pain', translatedName: 'ਆਰਥਿਕ ਅਤੇ ਸਮਾਜਿਕ ਸਸ਼ਕਤੀਕਰਨ' },
+    { legacyCatId: 'C005', legacyLangCode: 'sant', translatedName: 'ᱟᱨᱛᱷᱤᱠ ᱟᱨ ᱥᱟᱢᱟᱡᱤᱠ ᱥᱟᱥᱚᱠᱛᱤᱠᱚᱨᱚᱱ' },
+    { legacyCatId: 'C005', legacyLangCode: 'tata', translatedName: 'பொருளாதார மற்றும் சமூக அதிகாரமளித்தல்' },
+    { legacyCatId: 'C005', legacyLangCode: 'tete', translatedName: 'ఆర్థిక మరియు సామాజిక సాధికారత' },
+    { legacyCatId: 'C005', legacyLangCode: 'urin', translatedName: 'معاشی اور سماجی بااختیار بنانا' },
+    // W003 — Economic Empowerment
+    { legacyCatId: 'W003', legacyLangCode: 'bnin', translatedName: 'অর্থনৈতিক ক্ষমতায়ন' },
+    { legacyCatId: 'W003', legacyLangCode: 'guin', translatedName: 'આર્થિક સશક્તિકરણ' },
+    { legacyCatId: 'W003', legacyLangCode: 'hini', translatedName: 'आर्थिक सशक्तिकरण' },
+    { legacyCatId: 'W003', legacyLangCode: 'knin', translatedName: 'ಆರ್ಥಿಕ ಸಬಲೀಕರಣ' },
+    { legacyCatId: 'W003', legacyLangCode: 'mlin', translatedName: 'സാമ്പത്തിക സശക്തീകരണം' },
+    { legacyCatId: 'W003', legacyLangCode: 'mrin', translatedName: 'आर्थिक सशक्तीकरण' },
+    { legacyCatId: 'W003', legacyLangCode: 'orin', translatedName: 'ଆର୍ଥିକ ସଶକ୍ତିକରଣ' },
+    { legacyCatId: 'W003', legacyLangCode: 'pain', translatedName: 'ਆਰਥਿਕ ਸਸ਼ਕਤੀਕਰਨ' },
+    { legacyCatId: 'W003', legacyLangCode: 'sant', translatedName: 'ᱟᱨᱛᱷᱤᱠ ᱥᱟᱥᱚᱠᱛᱤᱠᱚᱨᱚᱱ' },
+    { legacyCatId: 'W003', legacyLangCode: 'tata', translatedName: 'பொருளாதார அதிகாரமளித்தல்' },
+    { legacyCatId: 'W003', legacyLangCode: 'tete', translatedName: 'ఆర్థిక సాధికారత' },
+    { legacyCatId: 'W003', legacyLangCode: 'urin', translatedName: 'معاشی بااختیار بنانا' },
+  ];
+
+  const allCats = await prisma.serviceCategory.findMany({ select: { id: true, name: true, targetGroup: true } });
+  const catByKey = new Map(allCats.map(c => [`${c.name}|${c.targetGroup}`, c.id]));
+
+  const catTranslationData: Array<{ categoryId: string; languageId: string; translatedName: string }> = [];
+  for (const row of rawCategoryTranslations) {
+    const catDef = legacyCategoryMap[row.legacyCatId];
+    if (!catDef) continue;
+    const categoryId = catByKey.get(`${catDef.name}|${catDef.targetGroup}`);
+    const isoCode = legacyToIso[row.legacyLangCode];
+    const languageId = isoCode ? langByCode.get(isoCode) : undefined;
+    if (categoryId && languageId) {
+      catTranslationData.push({ categoryId, languageId, translatedName: row.translatedName });
+    }
+  }
+
+  if (catTranslationData.length > 0) {
+    await prisma.serviceCategoryTranslation.createMany({ data: catTranslationData, skipDuplicates: true });
+  }
+  console.log(`✅ Seeded ${catTranslationData.length} service category translations`);
 
   console.log('🎉 Database seeding completed successfully!');
 }

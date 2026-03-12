@@ -155,9 +155,11 @@ export async function fetchStates() {
 
 /**
  * Fetch faiths/religious affiliations
+ * @param countryId - ISO alpha-2 country code to filter relevant faiths
  */
-export async function fetchFaiths() {
-  return apiGet('/reference/faiths');
+export async function fetchFaiths(countryId?: string) {
+  const query = countryId ? `?countryId=${encodeURIComponent(countryId)}` : '';
+  return apiGet(`/reference/faiths${query}`);
 }
 
 /**

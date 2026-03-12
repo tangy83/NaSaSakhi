@@ -1,5 +1,5 @@
 // Saathi - Complete Prisma Schema
-// Phase 2: Volunteer Admin & Multi-Language Platform
+// Phase 3: Two-Stage Approval, Translator Role, Country Support, Three-Layer Translation
 // Synced from backend/prisma/schema.prisma — keep both files in sync.
 
 generator client {
@@ -25,8 +25,14 @@ model Organization {
   yearEstablished      Int
   description          String?
   faithId              String?
+  faith                Faith?             @relation(fields: [faithId], references: [id])
+  isBPLFriendly        Boolean            @default(false)
   status               OrganizationStatus @default(PENDING)
   websiteUrl           String?
+
+  // Country association
+  countryId String  @default("IN")
+  country   Country @relation(fields: [countryId], references: [id])
 
   // Self-referential relationship for branches
   parentOrganization Organization?  @relation("OrgBranches", fields: [parentOrganizationId], references: [id])
@@ -40,6 +46,7 @@ model Organization {
   branches                 OrganizationBranch[]
   contacts                 ContactInformation[]
   languages                OrganizationLanguage[]
+  socialCategories         OrganizationSocialCategory[]
   documents                Document[]
   reviewNotes              ReviewNote[]
   translationJobs          TranslationJob[]
@@ -50,6 +57,7 @@ model Organization {
 
   @@index([name, status])
   @@index([entityType, status])
+  @@index([countryId, status])
   @@map("organizations")
 }
 
@@ -75,9 +83,11 @@ enum RegistrationType {
 
 enum OrganizationStatus {
   PENDING
+  VOLUNTEER_APPROVED // Passed Stage 1 volunteer review; awaiting Stage 2 Translator review
   APPROVED
   REJECTED
   CLARIFICATION_REQUESTED
+  ARCHIVED // Soft-hidden; excluded from public directory
 }
 
 model OrganizationBranch {
@@ -165,8 +175,9 @@ model ServiceCategory {
   displayOrder Int
 
   // Relationships
-  resources ServiceResource[]
-  branches  BranchCategory[]
+  resources    ServiceResource[]
+  branches     BranchCategory[]
+  translations ServiceCategoryTranslation[]
 
   @@unique([name, targetGroup])
   @@map("service_categories")
@@ -184,8 +195,9 @@ model ServiceResource {
   description String?
 
   // Relationships
-  category ServiceCategory  @relation(fields: [categoryId], references: [id])
-  branches BranchResource[]
+  category     ServiceCategory              @relation(fields: [categoryId], references: [id])
+  branches     BranchResource[]
+  translations ServiceResourceTranslation[]
 
   @@unique([categoryId, name])
   @@map("service_resources")
@@ -217,12 +229,13 @@ model City {
 }
 
 model Language {
-  id             String  @id @default(uuid())
-  name           String  @unique
-  code           String  @unique @db.VarChar(10)
-  isActive       Boolean @default(true)
+  id               String  @id @default(uuid())
+  name             String  @unique
+  nativeScriptName String? // e.g., "हिन्दी", "தமிழ்", "বাংলা"
+  code             String  @unique @db.VarChar(10)
+  isActive         Boolean @default(true)
   // Phase 2: font & script metadata
-  scriptFamily   String  @default("Latin") // e.g., "Devanagari", "Tamil", "Arabic"
+  scriptFamily   String @default("Latin") // e.g., "Devanagari", "Tamil", "Arabic"
   isRTL          Boolean @default(false) // true for Urdu, Sindhi, Kashmiri
   fontFamily     String  @default("Open Sans") // CSS font-family name
   googleFontName String  @default("Open+Sans") // Google Fonts identifier
@@ -232,6 +245,12 @@ model Language {
   organizationTranslations OrganizationTranslation[]
   branchTranslations       BranchTranslation[]
   translationJobs          TranslationJob[]
+  countryLanguages         CountryLanguage[]
+  uiTranslations           UITranslation[]
+  categoryTranslations     ServiceCategoryTranslation[]
+  resourceTranslations     ServiceResourceTranslation[]
+  faithTranslations        FaithTranslation[]
+  socialCategoryTranslations SocialCategoryTranslation[]
 
   @@map("languages")
 }
@@ -240,6 +259,10 @@ model Faith {
   id   String @id @default(uuid())
   name String @unique
 
+  organizations Organization[]
+  translations  FaithTranslation[]
+  countryFaiths CountryFaith[]
+
   @@map("faiths")
 }
 
@@ -247,7 +270,114 @@ model SocialCategory {
   id   String @id @default(uuid())
   name String @unique
 
+  organizations OrganizationSocialCategory[]
+  translations  SocialCategoryTranslation[]
+
   @@map("social_categories")
+}
+
+// ============================================================================
+// PHASE 3: Country & Multi-Country Support
+// ============================================================================
+
+model Country {
+  id            String @id // ISO alpha-2 code e.g. "IN", "US"
+  name          String // English name e.g. "India"
+
+  languages     CountryLanguage[]
+  faiths        CountryFaith[]
+  organizations Organization[]
+
+  @@map("countries")
+}
+
+model CountryLanguage {
+  countryId  String
+  languageId String
+
+  country  Country  @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  language Language @relation(fields: [languageId], references: [id], onDelete: Cascade)
+
+  @@id([countryId, languageId])
+  @@map("country_languages")
+}
+
+model CountryFaith {
+  countryId String
+  faithId   String
+
+  country Country @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  faith   Faith   @relation(fields: [faithId], references: [id], onDelete: Cascade)
+
+  @@id([countryId, faithId])
+  @@map("country_faiths")
+}
+
+// ============================================================================
+// PHASE 3: Layer 1 — UI Translation Strings
+// ============================================================================
+
+model UITranslation {
+  key        String
+  languageId String
+  value      String   @db.Text
+
+  language Language @relation(fields: [languageId], references: [id], onDelete: Cascade)
+
+  @@id([key, languageId])
+  @@map("ui_translations")
+}
+
+// ============================================================================
+// PHASE 3: Layer 2 — Reference Data Translations
+// ============================================================================
+
+model ServiceCategoryTranslation {
+  categoryId     String
+  languageId     String
+  translatedName String
+
+  category ServiceCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  language Language        @relation(fields: [languageId], references: [id], onDelete: Cascade)
+
+  @@id([categoryId, languageId])
+  @@map("service_category_translations")
+}
+
+model ServiceResourceTranslation {
+  resourceId     String
+  languageId     String
+  translatedName String
+
+  resource ServiceResource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  language Language        @relation(fields: [languageId], references: [id], onDelete: Cascade)
+
+  @@id([resourceId, languageId])
+  @@map("service_resource_translations")
+}
+
+model FaithTranslation {
+  faithId        String
+  languageId     String
+  translatedName String
+
+  faith    Faith    @relation(fields: [faithId], references: [id], onDelete: Cascade)
+  language Language @relation(fields: [languageId], references: [id], onDelete: Cascade)
+
+  @@id([faithId, languageId])
+  @@map("faith_translations")
+}
+
+model SocialCategoryTranslation {
+  socialCategoryId String
+  languageId       String
+  translatedName   String
+
+  socialCategory SocialCategory @relation(fields: [socialCategoryId], references: [id], onDelete: Cascade)
+  language       Language       @relation(fields: [languageId], references: [id], onDelete: Cascade)
+
+  @@id([socialCategoryId, languageId])
+  @@map("social_category_translations")
 }
 
 // Junction Tables (Many-to-Many relationships)
@@ -284,6 +414,17 @@ model OrganizationLanguage {
   @@map("organization_languages")
 }
 
+model OrganizationSocialCategory {
+  organizationId   String
+  socialCategoryId String
+
+  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  socialCategory SocialCategory @relation(fields: [socialCategoryId], references: [id])
+
+  @@id([organizationId, socialCategoryId])
+  @@map("organization_social_categories")
+}
+
 // ============================================================================
 // STAGE 4: Auth & Documents
 // ============================================================================
@@ -315,6 +456,7 @@ enum UserRole {
   ADMIN
   SUPER_ADMIN
   VOLUNTEER
+  TRANSLATOR // Phase 3: Reviews and approves Layer 3 translated content (Stage 2)
 }
 
 model Account {
@@ -432,10 +574,10 @@ model OrganizationTranslation {
   id             String            @id @default(uuid())
   organizationId String
   languageId     String
-  fieldName      String // e.g., "name", "description", "contactNotes"
+  fieldName      String // e.g., "name", "description", "contactName", "addressLine1"
   translatedText String            @db.Text
   status         TranslationStatus @default(PENDING_TRANSLATION)
-  translatedBy   String? // User.id of volunteer who reviewed it
+  translatedBy   String? // User.id of translator who reviewed it
 
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   language     Language     @relation(fields: [languageId], references: [id], onDelete: Restrict)
@@ -453,10 +595,10 @@ model BranchTranslation {
   id             String            @id @default(uuid())
   branchId       String
   languageId     String
-  fieldName      String // e.g., "description", "addressNotes"
+  fieldName      String // e.g., "addressLine1", "addressLine2"
   translatedText String            @db.Text
   status         TranslationStatus @default(PENDING_TRANSLATION)
-  translatedBy   String? // User.id of volunteer who reviewed it
+  translatedBy   String? // User.id of translator who reviewed it
 
   branch   OrganizationBranch @relation(fields: [branchId], references: [id], onDelete: Cascade)
   language Language           @relation(fields: [languageId], references: [id], onDelete: Restrict)
@@ -472,7 +614,7 @@ model BranchTranslation {
 model ReviewNote {
   id             String             @id @default(uuid())
   organizationId String
-  reviewerId     String // User.id of the volunteer
+  reviewerId     String // User.id of the volunteer or translator
   note           String             @db.Text
   statusBefore   OrganizationStatus
   statusAfter    OrganizationStatus

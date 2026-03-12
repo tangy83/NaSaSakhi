@@ -1,12 +1,17 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { UseFormRegister, FieldErrors, UseFormSetValue, UseFormWatch } from 'react-hook-form';
 import { TextInput } from '@/components/form/TextInput';
 import { Dropdown } from '@/components/form/Dropdown';
 import { Checkbox } from '@/components/form/Checkbox';
 import { fetchFaiths, fetchSocialCategories } from '@/lib/api';
 import { Faith, SocialCategory } from '@/types/api';
+
+interface Country {
+  id: string;
+  name: string;
+}
 import { useApiError } from '@/hooks/useApiError';
 
 interface OrganizationSectionProps {
@@ -29,26 +34,29 @@ export function OrganizationSection({ register, errors, setValue, watch, entityT
   const isBranch = entityType === 'branch';
   const [faiths, setFaiths] = useState<Faith[]>([]);
   const [socialCategories, setSocialCategories] = useState<SocialCategory[]>([]);
+  const [countries, setCountries] = useState<Country[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { handleError } = useApiError();
 
   const watchedSocialCategoryIds = watch('socialCategoryIds') || [];
+  const watchedCountryId = watch('countryId') as string | undefined;
+  const isInitialFaithLoad = useRef(true);
 
-  // Load reference data
+  // Load reference data (countries + social categories once; faiths by country)
   useEffect(() => {
     const loadReferenceData = async () => {
       setIsLoading(true);
       try {
-        const [faithsRes, socialCategoriesRes] = await Promise.all([
-          fetchFaiths(),
+        const [socialCategoriesRes, countriesRes] = await Promise.all([
           fetchSocialCategories(),
+          fetch('/api/reference/countries').then((r) => r.json()),
         ]);
 
-        if (faithsRes.success && faithsRes.data) {
-          setFaiths(faithsRes.data);
-        }
         if (socialCategoriesRes.success && socialCategoriesRes.data) {
           setSocialCategories(socialCategoriesRes.data);
+        }
+        if (countriesRes.success && countriesRes.data) {
+          setCountries(countriesRes.data);
         }
       } catch (error) {
         handleError(error, 'Failed to load reference data');
@@ -59,6 +67,26 @@ export function OrganizationSection({ register, errors, setValue, watch, entityT
 
     loadReferenceData();
   }, [handleError]);
+
+  // Refetch faiths whenever the selected country changes; reset selection on subsequent changes
+  useEffect(() => {
+    const loadFaiths = async () => {
+      try {
+        const res = await fetchFaiths(watchedCountryId || undefined);
+        if (res.success && res.data) {
+          setFaiths(res.data);
+          if (!isInitialFaithLoad.current) {
+            setValue('faithId', '');
+          }
+          isInitialFaithLoad.current = false;
+        }
+      } catch (error) {
+        handleError(error, 'Failed to load faiths');
+      }
+    };
+
+    loadFaiths();
+  }, [watchedCountryId, handleError, setValue]);
 
   // Handle social category checkbox change
   const handleSocialCategoryChange = (categoryId: string, checked: boolean) => {
@@ -145,6 +173,19 @@ export function OrganizationSection({ register, errors, setValue, watch, entityT
         })}
       />
 
+      {/* Country */}
+      {countries.length > 0 && (
+        <Dropdown
+          label="Country"
+          required
+          options={countries.map((c) => ({ value: c.id, label: c.name }))}
+          placeholder="Select country"
+          error={errors.countryId?.message as string}
+          helperText="Country where your organization primarily operates"
+          {...register('countryId')}
+        />
+      )}
+
       {/* Faith (Optional) */}
       {faiths.length > 0 && (
         <Dropdown
@@ -184,6 +225,17 @@ export function OrganizationSection({ register, errors, setValue, watch, entityT
           )}
         </div>
       )}
+
+      {/* BPL Friendly (Optional) */}
+      <div className="border border-gray-300 rounded-md p-4">
+        <Checkbox
+          label="Services available to BPL (Below Poverty Line) households"
+          {...register('isBPLFriendly')}
+        />
+        <p className="text-xs text-gray-500 mt-1 ml-6">
+          Check this if your organization provides services free of charge or at subsidised rates for BPL families
+        </p>
+      </div>
     </div>
   );
 }

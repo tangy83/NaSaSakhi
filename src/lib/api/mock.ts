@@ -346,7 +346,7 @@ export async function fetchStatesMock(): Promise<ApiResponse<State[]>> {
  * Mock: Fetch faiths
  * GET /api/reference/faiths
  */
-export async function fetchFaithsMock(): Promise<ApiResponse<Faith[]>> {
+export async function fetchFaithsMock(_countryId?: string): Promise<ApiResponse<Faith[]>> {
   await delay(200);
   return {
     success: true,
